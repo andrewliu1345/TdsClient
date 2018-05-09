@@ -1,0 +1,22 @@
+﻿<Window x:Class="TermConfigProgram.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TermConfigProgram"
+        mc:Ignorable="d"
+        Title="终端配置程序" Height="122.345" Width="777.434" MinWidth="777.434" MinHeight="122.345" ResizeMode="CanMinimize">
+    <Grid>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="0*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.Background>
+            <ImageBrush ImageSource="Resources/skin-bd-bg2.jpg" Viewbox="0,0,0.5,0.5"/>
+        </Grid.Background>
+        <Image Source="Resources/skin-logozi.png" HorizontalAlignment="Left" Height="46" Margin="639,10,0,0" VerticalAlignment="Top" Width="122">
+        </Image>
+    </Grid>
+
+</Window>
