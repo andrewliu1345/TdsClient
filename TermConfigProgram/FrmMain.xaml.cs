@@ -21,14 +21,68 @@ namespace TermConfigProgram
     /// </summary>
     public partial class MainWindow : Window
     {
+        private NotifyIcon notifyIcon;
         public MainWindow()
         {
             //this.ShowInTaskbar = false;
             InitializeComponent();
-            this.SetNotifyIcon();
-            this.hideMethod();
+            SetWindowLocation();//程序初始位置
+            SetNotifyIcon();//设置托盘图标
+            hideMethod();//隐藏界面
         }
-        private NotifyIcon notifyIcon;
+        /// <summary>
+        /// 程序初始位置
+        /// </summary>
+        private void SetWindowLocation()
+        {
+            double primaryScreenWidth = SystemParameters.PrimaryScreenWidth;
+            double primaryScreenHeight = SystemParameters.PrimaryScreenHeight;
+            double num;
+            if (primaryScreenWidth % base.Width == 0.0)
+            {
+                num = primaryScreenWidth / base.Width - 1.0;
+            }
+            else if (primaryScreenWidth / base.Width > 1.0)
+            {
+                num = primaryScreenWidth / base.Width - 1.0;
+            }
+            else
+            {
+                num = primaryScreenWidth / base.Width;
+            }
+            double num2;
+            if (primaryScreenHeight % base.Height == 0.0)
+            {
+                num2 = primaryScreenHeight / base.Height - 1.0;
+            }
+            else if (primaryScreenHeight / base.Height > 1.0)
+            {
+                num2 = primaryScreenHeight / base.Height - 1.0;
+            }
+            else
+            {
+                num2 = primaryScreenHeight / base.Height;
+            }
+            if (primaryScreenWidth < base.Width)
+            {
+                base.Left = 50.0;
+            }
+            else
+            {
+                base.Left = num * base.Width - 50.0;
+            }
+            if (primaryScreenHeight < base.Height)
+            {
+                base.Top = 50.0;
+            }
+            else
+            {
+                base.Top = num2 * base.Height - 50.0;
+            }
+        }
+        /// <summary>
+        /// 设置托盘图标
+        /// </summary>
         private void SetNotifyIcon()
         {
             this.notifyIcon = new NotifyIcon();
@@ -53,10 +107,18 @@ namespace TermConfigProgram
             this.notifyIcon.ContextMenu = new System.Windows.Forms.ContextMenu(menuItems);
             this.notifyIcon.MouseDoubleClick += notifyIcon_MouseDoubleClick;
         }
+        /// <summary>
+        /// 托盘双击
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void notifyIcon_MouseDoubleClick(object sender, EventArgs e)
         {
             this.showAndHide();
         }
+        /// <summary>
+        /// 退出
+        /// </summary>
         private void exitMethod()
         {
             //             if (MainWindow.portSettingWindow != null)
@@ -73,7 +135,9 @@ namespace TermConfigProgram
             //             }
             base.Close();
         }
-
+        /// <summary>
+        /// 显示
+        /// </summary>
         private void showMethod()
         {
             if (base.WindowState == WindowState.Minimized)
@@ -91,6 +155,9 @@ namespace TermConfigProgram
             }
         }
 
+        /// <summary>
+        /// 隐藏
+        /// </summary>
         private void hideMethod()
         {
             if (base.WindowState == WindowState.Maximized)
@@ -120,6 +187,9 @@ namespace TermConfigProgram
         {
             //this.exitMethod();
         }
+        /// <summary>
+        /// 显示或隐藏界面
+        /// </summary>
         private void showAndHide()
         {
             if (base.WindowState == WindowState.Minimized)
@@ -146,6 +216,73 @@ namespace TermConfigProgram
                 this.WindowState = WindowState.Normal;
                 base.WindowState = WindowState.Minimized;
                 base.Hide();
+            }
+        }
+
+        #region 按键事件
+
+        private void Button_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            System.Windows.Controls.Button button = (System.Windows.Controls.Button)sender;
+            //System.Windows.Controls.Image image = (System.Windows.Controls.Image)button.Content;
+            button.Height = 75;
+            button.Width = 80;
+        }
+
+        private void Button_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            System.Windows.Controls.Button button = (System.Windows.Controls.Button)sender;
+            // System.Windows.Controls.Image image = (System.Windows.Controls.Image)button.Content;
+            button.Height = 70;
+            button.Width = 75;
+        }
+        #endregion
+
+        private void btnUsb_Click(object sender, RoutedEventArgs e)//USB 管理
+        {
+
+        }
+
+        private void btnSerialPort_Click(object sender, RoutedEventArgs e)//串口管理
+        {
+
+        }
+
+        private void btnBt_Click(object sender, RoutedEventArgs e)//蓝牙重连
+        {
+
+        }
+
+        private void btnAPN_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+           
+            MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("是否关闭窗口？是，关闭。否，最小化到托盘", "提示", MessageBoxButton.YesNo, MessageBoxImage.Asterisk, MessageBoxResult.Yes);
+            if (messageBoxResult == MessageBoxResult.No)
+            {
+                this.hideMethod();
+                e.Cancel = true;
+            }
+            else
+            {
+                //                 if (this.Pro != null)
+                //                 {
+                //                     MainWindow.portSettingWindow.Close();
+                //                 }
+                //                 if (MainWindow.serialPortWindow != null)
+                //                 {
+                //                     MainWindow.serialPortWindow.Close();
+                //                 }
+                //                 if (this.loadWindow != null)
+                //                 {
+                //                     this.loadWindow.Close();
+                //                 }
+                e.Cancel = false;
+              //  base.Close();
             }
         }
     }

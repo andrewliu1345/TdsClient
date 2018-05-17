@@ -1,8 +1,8 @@
-﻿<Application x:Class="TermConfigProgram.App"
+﻿<Application x:Class="DeviceTest.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:TermConfigProgram"
-             StartupUri="FrmMain.xaml">
+             xmlns:local="clr-namespace:DeviceTest"
+             StartupUri="MainWindow.xaml">
     <Application.Resources>
          
     </Application.Resources>

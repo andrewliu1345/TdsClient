@@ -1,0 +1,29 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
+
+namespace DeviceTest
+{
+    public class Api
+    {
+        //打开设备
+        [DllImport("DLL\\mtx_32.dll", EntryPoint = "device_open")]
+        public static extern int device_open(int port, int baud);
+
+        //打开设备
+        [DllImport("DLL\\mtx_32.dll", EntryPoint = "device_open_name")]
+        public static extern int device_open_name(string pPort, int auxPort, int baud);
+
+        //关闭设备
+        [DllImport("DLL\\mtx_32.dll", EntryPoint = "device_close")]
+        public static extern int device_close(int icdev);
+
+        [DllImport("DLL\\mtx_32.dll", EntryPoint = "get_device_status")]
+        public static extern int get_device_status(int icdev, ref byte ndev_status);
+
+        [DllImport("DLL\\mtx_32.dll", EntryPoint = "Set_RCT_Timer")]
+        public static extern int Set_RCT_Timer(int icdev);
+    }
+}
