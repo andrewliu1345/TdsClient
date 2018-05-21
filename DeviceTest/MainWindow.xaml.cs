@@ -22,6 +22,7 @@ namespace DeviceTest
     public partial class MainWindow : Window
     {
         int deiceID = -1;
+        int deiceIDPrin = -1;
         string[] _SerialPortS;
         Dictionary<string, int> _SerialPortList = new Dictionary<string, int>();
 
@@ -48,6 +49,11 @@ namespace DeviceTest
             cbbSerialPort.DisplayMemberPath = "Key";
             cbbSerialPort.SelectedValuePath = "Value";
             cbbSerialPort.SelectedIndex = 0;
+
+            cbbSerialPortPrint.ItemsSource = list;
+            cbbSerialPortPrint.DisplayMemberPath = "Key";
+            cbbSerialPortPrint.SelectedValuePath = "Value";
+            cbbSerialPortPrint.SelectedIndex = 0;
         }
 
         private void btnConn_Click(object sender, RoutedEventArgs e)
@@ -121,6 +127,53 @@ namespace DeviceTest
                 string msg = string.Format("同步失败，iRet={0}", iRet);
                 MessageBox.Show(msg);
 
+            }
+        }
+
+        private void btnConntPrint_Click(object sender, RoutedEventArgs e)
+        {
+            string portname = cbbSerialPortPrint.Text;
+            int port = (int)cbbSerialPortPrint.SelectedValue;
+            if (deiceIDPrin > 0)
+            {
+                int iRet = Api.device_close_print(deiceIDPrin);
+                deiceIDPrin = -1;
+            }
+
+            deiceIDPrin = Api.device_open_print(port, 115200);
+
+
+            if (deiceIDPrin > 0)
+            {
+                var msg = string.Format("端口:{0},连接成功。iRet={1}", port, deiceIDPrin);
+                MessageBox.Show(msg);
+            }
+            else
+            {
+                var msg = string.Format("端口:{0},连接失败。iRet={1}", port, deiceIDPrin);
+                MessageBox.Show(msg);
+            }
+        }
+
+        private void btnClosePrint_Click(object sender, RoutedEventArgs e)
+        {
+            int iRet = Api.device_close_print(deiceIDPrin);
+        }
+
+        private void btnPrint_Click(object sender, RoutedEventArgs e)
+        {
+            string str = txtPrintInfo.Text;
+            int iRet = Api.Print_CHS(deiceIDPrin, str, str.Length);
+            iRet = Api.Print_CHS(deiceIDPrin, "\n", 1);
+            if (deiceIDPrin > 0)
+            {
+                var msg = string.Format("端口:{0},打印成功。iRet={1}", deiceIDPrin, iRet);
+                MessageBox.Show(msg);
+            }
+            else
+            {
+                var msg = string.Format("端口:{0},打印失败。iRet={1}", deiceIDPrin, iRet);
+                MessageBox.Show(msg);
             }
         }
     }

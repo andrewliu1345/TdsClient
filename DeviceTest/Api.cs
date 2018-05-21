@@ -25,5 +25,17 @@ namespace DeviceTest
 
         [DllImport("DLL\\mtx_32.dll", EntryPoint = "Set_RCT_Timer")]
         public static extern int Set_RCT_Timer(int icdev);
+
+        //打开设备
+        [DllImport("DLL\\Print_32.dll", EntryPoint = "device_open")]
+        public static extern int device_open_print(int port, int baud);
+
+        //关闭设备
+        [DllImport("DLL\\Print_32.dll", EntryPoint = "device_close")]
+        public static extern int device_close_print(int icdev);
+
+        //打印
+        [DllImport("DLL\\Print_32.dll", EntryPoint = "Print_CHS")]
+        public static extern int Print_CHS(int icdev, string str, int length);
     }
 }

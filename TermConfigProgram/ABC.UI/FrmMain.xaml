@@ -1,4 +1,4 @@
-﻿<Window x:Class="TermConfigProgram.MainWindow"
+﻿<Window x:Class="ABC.UI.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -13,27 +13,27 @@
             <ColumnDefinition Width="0*"/>
         </Grid.ColumnDefinitions>
 
-        <Image Source="Resources/skin-logozi.png" HorizontalAlignment="Left" Height="60" Margin="514,0,0,0" VerticalAlignment="Top" Width="168">
+        <Image Source="/ABC.UI;Component/Resources/skin-logozi.png" HorizontalAlignment="Left" Height="60" Margin="514,0,0,0" VerticalAlignment="Top" Width="168">
         </Image>
         <Button x:Name="btnUsb"  Background="#00FFFFFF" BorderBrush="#00FFFFFF" HorizontalAlignment="Left" Margin="12,10,0,0" VerticalAlignment="Top" Width="70" Height="73" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave" Click="btnUsb_Click">
             <Button.Content>
-                <Image Source="Resources/skin-icon-usb.png" />
+                <Image Source="/ABC.UI;Component/Resources/skin-icon-usb.png" />
             </Button.Content>
         </Button>
         <Button x:Name="btnSerialPort"  Background="#00FFFFFF" BorderBrush="#00FFFFFF" HorizontalAlignment="Left" Margin="140,10,0,0" VerticalAlignment="Top" Width="70" Height="75" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave" Click="btnSerialPort_Click">
             <Button.Content>
-                <Image Source="Resources/skin-icon-setting.png" />
+                <Image Source="/ABC.UI;Component/Resources/skin-icon-setting.png" />
             </Button.Content>
         </Button>
         <Button x:Name="btnBt" Background="#00FFFFFF" BorderBrush="#00FFFFFF" HorizontalAlignment="Left" Margin="280,10,0,0" VerticalAlignment="Top" Width="70" Height="75" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave" Click="btnBt_Click">
             <Button.Content>
-                <Image Source="Resources/skin-icon-bluetooth.png" />
+                <Image Source="/ABC.UI;Component/Resources/skin-icon-bluetooth.png" />
             </Button.Content>
 
         </Button>
         <Button x:Name="btnAPN" Background="#00FFFFFF" BorderBrush="#00FFFFFF" HorizontalAlignment="Left" Margin="420,10,0,0" VerticalAlignment="Top" Width="70" Height="75" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave" Click="btnAPN_Click">
             <Button.Content>
-                <Image Source="Resources/skin-icon-network.png" />
+                <Image Source="/ABC.UI;Component/Resources/skin-icon-network.png" />
             </Button.Content>
         </Button>
         <Label Content="USB管理" HorizontalAlignment="Left" Margin="12,83,0,0" VerticalAlignment="Top" Width="70" FontWeight="Bold"/>
@@ -43,6 +43,6 @@
 
     </Grid>
     <Window.Background>
-        <ImageBrush ImageSource="Resources/skin-bd-bg2.jpg" Viewbox="0,0,0.5,0.5"/>
+        <ImageBrush ImageSource="/ABC.UI;Component/Resources/skin-bd-bg2.jpg" Viewbox="0,0,0.5,0.5"/>
     </Window.Background>
 </Window>

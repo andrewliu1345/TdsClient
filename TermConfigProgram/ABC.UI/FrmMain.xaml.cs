@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ABC.HelperClass;
+using ABC.Logs;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -14,7 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace TermConfigProgram
+namespace ABC.UI
 {
     /// <summary>
     /// MainWindow.xaml 的交互逻辑
@@ -26,9 +28,13 @@ namespace TermConfigProgram
         {
             //this.ShowInTaskbar = false;
             InitializeComponent();
+            SysLog.d("InitializeComponent");
             SetWindowLocation();//程序初始位置
+            
             SetNotifyIcon();//设置托盘图标
+            
             hideMethod();//隐藏界面
+          
         }
         /// <summary>
         /// 程序初始位置
@@ -79,6 +85,7 @@ namespace TermConfigProgram
             {
                 base.Top = num2 * base.Height - 50.0;
             }
+            SysLog.d("SetWindowLocation");
         }
         /// <summary>
         /// 设置托盘图标
@@ -106,6 +113,7 @@ namespace TermConfigProgram
             };
             this.notifyIcon.ContextMenu = new System.Windows.Forms.ContextMenu(menuItems);
             this.notifyIcon.MouseDoubleClick += notifyIcon_MouseDoubleClick;
+            SysLog.d("SetNotifyIcon");
         }
         /// <summary>
         /// 托盘双击
@@ -172,6 +180,7 @@ namespace TermConfigProgram
                 base.WindowState = WindowState.Minimized;
                 base.Hide();
             }
+            SysLog.d("hideMethod");
         }
         private void show_Click(object sender, EventArgs e)
         {
@@ -185,7 +194,7 @@ namespace TermConfigProgram
 
         private void exit_Click(object sender, EventArgs e)
         {
-            //this.exitMethod();
+            this.Close();
         }
         /// <summary>
         /// 显示或隐藏界面
@@ -240,7 +249,8 @@ namespace TermConfigProgram
 
         private void btnUsb_Click(object sender, RoutedEventArgs e)//USB 管理
         {
-
+            string fileName = System.Windows.Forms.Application.StartupPath + "\\usbTool\\Ratool.exe";
+            ContrloApp.RunTarget(fileName, true);
         }
 
         private void btnSerialPort_Click(object sender, RoutedEventArgs e)//串口管理

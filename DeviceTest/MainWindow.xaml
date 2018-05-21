@@ -5,15 +5,30 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DeviceTest"
         mc:Ignorable="d"
-        Title="MainWindow" Height="732.378" Width="905.731">
+        Title="MainWindow" Height="732.378" Width="528.931">
     <Grid>
-        <Label Content="串口" HorizontalAlignment="Left" Margin="43,42,0,0" VerticalAlignment="Top"/>
-        <ComboBox x:Name="cbbSerialPort" HorizontalAlignment="Left" Margin="82,46,0,0" VerticalAlignment="Top" Width="120"/>
-        <Button x:Name="btnConnt" Content="连接" HorizontalAlignment="Left" Margin="229,49,0,0" VerticalAlignment="Top" Width="75" Click="btnConn_Click"/>
-        <Button x:Name="btnClose" Content="断开" HorizontalAlignment="Left" Margin="324,49,0,0" VerticalAlignment="Top" Width="75" Click="btnClose_Click"/>
-        <Button x:Name="btnRefresh" Content="刷新端口" HorizontalAlignment="Left" Margin="43,10,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="0.252,-0.111" Click="btnRefresh_Click"/>
-        <Button x:Name="btnGetStatus" Content="获取状态" HorizontalAlignment="Left" Margin="43,93,0,0" VerticalAlignment="Top" Width="75" Click="btnGetStatus_Click"/>
-        <Button x:Name="btnSynRCT" Content="同步时间" HorizontalAlignment="Left" Margin="419,49,0,0" VerticalAlignment="Top" Width="75" Click="btnSynRCT_Click"/>
+        <GroupBox Header="背夹" HorizontalAlignment="Left" Height="313" Margin="10,41,0,0" VerticalAlignment="Top" Width="502">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,0,-1.6,0" Width="492" Height="24" VerticalAlignment="Top">
+                <Label Content="串口" HorizontalAlignment="Left"  VerticalAlignment="Top"/>
+                <ComboBox x:Name="cbbSerialPort" HorizontalAlignment="Left"   Width="120"/>
+                <Button x:Name="btnConnt" Content="连接" HorizontalAlignment="Left"  Width="75" Click="btnConn_Click"/>
+                <Button x:Name="btnClose" Content="断开" HorizontalAlignment="Left"   Width="75" Click="btnClose_Click"/>
+                <Button x:Name="btnGetStatus" Content="获取状态" HorizontalAlignment="Left"  Width="75" Click="btnGetStatus_Click" />
+                <Button x:Name="btnSynRCT" Content="同步时间" HorizontalAlignment="Left"   Width="75" Click="btnSynRCT_Click"/>
+            </StackPanel>
+        </GroupBox>
+        <GroupBox Header="打印机" Height="333" Margin="0,359,10.4,0" VerticalAlignment="Top">
+            <Canvas Margin="0,0,-2.8,0.4">
+                <Label Content="串口" HorizontalAlignment="Left"  VerticalAlignment="Top" Canvas.Left="10" Canvas.Top="10"/>
+                <ComboBox x:Name="cbbSerialPortPrint" HorizontalAlignment="Left"   Width="120" Height="28" VerticalAlignment="Top" Canvas.Left="48" Canvas.Top="10" />
+                <Button x:Name="btnConntPrint" Content="连接" HorizontalAlignment="Left"  Width="75"  Height="28" VerticalAlignment="Top" Canvas.Left="173" Canvas.Top="10" Click="btnConntPrint_Click"/>
+                <Button x:Name="btnClosePrint" Content="断开" HorizontalAlignment="Left"   Width="75" Height="28" VerticalAlignment="Top" Canvas.Left="253" Canvas.Top="10" Click="btnClosePrint_Click"/>
+
+                <TextBox x:Name="txtPrintInfo" TextWrapping="Wrap" Width="318" Text="打应内容" Canvas.Left="10" Canvas.Top="43" Height="233" AcceptsReturn="True" VerticalScrollBarVisibility="Visible"/>
+                <Button x:Name="btnPrint" Content="打印" Canvas.Left="10" Canvas.Top="281" Width="75" Click="btnPrint_Click"/>
+            </Canvas>
+        </GroupBox>
+        <Button x:Name="btnRefresh" Content="刷新端口" HorizontalAlignment="Left"  Width="75"  Click="btnRefresh_Click" Height="26" VerticalAlignment="Top" Margin="10,10,0,0"/>
 
     </Grid>
 </Window>
