@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace ABC.Config
+﻿namespace ABC.Config
 {
     public class IniFileRead
     {
@@ -19,7 +14,7 @@ namespace ABC.Config
         const string BAUD = "BAUD";
         private static readonly IniFileRead m_instance = new IniFileRead();
         static IniFileHelper inf;
-        const string file_path = "Dev.cfg";
+        const string file_path = "./Dev.cfg";
         /// <summary>
         /// 单例
         /// </summary>

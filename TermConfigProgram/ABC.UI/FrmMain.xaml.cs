@@ -1,20 +1,8 @@
 ﻿using ABC.HelperClass;
 using ABC.Logs;
 using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Forms;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace ABC.UI
 {
@@ -23,6 +11,7 @@ namespace ABC.UI
     /// </summary>
     public partial class MainWindow : Window
     {
+
         private NotifyIcon notifyIcon;
         public MainWindow()
         {
@@ -30,11 +19,11 @@ namespace ABC.UI
             InitializeComponent();
             SysLog.d("InitializeComponent");
             SetWindowLocation();//程序初始位置
-            
+
             SetNotifyIcon();//设置托盘图标
-            
+
             hideMethod();//隐藏界面
-          
+
         }
         /// <summary>
         /// 程序初始位置
@@ -255,7 +244,8 @@ namespace ABC.UI
 
         private void btnSerialPort_Click(object sender, RoutedEventArgs e)//串口管理
         {
-
+            FrmSerialPort frm = new FrmSerialPort();
+            frm.Show();
         }
 
         private void btnBt_Click(object sender, RoutedEventArgs e)//蓝牙重连
@@ -270,7 +260,7 @@ namespace ABC.UI
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-           
+
             MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("是否关闭窗口？是，关闭。否，最小化到托盘", "提示", MessageBoxButton.YesNo, MessageBoxImage.Asterisk, MessageBoxResult.Yes);
             if (messageBoxResult == MessageBoxResult.No)
             {
@@ -292,7 +282,7 @@ namespace ABC.UI
                 //                     this.loadWindow.Close();
                 //                 }
                 e.Cancel = false;
-              //  base.Close();
+                //  base.Close();
             }
         }
     }
