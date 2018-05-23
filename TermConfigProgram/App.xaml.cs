@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using ABC.Background;
+using System.Windows;
 
 namespace ABC.UI
 {
@@ -7,6 +8,9 @@ namespace ABC.UI
     /// </summary>
     public partial class App : Application
     {
-
+        public App()
+        {
+            CommServer.Instance.Start();
+        }
     }
 }

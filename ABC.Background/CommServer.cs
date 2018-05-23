@@ -1,19 +1,20 @@
 ﻿using ABC.Config;
+using ABC.HelperClass;
+using ABC.Listener;
 using ABC.Logs;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading;
 
 namespace ABC.Background
 {
     //定义接收客户端发送消息的回调
-    public delegate void ReceiveMsgCallBack(byte[] strReceive);
+    public delegate void ReceiveMsgCallBack(byte[] strReceive, int length);
 
     //定义发送文件的回调
-    public delegate void SendFileCallBack(byte[] bf);
-    public class CommServer
+    public delegate void SendFileCallBack(byte[] bf, int length);
+    public class CommServer :ICallBackListenner
     {
 
         static CommServer m_instance = new CommServer();
@@ -22,14 +23,11 @@ namespace ABC.Background
         /// 单例
         /// </summary>
         /// <returns></returns>
-        public static CommServer Instance(ref SendFileCallBack sendFileCallBack)
+        public static CommServer Instance
         {
-            if (sendFileCallBack == null)
-            {
-                sendFileCallBack += SendMsg;
-            }
+            get
+            { return m_instance; }
 
-            return m_instance;
         }
 
 
@@ -96,7 +94,15 @@ namespace ABC.Background
                 socketSend = socketWatch.Accept();
                 //获取远程主机的ip地址和端口号
                 string strIp = socketSend.RemoteEndPoint.ToString();
-                dicSocket.Add(strIp, socketSend);
+                if (dicSocket.ContainsKey(strIp))
+                {
+                    dicSocket[strIp] = socketSend;//修改
+                }
+                else
+                {
+                    dicSocket.Add(strIp, socketSend);//添加
+                }
+
                 //  this.cmb_Socket.Invoke(setCmbCallBack, strIp);
                 string strMsg = "远程主机：" + socketSend.RemoteEndPoint + "连接成功";
                 SysLog.i(strMsg);
@@ -116,34 +122,57 @@ namespace ABC.Background
         /// <param name="obj"></param>
         private void Receive(object obj)
         {
+            // int n = 0;
             Socket socketSend = obj as Socket;
+            byte[] buffer = new byte[4096];
             while (true)
             {
-                //客户端连接成功后，服务器接收客户端发送的消息
-                byte[] buffer = new byte[4096];
-                //实际接收到的有效字节数
-                int count = socketSend.Receive(buffer);
-                if (count == 0)//count 表示客户端关闭，要退出循环
+                try
                 {
+                    //客户端连接成功后，服务器接收客户端发送的消息
+
+                    //实际接收到的有效字节数
+
+                    int count = socketSend.Receive(buffer);
+
+                    if (count == 0)//count 表示客户端关闭，要退出循环
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        string str = DataConver.bytesToHexString(buffer, count);
+                        string strReceiveMsg = "接收：" + socketSend.RemoteEndPoint + "发送的消息:" + str;
+                        SysLog.i(strReceiveMsg);
+                        //socketSend.Send(new byte[1] { (byte)++n });
+                        if (receiveCallBack == null)
+                        {
+                            continue;
+                        }
+                        receiveCallBack(buffer, count);
+
+
+                        //txt_Log.Invoke(receiveCallBack, strReceiveMsg);
+                    }
+                }
+                catch (System.Exception ex)
+                {
+                    SysLog.e("链接出错", ex);
                     break;
                 }
-                else
-                {
-                    receiveCallBack(buffer);
-                    string str = Encoding.Default.GetString(buffer, 0, count);
-                    string strReceiveMsg = "接收：" + socketSend.RemoteEndPoint + "发送的消息:" + str;
-                    SysLog.i(strReceiveMsg);
-                    //txt_Log.Invoke(receiveCallBack, strReceiveMsg);
-                }
+
             }
         }
-        /// <summary>
-        /// 回调委托需要执行的方法
-        /// </summary>
-        /// <param name="strMsg"></param>
-        private static void SendMsg(byte[] strMsg)
-        {
 
+
+        public void backData(byte[] buffer)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void isLegal(byte[] cmd)
+        {
+            throw new System.NotImplementedException();
         }
         //         private void ReceiveMsg(byte[] strMsg)
         //         {
