@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B35B1E06-631B-4F8A-AC22-C34CBD6AADAC}</ProjectGuid>
+    <ProjectGuid>{8A9A9047-FF09-4296-B386-CF2C9A2123FF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ABC.Background</RootNamespace>
-    <AssemblyName>ABC.Background</AssemblyName>
+    <RootNamespace>ABC.Printer</RootNamespace>
+    <AssemblyName>ABC.Printer</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -20,7 +20,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,7 +28,6 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -41,48 +39,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CommServer.cs" />
+    <Compile Include="Print.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadata Include="Connected Services\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ABC.BackSplint\ABC.BackSplint.csproj">
-      <Project>{8ab091ed-f302-4997-abbd-6625b7d6f718}</Project>
-      <Name>ABC.BackSplint</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ABC.Config\ABC.Config.csproj">
-      <Project>{20b6d062-1745-48f4-9626-bf4b6d76b365}</Project>
-      <Name>ABC.Config</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ABC.DeviceApi\ABC.DeviceApi.csproj">
-      <Project>{d64ae845-8508-472d-a7a1-2124819945b4}</Project>
-      <Name>ABC.DeviceApi</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ABC.Enity\ABC.Enity.csproj">
-      <Project>{9b2ff05f-d632-4312-80bb-3d0c0e0b79a7}</Project>
-      <Name>ABC.Enity</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ABC.Factory\ABC.Factory.csproj">
-      <Project>{2a5a72e5-fa06-42d1-b3ac-5a0264e7c479}</Project>
-      <Name>ABC.Factory</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ABC.HelperClass\ABC.HelperClass.csproj">
-      <Project>{C10D892E-3047-43FB-8953-3E4E7C6C1AB9}</Project>
-      <Name>ABC.HelperClass</Name>
+    <ProjectReference Include="..\ABC.abstractFun\ABC.abstractFun.csproj">
+      <Project>{733A853D-25A6-47E1-AB09-FF7331F28DBB}</Project>
+      <Name>ABC.abstractFun</Name>
     </ProjectReference>
     <ProjectReference Include="..\ABC.Listener\ABC.Listener.csproj">
       <Project>{69a0ce27-eba8-42f9-a7df-29c575ae651f}</Project>
       <Name>ABC.Listener</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ABC.Log\ABC.Logs.csproj">
-      <Project>{0e09c904-bf41-40df-81bf-46e31d65a25d}</Project>
-      <Name>ABC.Logs</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ABC.Printer\ABC.Printer.csproj">
-      <Project>{8a9a9047-ff09-4296-b386-cf2c9a2123ff}</Project>
-      <Name>ABC.Printer</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

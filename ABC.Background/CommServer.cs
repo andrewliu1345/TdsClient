@@ -1,4 +1,5 @@
 ﻿using ABC.Config;
+using ABC.Enity;
 using ABC.HelperClass;
 using ABC.Listener;
 using ABC.Logs;
@@ -14,7 +15,7 @@ namespace ABC.Background
 
     //定义发送文件的回调
     public delegate void SendFileCallBack(byte[] bf, int length);
-    public class CommServer :ICallBackListenner
+    public class CommServer : iCallBackListenner
     {
 
         static CommServer m_instance = new CommServer();
@@ -26,7 +27,9 @@ namespace ABC.Background
         public static CommServer Instance
         {
             get
-            { return m_instance; }
+            {
+                return m_instance;
+            }
 
         }
 
@@ -122,6 +125,7 @@ namespace ABC.Background
         /// <param name="obj"></param>
         private void Receive(object obj)
         {
+            ConnectDev();
             // int n = 0;
             Socket socketSend = obj as Socket;
             byte[] buffer = new byte[4096];
@@ -174,10 +178,31 @@ namespace ABC.Background
         {
             throw new System.NotImplementedException();
         }
-        //         private void ReceiveMsg(byte[] strMsg)
-        //         {
-        //             // this.txt_Log.AppendText(strMsg + " \r \n");
-        //         }
 
+        /// <summary>
+        /// 连接设备
+        /// </summary>
+        private void ConnectDev()
+        {
+            int comBs = IniFileRead.Instance.BackSplint.Com;
+            int baudBs = IniFileRead.Instance.BackSplint.Baud;
+
+            int comPrint = IniFileRead.Instance.Printer.Com;
+            int baudPrint = IniFileRead.Instance.Printer.Baud;
+
+            if (DeviceIDs.ReadCard_fd > 0)
+            {
+                DeviceApi.BSApiHelper.device_close(DeviceIDs.ReadCard_fd);
+                DeviceIDs.ReadCard_fd = -1;
+            }
+            DeviceIDs.ReadCard_fd = DeviceApi.BSApiHelper.device_open(comBs - 1, baudBs);
+            if (DeviceIDs.Print_fd > 0)
+            {
+                DeviceApi.PrintApiHelper.device_close_print(DeviceIDs.Print_fd);
+                DeviceIDs.Print_fd = -1;
+            }
+            DeviceIDs.Print_fd = DeviceApi.PrintApiHelper.device_open_print(comPrint, baudPrint);
+           
+        }
     }
 }
