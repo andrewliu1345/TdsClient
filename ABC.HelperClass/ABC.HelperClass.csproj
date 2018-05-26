@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="ContrloApp.cs" />
     <Compile Include="DataConver.cs" />
+    <Compile Include="DataDispose .cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

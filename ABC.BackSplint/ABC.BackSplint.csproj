@@ -39,7 +39,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ICCard.cs" />
     <Compile Include="IDCard.cs" />
+    <Compile Include="MagneticCard.cs" />
+    <Compile Include="PinPad.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -51,9 +54,21 @@
       <Project>{d64ae845-8508-472d-a7a1-2124819945b4}</Project>
       <Name>ABC.DeviceApi</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ABC.Enity\ABC.Enity.csproj">
+      <Project>{9B2FF05F-D632-4312-80BB-3D0C0E0B79A7}</Project>
+      <Name>ABC.Enity</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ABC.HelperClass\ABC.HelperClass.csproj">
+      <Project>{C10D892E-3047-43FB-8953-3E4E7C6C1AB9}</Project>
+      <Name>ABC.HelperClass</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ABC.Listener\ABC.Listener.csproj">
       <Project>{69a0ce27-eba8-42f9-a7df-29c575ae651f}</Project>
       <Name>ABC.Listener</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ABC.Log\ABC.Logs.csproj">
+      <Project>{0E09C904-BF41-40DF-81BF-46E31D65A25D}</Project>
+      <Name>ABC.Logs</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

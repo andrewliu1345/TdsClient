@@ -7,11 +7,11 @@ namespace ABC.Config
     {
         public string path;
 
-        [DllImport("kernel32")]
+        [DllImport("kernel32", EntryPoint = "WritePrivateProfileString", CharSet = CharSet.Unicode, SetLastError = true)]
         private static extern long WritePrivateProfileString(string section, string key, string val, string filePath);
 
-        [DllImport("kernel32")]
-        private static extern int GetPrivateProfileString(string section, string key, string def, StringBuilder retVal, int size, string filePath);
+        [DllImport("kernel32", EntryPoint = "GetPrivateProfileString", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static extern int GetPrivateProfileString(string section, string key, string def, ref byte retVal, int size, string filePath);
 
         public IniFileHelper(string INIPath)
         {
@@ -36,9 +36,13 @@ namespace ABC.Config
         /// <returns></returns>
         public string IniReadValue(string Section, string Key, string defaultValue = "")
         {
-            StringBuilder stringBuilder = new StringBuilder(256);
-            int privateProfileString = IniFileHelper.GetPrivateProfileString(Section, Key, defaultValue, stringBuilder, 256, this.path);
-            return stringBuilder.ToString();
+            byte[] buffer = new byte[256];
+            //StringBuilder stringBuilder = new StringBuilder(256);
+            //stringBuilder.Clear();
+            int privateProfileString = IniFileHelper.GetPrivateProfileString(Section, Key, defaultValue, ref buffer[0], 256, this.path);
+            string strValue = Encoding.Default.GetString(buffer).Replace("\0","");
+            return strValue;
+            //return stringBuilder.ToString();
         }
     }
 }

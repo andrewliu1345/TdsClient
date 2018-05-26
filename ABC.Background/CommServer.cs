@@ -51,7 +51,7 @@ namespace ABC.Background
 
         //将远程连接的客户端的IP地址和Socket存入集合中
         Dictionary<string, Socket> dicSocket = new Dictionary<string, Socket>();
-
+        private readonly static object dicSocketLock = new object();
         //创建监听连接的线程
         Thread AcceptSocketThread;
         //接收客户端发送消息的线程
@@ -59,8 +59,9 @@ namespace ABC.Background
 
         public void Start()
         {
-            var _ip = IniFileRead.Instance.SocketParameter.IP;
-            var _point = IniFileRead.Instance.SocketParameter.PORT;
+            SocketParameterClass socketParameter = AppConfig.Instance.SocketParameter;
+            var _ip = socketParameter.IP;
+            var _point = socketParameter.PORT;
             //当点击开始监听的时候 在服务器端创建一个负责监听IP地址和端口号的Socket
             socketWatch = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             //获取ip地址
@@ -133,6 +134,10 @@ namespace ABC.Background
             {
                 try
                 {
+                    if (DeviceIDs.ReadCard_fd < 0 || DeviceIDs.Print_fd < 0)
+                    {
+                        ConnectDev();
+                    }
                     //客户端连接成功后，服务器接收客户端发送的消息
 
                     //实际接收到的有效字节数
@@ -145,18 +150,11 @@ namespace ABC.Background
                     }
                     else
                     {
-                        string str = DataConver.bytesToHexString(buffer, count);
+                        string str = buffer.bytesToHexString(count);//DataConver.bytesToHexString(buffer, count);
                         string strReceiveMsg = "接收：" + socketSend.RemoteEndPoint + "发送的消息:" + str;
                         SysLog.i(strReceiveMsg);
-                        //socketSend.Send(new byte[1] { (byte)++n });
-                        if (receiveCallBack == null)
-                        {
-                            continue;
-                        }
-                        receiveCallBack(buffer, count);
-
-
-                        //txt_Log.Invoke(receiveCallBack, strReceiveMsg);
+                        Factory.FunFactory.Instance.NetSocket = socketSend;
+                        Factory.FunFactory.Instance.SetData(buffer, count);
                     }
                 }
                 catch (System.Exception ex)
@@ -184,11 +182,13 @@ namespace ABC.Background
         /// </summary>
         private void ConnectDev()
         {
-            int comBs = IniFileRead.Instance.BackSplint.Com;
-            int baudBs = IniFileRead.Instance.BackSplint.Baud;
+            BackSplintClass backSplint = AppConfig.Instance.BackSplint;
+            int comBs = backSplint.Com;
+            int baudBs = backSplint.Baud;
 
-            int comPrint = IniFileRead.Instance.Printer.Com;
-            int baudPrint = IniFileRead.Instance.Printer.Baud;
+            PrinterClass printer = AppConfig.Instance.Printer;
+            int comPrint = printer.Com;
+            int baudPrint = printer.Baud;
 
             if (DeviceIDs.ReadCard_fd > 0)
             {
@@ -202,7 +202,7 @@ namespace ABC.Background
                 DeviceIDs.Print_fd = -1;
             }
             DeviceIDs.Print_fd = DeviceApi.PrintApiHelper.device_open_print(comPrint, baudPrint);
-           
+
         }
     }
 }

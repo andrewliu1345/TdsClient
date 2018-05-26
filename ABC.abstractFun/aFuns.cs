@@ -8,23 +8,36 @@ namespace ABC.abstractFun
 {
     public abstract class aFuns
     {
-      protected iCallBackListenner m_callBackListenner;
-    public abstract void SetData(byte[] buffer);
-
-    public void SetBackListener(iCallBackListenner callBackListenner)
-    {
-        m_callBackListenner = callBackListenner;
-    }
-    /// <summary>
-    /// 返回数据
-    /// </summary>
-    /// <param name="buffer"></param>
-    protected void backData(byte[] buffer)
-    {
-        if (m_callBackListenner != null)
+        protected int m_TimeOut = 30000;
+        protected iCallBackListenner m_callBackListenner;
+        public abstract void SetData(byte[] buffer);
+        public int SetTimeOut
         {
-            m_callBackListenner.backData(buffer);
+            set
+            {
+                m_TimeOut = value;
+            }
+
+        }
+
+        public iCallBackListenner SetBackListener
+        {
+            set
+            {
+                m_callBackListenner = value;
+            }
+
+        }
+        /// <summary>
+        /// 返回数据
+        /// </summary>
+        /// <param name="buffer"></param>
+        protected void backData(byte[] buffer)
+        {
+            if (m_callBackListenner != null)
+            {
+                m_callBackListenner.backData(buffer);
+            }
         }
     }
-}
 }

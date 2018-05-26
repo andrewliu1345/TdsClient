@@ -11,7 +11,7 @@ namespace ABC.UI
     /// </summary>
     public partial class MainWindow : Window
     {
-
+        
         private NotifyIcon notifyIcon;
         public MainWindow()
         {
@@ -23,7 +23,7 @@ namespace ABC.UI
             SetNotifyIcon();//设置托盘图标
 
             hideMethod();//隐藏界面
-
+            //int i = Class1.xx();
         }
         /// <summary>
         /// 程序初始位置

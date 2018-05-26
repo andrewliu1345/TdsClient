@@ -43,23 +43,37 @@ namespace ABC.UI
             cbbPrinter.SelectedValuePath = "Value";
             cbbPrinter.SelectedIndex = 0;
         }
+        BackSplintClass backSplint = AppConfig.Instance.BackSplint;
+        PrinterClass printer = AppConfig.Instance.Printer;
         private void LoadIni()
         {
-            cbbBS.SelectedValue = IniFileRead.Instance.BackSplint.Com;
-            cbbPrinter.SelectedValue = IniFileRead.Instance.Printer.Com;
+
+            cbbBS.SelectedValue = backSplint.Com;
+            cbbPrinter.SelectedValue = printer.Com;
         }
         private void SaveIni()
         {
             if (cbbBS.SelectedValue != null)
-                IniFileRead.Instance.BackSplint.Com = (int)cbbBS.SelectedValue;
+            {
+                backSplint.Com = (int)cbbBS.SelectedValue;
+                backSplint.Baud = 112500;
+                backSplint.Save();
+            }
+
 
             if (cbbPrinter.SelectedValue != null)
-                IniFileRead.Instance.Printer.Com = (int)cbbPrinter.SelectedValue;
+            {
+                printer.Com = (int)cbbPrinter.SelectedValue;
+                printer.Baud = 115200;
+                printer.Save();
+            }
+            MessageBox.Show("保存成功");
         }
         private void btnRefresh_Click(object sender, RoutedEventArgs e)
         {
             LoadComboBox();
             LoadIni();
+            MessageBox.Show("刷新成功");
         }
 
         private void btnSave_Click(object sender, RoutedEventArgs e)

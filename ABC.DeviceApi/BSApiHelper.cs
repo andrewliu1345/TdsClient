@@ -54,5 +54,7 @@ namespace ABC.DeviceApi
         /// <returns></returns>
         [DllImport(DllPath, EntryPoint = "IDCard_GetCardInfo")]
         public static extern int IDCard_GetCardInfo(int icdev, int index, StringBuilder infodata);
+
+      
     }
 }

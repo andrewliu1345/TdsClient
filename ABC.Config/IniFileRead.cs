@@ -14,7 +14,7 @@
         const string BAUD = "BAUD";
         private static readonly IniFileRead m_instance = new IniFileRead();
         static IniFileHelper inf;
-        const string file_path = "./Dev.cfg";
+        const string file_path = ".\\Dev.cfg";
         /// <summary>
         /// 单例
         /// </summary>
@@ -114,7 +114,7 @@
                 {
                     int _com = 11;
                     var str = inf.IniReadValue(BACK_SPLINT, IniFileRead.COM, "11");
-                    Logs.SysLog.i(string.Format("获取COM={0}", str));
+                    Logs.SysLog.i(string.Format("获取BS_COM={0}", str));
                     if (str.Equals(null) || str == null)
                     {
                         _com = 0;
@@ -128,7 +128,7 @@
                 set
                 {
                     int _com = value;
-                    Logs.SysLog.i(string.Format("写入ip={0}", _com));
+                    Logs.SysLog.i(string.Format("写入BS_Com={0}", _com));
                     inf.IniWriteValue(BACK_SPLINT, IniFileRead.COM, _com.ToString());
                 }
             }
@@ -140,9 +140,9 @@
             {
                 get
                 {
-                    int _baud = 11;
-                    var str = inf.IniReadValue(BACK_SPLINT, IniFileRead.BAUD, "11");
-                    Logs.SysLog.i(string.Format("获取COM={0}", str));
+                    int _baud = 115200;
+                    var str = inf.IniReadValue(BACK_SPLINT, IniFileRead.BAUD, "115200");
+                    Logs.SysLog.i(string.Format("获取BS_baud={0}", str));
                     if (str.Equals(null) || str == null)
                     {
                         _baud = 0;
@@ -156,7 +156,7 @@
                 set
                 {
                     int _baud = value;
-                    Logs.SysLog.i(string.Format("写入ip={0}", _baud));
+                    Logs.SysLog.i(string.Format("写入BS_baud={0}", _baud));
                     inf.IniWriteValue(BACK_SPLINT, IniFileRead.BAUD, _baud.ToString());
                 }
             }
@@ -168,7 +168,7 @@
         /// </summary>
         public class PrinterClass
         {
-            #region  背夹串口
+            #region  打印机串口
             /// <summary>
             /// 背夹串口号
             /// </summary>
@@ -178,7 +178,7 @@
                 {
                     int _com = 11;
                     var str = inf.IniReadValue(PRINTER, IniFileRead.COM, "11");
-                    Logs.SysLog.i(string.Format("获取_com={0}", str));
+                    Logs.SysLog.i(string.Format("获取Print_com={0}", str));
                     if (str.Equals(null) || str == null)
                     {
                         _com = 0;
@@ -192,7 +192,7 @@
                 set
                 {
                     int _com = value;
-                    Logs.SysLog.i(string.Format("写入_com={0}", _com));
+                    Logs.SysLog.i(string.Format("写入Print_com={0}", _com));
                     inf.IniWriteValue(PRINTER, IniFileRead.COM, _com.ToString());
                 }
             }
@@ -204,9 +204,9 @@
             {
                 get
                 {
-                    int _baud = 11;
-                    var str = inf.IniReadValue(PRINTER, IniFileRead.BAUD, "11");
-                    Logs.SysLog.i(string.Format("获取_baud={0}", str));
+                    int _baud = 115200;
+                    var str = inf.IniReadValue(PRINTER, IniFileRead.BAUD, "115200");
+                    Logs.SysLog.i(string.Format("获取Print_baud={0}", str));
                     if (str.Equals(null) || str == null)
                     {
                         _baud = 0;
@@ -220,7 +220,7 @@
                 set
                 {
                     int _baud = value;
-                    Logs.SysLog.i(string.Format("写入_baud={0}", _baud));
+                    Logs.SysLog.i(string.Format("写入Print_baud={0}", _baud));
                     inf.IniWriteValue(PRINTER, IniFileRead.BAUD, _baud.ToString());
                 }
             }

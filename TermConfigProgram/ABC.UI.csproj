@@ -112,7 +112,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Dev.cfg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -156,6 +158,10 @@
       <Project>{b35b1e06-631b-4f8a-ac22-c34cbd6aadac}</Project>
       <Name>ABC.Background</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ABC.BackSplint\ABC.BackSplint.csproj">
+      <Project>{8ab091ed-f302-4997-abbd-6625b7d6f718}</Project>
+      <Name>ABC.BackSplint</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ABC.Config\ABC.Config.csproj">
       <Project>{20b6d062-1745-48f4-9626-bf4b6d76b365}</Project>
       <Name>ABC.Config</Name>
@@ -172,6 +178,10 @@
       <Project>{0e09c904-bf41-40df-81bf-46e31d65a25d}</Project>
       <Name>ABC.Logs</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ABC.Printer\ABC.Printer.csproj">
+      <Project>{8a9a9047-ff09-4296-b386-cf2c9a2123ff}</Project>
+      <Name>ABC.Printer</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="log4net.xml">
@@ -179,6 +189,15 @@
     </Resource>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="DLL\GetInfo.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DLL\mtx_32.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DLL\Print_32.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="usbTool\Ratool.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

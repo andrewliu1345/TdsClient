@@ -31,6 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -39,9 +40,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IniFileHelper.cs" />
-    <Compile Include="IniFileRead.cs" />
+    <Compile Include="AppConfig.cs" />
+    <Compile Include="BackSplintClass.cs" />
+    <Compile Include="BaseConfig.cs" />
+    <Compile Include="PrinterClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SocketParameterClass.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ABC.Log\ABC.Logs.csproj">

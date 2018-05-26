@@ -5,14 +5,14 @@ using System.Text;
 
 namespace ABC.HelperClass
 {
-    public class DataConver
+    public static class DataConver
     {
         /// <summary>
         /// HexString转Byte
         /// </summary>
         /// <param name="s"></param>
         /// <returns></returns>
-        public static byte[] HexString2ByteArray(string s)
+        public static byte[] HexString2ByteArray(this string s)
         {
             s = s.Replace(" ", "");
             byte[] buffer = new byte[s.Length / 2];
@@ -22,7 +22,7 @@ namespace ABC.HelperClass
             }
             return buffer;
         }
-        public static String bytesToHexString(byte[] src, int length)
+        public static String bytesToHexString(this byte[] src, int length)
         {
 
             StringBuilder stringBuilder = new StringBuilder("");
@@ -45,7 +45,14 @@ namespace ABC.HelperClass
                 stringBuilder.Append(hv);
                 stringBuilder.Append(" ");
             }
-            return stringBuilder.ToString();
+            return stringBuilder.ToString().Trim();
+        }
+        public static byte[] intToByteArray(this int a)
+        {
+            return new byte[]{
+                (byte) ((a >> 8) & 0xFF),
+                (byte) (a & 0xFF)
+        };
         }
     }
 }
