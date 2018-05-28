@@ -18,6 +18,9 @@ namespace ABC.DeviceApi
         [DllImport(DllPath, EntryPoint = "device_close")]
         public static extern int device_close(int icdev);
 
+        [DllImport(DllPath, EntryPoint = "dev_ledcontrol")]
+        public static extern int dev_ledcontrol(int icdev, byte[] ledparam);
+
         /// <summary>
         /// 背夹状态
         /// </summary>
@@ -34,6 +37,15 @@ namespace ABC.DeviceApi
         /// <returns></returns>
         [DllImport(DllPath, EntryPoint = "Set_RCT_Timer")]
         public static extern int Set_RCT_Timer(int icdev);
+
+        /// <summary>
+        /// LCD屏显示
+        /// </summary>
+        /// <param name="icdev">设备句柄</param>
+        /// <param name="ControlBit">控制位       1-接触(最低位) 2-非接 3-二代证 4-磁头 5-指纹(最高位)  0x00011111表示指示灯全亮</param>
+        /// <returns></returns>
+        [DllImport(DllPath, EntryPoint = "LCD_Status_Show")]
+        public static extern int LCD_Status_Show(int icdev, byte ControlBit);
 
         /// <summary>
         /// 读取二代证
@@ -53,8 +65,8 @@ namespace ABC.DeviceApi
         /// <param name="infodata">获取消息</param>
         /// <returns></returns>
         [DllImport(DllPath, EntryPoint = "IDCard_GetCardInfo")]
-        public static extern int IDCard_GetCardInfo(int icdev, int index, StringBuilder infodata);
+        public static extern int IDCard_GetCardInfo(int icdev, int index, ref byte infodata);
 
-      
+
     }
 }

@@ -11,10 +11,10 @@ using System.Threading;
 namespace ABC.Background
 {
     //定义接收客户端发送消息的回调
-    public delegate void ReceiveMsgCallBack(byte[] strReceive, int length);
+   // public delegate void ReceiveMsgCallBack(byte[] strReceive, int length);
 
     //定义发送文件的回调
-    public delegate void SendFileCallBack(byte[] bf, int length);
+    //public delegate void SendFileCallBack(byte[] bf, int length);
     public class CommServer : iCallBackListenner
     {
 
@@ -37,7 +37,7 @@ namespace ABC.Background
         /// <summary>
         /// 接收回调
         /// </summary>
-        public event ReceiveMsgCallBack receiveCallBack;
+       // public event ReceiveMsgCallBack receiveCallBack;
 
         /// <summary>
         /// 发送回调
@@ -176,7 +176,11 @@ namespace ABC.Background
         {
             throw new System.NotImplementedException();
         }
-
+        //重连蓝牙
+        public void RestBTConnect()
+        {
+            ConnectDev();
+        }
         /// <summary>
         /// 连接设备
         /// </summary>

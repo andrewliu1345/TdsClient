@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="ICCard.cs" />
     <Compile Include="IDCard.cs" />
+    <Compile Include="LedControl.cs" />
     <Compile Include="MagneticCard.cs" />
     <Compile Include="PinPad.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

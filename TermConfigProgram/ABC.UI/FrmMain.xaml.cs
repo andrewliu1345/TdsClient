@@ -1,4 +1,5 @@
-﻿using ABC.HelperClass;
+﻿using ABC.Background;
+using ABC.HelperClass;
 using ABC.Logs;
 using System;
 using System.Windows;
@@ -250,7 +251,8 @@ namespace ABC.UI
 
         private void btnBt_Click(object sender, RoutedEventArgs e)//蓝牙重连
         {
-
+            CommServer.Instance.RestBTConnect();
+            System.Windows.MessageBox.Show(" 完成重连");
         }
 
         private void btnAPN_Click(object sender, RoutedEventArgs e)
@@ -269,20 +271,7 @@ namespace ABC.UI
             }
             else
             {
-                //                 if (this.Pro != null)
-                //                 {
-                //                     MainWindow.portSettingWindow.Close();
-                //                 }
-                //                 if (MainWindow.serialPortWindow != null)
-                //                 {
-                //                     MainWindow.serialPortWindow.Close();
-                //                 }
-                //                 if (this.loadWindow != null)
-                //                 {
-                //                     this.loadWindow.Close();
-                //                 }
                 e.Cancel = false;
-                //  base.Close();
             }
         }
     }

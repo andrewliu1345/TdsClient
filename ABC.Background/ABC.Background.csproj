@@ -45,9 +45,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadata Include="Connected Services\" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\ABC.BackSplint\ABC.BackSplint.csproj">
       <Project>{8ab091ed-f302-4997-abbd-6625b7d6f718}</Project>
       <Name>ABC.BackSplint</Name>

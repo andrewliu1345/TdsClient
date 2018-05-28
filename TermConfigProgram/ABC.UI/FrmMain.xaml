@@ -31,15 +31,15 @@
             </Button.Content>
 
         </Button>
-        <Button x:Name="btnAPN" Background="#00FFFFFF" BorderBrush="#00FFFFFF" HorizontalAlignment="Left" Margin="420,10,0,0" VerticalAlignment="Top" Width="70" Height="75" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave" Click="btnAPN_Click">
+        <Button x:Name="btnAPN" Background="#00FFFFFF" BorderBrush="#00FFFFFF" HorizontalAlignment="Left" Margin="420,10,0,0" VerticalAlignment="Top" Width="70" Height="75" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave" Click="btnAPN_Click" Visibility="Hidden">
             <Button.Content>
-                <Image Source="/ABC.UI;Component/Resources/skin-icon-network.png" />
+                <Image Source="/ABC.UI;Component/Resources/skin-icon-network.png" Visibility="Hidden" />
             </Button.Content>
         </Button>
         <Label Content="USB管理" HorizontalAlignment="Left" Margin="12,83,0,0" VerticalAlignment="Top" Width="70" FontWeight="Bold"/>
         <Label Content="串口管理" HorizontalAlignment="Left" Margin="140,85,0,-1.6" VerticalAlignment="Top" Width="70" FontWeight="Bold"/>
         <Label Content="蓝牙重连" HorizontalAlignment="Left" Margin="280,83,0,0" VerticalAlignment="Top" Width="70" FontWeight="Bold"/>
-        <Label Content="APN设置" HorizontalAlignment="Left" Margin="420,85,0,-1.6" VerticalAlignment="Top" Width="70" FontWeight="Bold"/>
+        <Label Content="APN设置" HorizontalAlignment="Left" Margin="420,85,0,-1.6" VerticalAlignment="Top" Width="70" FontWeight="Bold" Visibility="Hidden"/>
 
     </Grid>
     <Window.Background>

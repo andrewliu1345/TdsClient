@@ -54,5 +54,47 @@ namespace ABC.HelperClass
                 (byte) (a & 0xFF)
         };
         }
+
+        /// <summary>
+        /// byte数组转Int 高位要前
+        /// </summary>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        public static int ByteArrayToIntH(this byte[] b)
+        {
+            int sum = 0;
+            if (b.Equals(null))
+            {
+                return sum;
+            }
+
+            int ilen = b.Length;
+            for (int i = 0; i < ilen; i++)
+            {
+                sum += (b[i] << (8 * (ilen - 1 - i))) & 0xFF;
+            }
+            return sum;
+        }
+
+        /// <summary>
+        /// byte数组转Int 低位要前
+        /// </summary>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        public static int ByteArrayToIntL(this byte[] b)
+        {
+            int sum = 0;
+            if (b.Equals(null))
+            {
+                return sum;
+            }
+
+            int ilen = b.Length;
+            for (int i = 0; i < ilen; i++)
+            {
+                sum += (b[i] << (8 * (i-1))) & 0xFF;
+            }
+            return sum;
+        }
     }
 }
