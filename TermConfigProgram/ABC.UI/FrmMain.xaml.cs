@@ -26,6 +26,11 @@ namespace ABC.UI
             hideMethod();//隐藏界面
             //int i = Class1.xx();
         }
+        protected override void OnClosed(EventArgs e)
+        {
+            CommServer.Instance.Stop();
+            base.OnClosed(e);
+        }
         /// <summary>
         /// 程序初始位置
         /// </summary>
