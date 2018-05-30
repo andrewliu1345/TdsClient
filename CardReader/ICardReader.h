@@ -27,7 +27,7 @@ public:
 
 	enum CardReader_CardType
 	{
-		CRCT_Unknown = 0, 
+		CRCT_Unknown = 0,
 		CRCT_MegCard = 1,
 		CRCT_ICCard = 2
 	};
@@ -91,16 +91,16 @@ public:
 	// 设置数据
 
 #if !defined(DEVICE_INTERFACE_VERSION_ANDROID)
-        virtual bool getData(const std::string& key, std::string& value) = 0;
-        virtual bool setData(const std::string& key, const std::string& value) = 0;
+	virtual bool getData(const std::string& key, std::string& value) = 0;
+	virtual bool setData(const std::string& key, const std::string& value) = 0;
 #else
-        virtual const int getData(const char* key, char* value, unsigned int len) = 0;
-        virtual bool setData(const char* key, const char* value) = 0;
+	virtual const int getData(const char* key, char* value, unsigned int len) = 0;
+	virtual bool setData(const char* key, const char* value) = 0;
 #endif
 
 	// 读卡器事件
 protected:
-	ICardReaderEventHandler* m_pEventHandler;
+	ICardReaderEventHandler * m_pEventHandler;
 };
 
 NS_TDS_DEVICE_END

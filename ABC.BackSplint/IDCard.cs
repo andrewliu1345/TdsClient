@@ -35,22 +35,47 @@ namespace ABC.BackSplint
         private static bool ReadOK = false;
         public override void SetData(byte[] buffer)
         {
+
             byte[] bLen = new byte[2];
             System.Array.Copy(buffer, 1, bLen, 0, 2);
             int iLen = bLen.ByteArrayToIntH();
-            if (iLen > 2)
+            int tag = buffer[5] & 0xff;
+            byte[] bDateLen = new byte[1];
+            System.Array.Copy(buffer, 6, bDateLen, 0, 1);
+            int iDataLen = bDateLen.ByteArrayToIntH();
+            switch (tag)
             {
-                byte[] bDateLen = new byte[1];
-                System.Array.Copy(buffer, 5, bDateLen, 0, 1);
-                int iDataLen = bDateLen.ByteArrayToIntH();
-                byte[] bData = new byte[iDataLen];
-                System.Array.Copy(buffer, 6, bData, 0, iDataLen);
-                string sData = Encoding.Default.GetString(bData);
-                GetIDCardData(sData);
-            }
-            else
-            {
-                GetFpIDCard();
+                case 1://readCard
+                    {
+                        byte[] bData = new byte[iDataLen];
+                        System.Array.Copy(buffer, 7, bData, 0, iDataLen);
+                        int itimeout = bData.ByteArrayToIntH();
+                        if (itimeout == 0)
+                        {
+                            m_TimeOut = 30000;
+                        }
+                        else
+                        {
+                            m_TimeOut = itimeout * 1000;
+                        }
+                        GetFpIDCard();
+                        break;
+
+                    }
+                case 2://getData
+                    {
+                        byte[] bData = new byte[iDataLen];
+                        System.Array.Copy(buffer, 7, bData, 0, iDataLen);
+                        string sData = Encoding.Default.GetString(bData);
+                        GetIDCardData(sData);
+                        break;
+                    }
+                default:
+                    {
+                        byte[] bErrBuff = DataDispose.sendErr(new byte[] { 0, 1 });//失败获取
+                        backData(bErrBuff);
+                        break;
+                    }
             }
 
         }

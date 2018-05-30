@@ -47,6 +47,18 @@
       <Project>{733A853D-25A6-47E1-AB09-FF7331F28DBB}</Project>
       <Name>ABC.abstractFun</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ABC.DeviceApi\ABC.DeviceApi.csproj">
+      <Project>{D64AE845-8508-472D-A7A1-2124819945B4}</Project>
+      <Name>ABC.DeviceApi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ABC.Enity\ABC.Enity.csproj">
+      <Project>{9B2FF05F-D632-4312-80BB-3D0C0E0B79A7}</Project>
+      <Name>ABC.Enity</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ABC.HelperClass\ABC.HelperClass.csproj">
+      <Project>{C10D892E-3047-43FB-8953-3E4E7C6C1AB9}</Project>
+      <Name>ABC.HelperClass</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ABC.Listener\ABC.Listener.csproj">
       <Project>{69a0ce27-eba8-42f9-a7df-29c575ae651f}</Project>
       <Name>ABC.Listener</Name>

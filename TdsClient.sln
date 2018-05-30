@@ -36,6 +36,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ABC.DeviceApi", "ABC.Device
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ABC.abstractFun", "ABC.abstractFun\ABC.abstractFun.csproj", "{733A853D-25A6-47E1-AB09-FF7331F28DBB}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libNetWorkConnet", "libNetWorkConnet\libNetWorkConnet.vcxproj", "{BE3E3077-FFC1-4757-B6B0-FC8E4D52E9F9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -222,6 +224,16 @@ Global
 		{733A853D-25A6-47E1-AB09-FF7331F28DBB}.Release|x64.Build.0 = Release|Any CPU
 		{733A853D-25A6-47E1-AB09-FF7331F28DBB}.Release|x86.ActiveCfg = Release|Any CPU
 		{733A853D-25A6-47E1-AB09-FF7331F28DBB}.Release|x86.Build.0 = Release|Any CPU
+		{BE3E3077-FFC1-4757-B6B0-FC8E4D52E9F9}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{BE3E3077-FFC1-4757-B6B0-FC8E4D52E9F9}.Debug|x64.ActiveCfg = Debug|x64
+		{BE3E3077-FFC1-4757-B6B0-FC8E4D52E9F9}.Debug|x64.Build.0 = Debug|x64
+		{BE3E3077-FFC1-4757-B6B0-FC8E4D52E9F9}.Debug|x86.ActiveCfg = Debug|Win32
+		{BE3E3077-FFC1-4757-B6B0-FC8E4D52E9F9}.Debug|x86.Build.0 = Debug|Win32
+		{BE3E3077-FFC1-4757-B6B0-FC8E4D52E9F9}.Release|Any CPU.ActiveCfg = Release|Win32
+		{BE3E3077-FFC1-4757-B6B0-FC8E4D52E9F9}.Release|x64.ActiveCfg = Release|x64
+		{BE3E3077-FFC1-4757-B6B0-FC8E4D52E9F9}.Release|x64.Build.0 = Release|x64
+		{BE3E3077-FFC1-4757-B6B0-FC8E4D52E9F9}.Release|x86.ActiveCfg = Release|Win32
+		{BE3E3077-FFC1-4757-B6B0-FC8E4D52E9F9}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

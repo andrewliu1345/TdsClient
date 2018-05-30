@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BasicFunction.cs" />
     <Compile Include="ICCard.cs" />
     <Compile Include="IDCard.cs" />
     <Compile Include="LedControl.cs" />

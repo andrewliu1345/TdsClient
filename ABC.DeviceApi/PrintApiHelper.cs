@@ -20,6 +20,6 @@ namespace ABC.DeviceApi
 
         //打印
         [DllImport(DllPath, EntryPoint = "Print_CHS")]
-        public static extern int Print_CHS(int icdev, string str, int length);
+        public static extern int Print_CHS(int icdev, byte[] str, int length);
     }
 }

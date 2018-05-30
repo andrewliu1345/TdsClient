@@ -28,6 +28,7 @@ namespace ABC.UI
         }
         protected override void OnClosed(EventArgs e)
         {
+            notifyIcon.Visible = false;
             CommServer.Instance.Stop();
             base.OnClosed(e);
         }

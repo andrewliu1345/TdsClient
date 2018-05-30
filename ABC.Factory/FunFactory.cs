@@ -47,7 +47,7 @@ namespace ABC.Factory
         {
             aFuns t = null;
             string sConfkey = GetTypeCode(buffer);
-            
+
             string sConfValue = ConfigurationManager.AppSettings[sConfkey];
             string[] SConfValueArray = sConfValue.Split(';');
             string sNamespaceName = SConfValueArray[0];

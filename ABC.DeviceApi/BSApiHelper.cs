@@ -67,6 +67,16 @@ namespace ABC.DeviceApi
         [DllImport(DllPath, EntryPoint = "IDCard_GetCardInfo")]
         public static extern int IDCard_GetCardInfo(int icdev, int index, ref byte infodata);
 
-
+        /// <summary>
+        /// 读取金融IC 卡卡号跟姓名
+        /// </summary>
+        /// <param name="icdev">句柄</param>
+        /// <param name="nCardType">卡片类型0 表示接触式CPU 卡、0xFF 表示非接触式CPU 卡，其他的不认可。</param>
+        /// <param name="ICCardNo">金融IC 卡卡号</param>
+        /// <param name="ICCardName">金融IC 卡姓名</param>
+        /// <param name="lpErrMsg">错误信息</param>
+        /// <returns></returns>
+        [DllImport(DllPath, EntryPoint = "iReadICCardNoAndName")]
+        public static extern int iReadICCardNoAndName(int icdev, int nCardType, ref byte ICCardNo, ref byte ICCardName, ref byte lpErrMsg);
     }
 }
