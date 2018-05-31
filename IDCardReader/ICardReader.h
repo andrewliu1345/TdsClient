@@ -1,4 +1,3 @@
-#pragma once 
 #ifndef TDS_DEVICE_ICARDREADER_H
 #define TDS_DEVICE_ICARDREADER_H
 
@@ -7,8 +6,8 @@
 
 #include <string>
 
-
 NS_TDS_DEVICE_BEGIN
+
 class ICardReader : public IDevice
 {
 public:

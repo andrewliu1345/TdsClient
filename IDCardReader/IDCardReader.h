@@ -1,22 +1,19 @@
 #pragma once
 #include "ICardReader.h"
 #include "ICardReaderEventHandler.h"
-class CardReader : public ICardReader
-{
-private:
-	static HANDLE g_hMutex;// = NULL;//SPI互斥量。
-	static HANDLE g_hDefThread;// = NULL;//异步处理线程句柄。
-	static unsigned int g_dwDefThreadId;// = 0;//异步处理线程ID。
+#include <TranSocket.h>
 
+class IDCardRead :public ICardReader
+{
 public:
-	void setDeviceEventHandler(void* pHandler);
+	IDCardRead();
+	virtual void setDeviceEventHandler(void* pHandler);
 	void initialize(XmlParser* pConfig);
 	const char* getDeviceId();
 	bool isBusy();
 	DeviceStatus getDeviceStatus();
 	void cancel(int nReqID);
 	int transaction(const char* tranID, const void* parameter, int* pReqID);
-
 
 	//
 	// 读卡， timeout 以毫秒为单位，如果设置为0，则表示无限等待
@@ -73,5 +70,7 @@ public:
 	// #else
 	// 	  const int getVendorInfo(const char* key, char* val, unsigned int len);
 	// #endif
+private:
+	TranSocket *transoket;
 };
-extern "C"  __declspec(dllimport)   ICardReader* APIENTRY createDevice();
+__declspec(dllimport)   ICardReader * __stdcall  createDevice();

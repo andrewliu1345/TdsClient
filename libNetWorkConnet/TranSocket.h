@@ -5,6 +5,7 @@ class TranSocket
 {
 public:
 
+
 	//************************************
 	// Method:    单例
 	// FullName:  TranSocket::GetInstance
@@ -13,6 +14,8 @@ public:
 	// Qualifier:
 	//************************************
 	static TranSocket* GetInstance();
+
+	bool GetIsConnected();
 
 	//************************************
 	// Method:    WriteData
@@ -44,12 +47,13 @@ private:
 	TranSocket();
 	static int Connet();
 	static SOCKET sclient;
-	static DWORD WINAPI Heart_Thead(LPVOID lpParameter);
+	static unsigned __stdcall Heart_Thead(LPVOID lpParameter);
 	HANDLE hThread;
 	static HANDLE g_hMutex;//互斥量
-	static unsigned char heartData[8];
+	static UINT g_dwDefThreadId;//异步处理线程ID。
+	static UCHAR heartData[8];
 	static int _write(const char* buffer, int length);
-	static int _read(char* refbuffer, int *length,int timeout);
-	
+	static int _read(char* refbuffer, int *length, int timeout);
+
 };
 

@@ -1,14 +1,26 @@
 #include "stdafx.h"
 #include "TranSocket.h"
 #include <WS2tcpip.h>
+#include <process.h>
 
-unsigned char TranSocket::heartData[8] = { 0x02 ,0x00 ,0x03 ,0x31 ,0x11 ,0x01 ,0x21, 0x03 };
+UCHAR TranSocket::heartData[8] = { 0x02 ,0x00 ,0x03 ,0x31 ,0x11 ,0x01 ,0x21, 0x03 };
 
+bool TranSocket::isConnected = false;
+sockaddr_in TranSocket::serAddr;
+SOCKET TranSocket::sclient = NULL;
+HANDLE TranSocket::g_hMutex = NULL;
+
+UINT TranSocket::g_dwDefThreadId = 0;
 TranSocket *TranSocket::m_instance = new TranSocket();
 TranSocket * TranSocket::GetInstance()
 {
 	//thread_exit= CreateEvent(NULL, TRUE, FALSE, NULL);
 	return m_instance;
+}
+
+bool TranSocket::GetIsConnected()
+{
+	return isConnected;
 }
 
 
@@ -18,12 +30,13 @@ TranSocket::TranSocket()
 	//创建一个互斥量
 	g_hMutex = CreateMutex(NULL, FALSE, NULL);
 	//启动线程
-	hThread = CreateThread(NULL,
-		0,
-		(LPTHREAD_START_ROUTINE)Heart_Thead,
-		NULL,
-		0,
-		NULL);
+// 	hThread = CreateThread(NULL,
+// 		0,
+// 		(LPTHREAD_START_ROUTINE)Heart_Thead,
+// 		NULL,
+// 		0,
+// 		NULL);
+	hThread= (HANDLE)_beginthreadex(NULL, 0, &Heart_Thead, NULL, 0, &g_dwDefThreadId);
 
 }
 
@@ -67,12 +80,11 @@ int TranSocket::Connet()
 	return 0;
 }
 
-DWORD WINAPI TranSocket::Heart_Thead(LPVOID lpParameter)
+unsigned __stdcall TranSocket::Heart_Thead(LPVOID lpParameter)
 {
 
 	while (true)
 	{
-
 		int iRet = -1;
 		if (!isConnected)
 		{
@@ -84,7 +96,7 @@ DWORD WINAPI TranSocket::Heart_Thead(LPVOID lpParameter)
 				isConnected = true;
 			}
 		}
-		iRet = _write((const char *)heartData, 8);
+		iRet = _write((const char *)heartData, 8);//发送心跳包
 		if (iRet != 0)
 		{
 			isConnected = false;
@@ -93,7 +105,7 @@ DWORD WINAPI TranSocket::Heart_Thead(LPVOID lpParameter)
 		Sleep(1000);
 		unsigned char  rebuff[7] = { 0 };
 		int relen = 7;
-		iRet = _read((char *)rebuff, &relen, 2000);
+		iRet = _read((char *)rebuff, &relen, 2000);//接收服务器返回
 		if (iRet == 0 || iRet == SOCKET_ERROR)
 		{
 			isConnected = false;
