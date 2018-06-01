@@ -36,9 +36,9 @@ namespace ABC.BackSplint
         public override void SetData(byte[] buffer)
         {
 
-            byte[] bLen = new byte[2];
-            System.Array.Copy(buffer, 1, bLen, 0, 2);
-            int iLen = bLen.ByteArrayToIntH();
+//             byte[] bLen = new byte[2];
+//             System.Array.Copy(buffer, 1, bLen, 0, 2);
+//             int iLen = bLen.ByteArrayToIntH();
             int tag = buffer[5] & 0xff;
             byte[] bDateLen = new byte[1];
             System.Array.Copy(buffer, 6, bDateLen, 0, 1);
