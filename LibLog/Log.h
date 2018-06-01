@@ -2,9 +2,7 @@
 class Log
 {
 public:
-	Log();
-	~Log();
-	static void i(char * classname,char *msg, ...);
+	static void i(char * classname, char *msg, ...);
 private:
 	static void starGetTime(char *pszTime);
 

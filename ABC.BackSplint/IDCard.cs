@@ -99,6 +99,7 @@ namespace ABC.BackSplint
             }
             else
             {
+                DeviceApi.BSApiHelper.device_beep(DeviceIDs.ReadCard_fd, 0, 1);
                 lcd.ShowLCD(LCDType.IDCARD);
                 Stopwatch stopwatch = new Stopwatch();
                 stopwatch.Start();
@@ -114,6 +115,7 @@ namespace ABC.BackSplint
                     int iRet = BSApiHelper.IDCard_ReadCard_finger(DeviceIDs.ReadCard_fd, stringBuilder);
                     if (iRet == 0)
                     {
+                        DeviceApi.BSApiHelper.device_beep(DeviceIDs.ReadCard_fd, 0, 1);
                         ReadOK = true;
                         string msg = stringBuilder.ToString();
                         SysLog.d("获取身份证返回:{0}", null, msg);

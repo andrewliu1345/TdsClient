@@ -235,6 +235,11 @@ namespace ABC.Background
                 DeviceIDs.ReadCard_fd = -1;
             }
             DeviceIDs.ReadCard_fd = DeviceApi.BSApiHelper.device_open(comBs - 1, baudBs);
+            if (DeviceIDs.ReadCard_fd > 0) {
+                DeviceApi.BSApiHelper.Set_RCT_Timer(DeviceIDs.ReadCard_fd);
+                DeviceApi.BSApiHelper.device_beep(DeviceIDs.ReadCard_fd,2,2);
+            }
+
             if (DeviceIDs.Print_fd > 0)
             {
                 DeviceApi.PrintApiHelper.device_close_print(DeviceIDs.Print_fd);

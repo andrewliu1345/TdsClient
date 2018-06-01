@@ -4,14 +4,7 @@
 
 
 
-Log::Log()
-{
-}
 
-
-Log::~Log()
-{
-}
 
 void Log::i(char * classname, char * msg, ...)
 {

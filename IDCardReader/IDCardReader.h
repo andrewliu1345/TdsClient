@@ -2,7 +2,7 @@
 #include "ICardReader.h"
 #include "ICardReaderEventHandler.h"
 #include <TranSocket.h>
-
+#define CLASSNAME "IDCardRead"
 class IDCardRead :public ICardReader
 {
 public:

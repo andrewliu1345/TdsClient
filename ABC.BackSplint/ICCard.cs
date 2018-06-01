@@ -15,6 +15,13 @@ namespace ABC.BackSplint
         {
             throw new NotImplementedException();
         }
-
+        /// <summary>
+        /// 上电
+        /// </summary>
+        private void ICCardPowerOn(int timeout)
+        {
+            byte[] msg = new byte[1024];
+            int length = 0;
+        }
     }
 }
