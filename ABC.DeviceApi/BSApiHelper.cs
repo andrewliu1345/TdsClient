@@ -138,5 +138,73 @@ namespace ABC.DeviceApi
         public static extern int card_APDU(int icdev, int cardno, int slen, byte[] datasend, ref int rlen, ref byte datareceive);
 
         #endregion
+        #region 密码键盘
+        
+        /// <summary>
+        /// 下载主密钥
+        /// </summary>
+        /// <param name="icdev"></param>
+        /// <param name="mainkeyno"></param>
+        /// <param name="encryptype"></param>
+        /// <param name="keylen"></param>
+        /// <param name="mainkey"></param>
+        /// <param name="errmessage"></param>
+        /// <returns></returns>
+        [DllImport(DllPath, EntryPoint = "LoadMasterkey")]
+        public static extern int LoadMasterkey(int icdev, int mainkeyno, int encryptype, int keylen, ref byte mainkey, ref byte errmessage);
+
+        /// <summary>
+        /// 下载工作密钥
+        /// </summary>
+        /// <param name="icdev"></param>
+        /// <param name="mainkeyno"></param>
+        /// <param name="workkeylen"></param>
+        /// <param name="workkey"></param>
+        /// <param name="errmessage"></param>
+        /// <returns></returns>
+        [DllImport(DllPath, EntryPoint = "LoadWorkkey")]
+        public static extern int LoadWorkkey(int icdev, int mainkeyno, int workkeylen, ref byte workkey, ref byte errmessage);
+
+        /// <summary>
+        /// 导入PIN密钥
+        /// </summary>
+        /// <param name="icdev"></param>
+        /// <param name="mainkeyno"></param>
+        /// <param name="pinkeylen"></param>
+        /// <param name="userkey"></param>
+        /// <param name="errmessage"></param>
+        /// <returns></returns>
+        [DllImport(DllPath, EntryPoint = "LoadPINkey")]
+        public static extern int LoadPINkey(int icdev, int mainkeyno, int pinkeylen,ref byte userkey, ref byte errmessage);
+
+
+        /// <summary>
+        /// 导入MAC密钥	
+        /// </summary>
+        /// <param name="icdev"></param>
+        /// <param name="mainkeyno"></param>
+        /// <param name="mackeylen"></param>
+        /// <param name=""></param>
+        /// <param name="mackey"></param>
+        /// <param name="errmessage"></param>
+        /// <returns></returns>
+        [DllImport(DllPath, EntryPoint = "LoadMackey")]
+        public static extern int LoadMackey(int icdev, int mainkeyno, int mackeylen,ref byte mackey,ref byte errmessage);
+
+        /// <summary>
+        /// 获取PinBlock
+        /// </summary>
+        /// <param name="icdev"></param>
+        /// <param name="mainkeyno"></param>
+        /// <param name="cardnolen"></param>
+        /// <param name="cardno"></param>
+        /// <param name="timeout"></param>
+        /// <param name="pinlen"></param>
+        /// <param name="pinblock"></param>
+        /// <param name="errmessage"></param>
+        /// <returns></returns>
+        [DllImport(DllPath, EntryPoint = "GetPIN")]
+        public static extern int GetPinBlock(int icdev, int mainkeyno, int cardnolen,ref byte cardno, long timeout, ref int pinlen, ref byte pinblock, ref byte errmessage);
+        #endregion
     }
 }

@@ -92,9 +92,13 @@ namespace ABC.HelperClass
             int ilen = b.Length;
             for (int i = 0; i < ilen; i++)
             {
-                sum += (b[i] << (8 * (i-1))) & 0xFF;
+                sum += (b[i] << (8 * (i - 1))) & 0xFF;
             }
             return sum;
+        }
+        public static string GetString(this byte[] b)
+        {
+            return Encoding.Default.GetString(b);
         }
     }
 }

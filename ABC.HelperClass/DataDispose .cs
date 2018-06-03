@@ -28,7 +28,41 @@ namespace ABC.HelperClass
             Writebuffer[6 + writeLen] = 3;
             return Writebuffer;
         }
+        /// <summary>
+        /// 解包
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <param name="mun"></param>
+        /// <returns></returns>
+        public static List<byte[]> unPackData(byte[] buffer, int mun)
+        {
+            byte[] bBuffLen = new byte[2];
+            int iBuffler = 0;
+            System.Array.Copy(buffer, 1, bBuffLen, 0, 2);
+            iBuffler = bBuffLen.ByteArrayToIntH();
 
+            int index = 6;
+            List<byte[]> list = new List<byte[]>();
+            for (int i = 0; i < mun; i++)
+            {
+                byte[] bLen = new byte[2];
+                int iLen = 0;
+                System.Array.Copy(buffer, index, bLen, 0, 2);
+                iLen = bLen.ByteArrayToIntH();
+                index += 2;
+
+                byte[] bParm = new byte[iLen];
+                System.Array.Copy(buffer, index, bParm, 0, iLen);
+                index += iLen;
+                list.Add(bParm);
+                if (index >= iBuffler)
+                {
+                    break;
+                }
+            }
+            return list;
+
+        }
         private static byte cr_bcc(byte[] data)
         {
             byte temp = 0;

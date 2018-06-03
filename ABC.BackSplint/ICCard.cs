@@ -91,7 +91,7 @@ namespace ABC.BackSplint
 
         private void ICCardAPDU(byte[] buffer)
         {
-            int index = 7;
+            int index = 6;
             int iLen = 0;
             byte[] bLen = new byte[2];
             System.Array.Copy(buffer, index, bLen, 0, 2);
@@ -99,11 +99,11 @@ namespace ABC.BackSplint
             iLen = bLen.ByteArrayToIntH();
             byte[] bApdu = new byte[iLen];
             System.Array.Copy(buffer, index, bApdu, 0, iLen);
-            String sApdu = Encoding.Default.GetString(bApdu);
-            byte[] sendApdu = sApdu.HexString2ByteArray();
+//             String sApdu = Encoding.Default.GetString(bApdu);
+//             byte[] sendApdu = sApdu.HexString2ByteArray();
             byte[] recBuffer = new byte[2048];
             int reclen = 0;
-            int iRet = DeviceApi.BSApiHelper.card_APDU(_fd, CardNo, sendApdu.Length, sendApdu, ref reclen, ref recBuffer[0]);
+            int iRet = DeviceApi.BSApiHelper.card_APDU(_fd, CardNo, bApdu.Length, bApdu, ref reclen, ref recBuffer[0]);
             if (iRet == 0)
             {
                 byte[] sendBuffer = DataDispose.toPackData(recBuffer, reclen);
