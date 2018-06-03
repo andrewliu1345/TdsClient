@@ -24,12 +24,18 @@
     <ClInclude Include="TranSocket.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="CSocketDelegete.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="TranSocket.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CSocketDelegete.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

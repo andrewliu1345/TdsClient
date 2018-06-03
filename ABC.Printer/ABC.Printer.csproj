@@ -63,6 +63,10 @@
       <Project>{69a0ce27-eba8-42f9-a7df-29c575ae651f}</Project>
       <Name>ABC.Listener</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ABC.Log\ABC.Logs.csproj">
+      <Project>{0E09C904-BF41-40DF-81BF-46E31D65A25D}</Project>
+      <Name>ABC.Logs</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

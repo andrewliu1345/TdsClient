@@ -60,7 +60,7 @@ namespace ABC.HelperClass
         /// </summary>
         /// <param name="b"></param>
         /// <returns></returns>
-        public static int ByteArrayToIntH(this byte[] b)
+        public static int ToIntH(this byte[] b)
         {
             int sum = 0;
             if (b.Equals(null))
@@ -81,7 +81,7 @@ namespace ABC.HelperClass
         /// </summary>
         /// <param name="b"></param>
         /// <returns></returns>
-        public static int ByteArrayToIntL(this byte[] b)
+        public static int ToIntL(this byte[] b)
         {
             int sum = 0;
             if (b.Equals(null))

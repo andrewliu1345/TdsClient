@@ -42,14 +42,14 @@ namespace ABC.BackSplint
             int tag = buffer[5] & 0xff;
             byte[] bDateLen = new byte[1];
             System.Array.Copy(buffer, 6, bDateLen, 0, 1);
-            int iDataLen = bDateLen.ByteArrayToIntH();
+            int iDataLen = bDateLen.ToIntH();
             switch (tag)
             {
                 case 1://readCard
                     {
                         byte[] bData = new byte[iDataLen];
                         System.Array.Copy(buffer, 7, bData, 0, iDataLen);
-                        int itimeout = bData.ByteArrayToIntH();
+                        int itimeout = bData.ToIntH();
                         if (itimeout == 0)
                         {
                             m_TimeOut = 30000;

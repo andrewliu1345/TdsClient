@@ -48,10 +48,10 @@ namespace ABC.BackSplint
             byte[] bLen = new byte[2];
             System.Array.Copy(buffer, index, bLen, 0, 2);
             index += 2;
-            iLen = bLen.ByteArrayToIntH();
+            iLen = bLen.ToIntH();
             byte[] bTimeout = new byte[iLen];
             System.Array.Copy(buffer, index, bTimeout, 0, iLen);
-            timeout = bTimeout.ByteArrayToIntH() * 1000;//毫秒为单位
+            timeout = bTimeout.ToIntH() * 1000;//毫秒为单位
             byte[] msg = new byte[1024];
             int length = 0;
             int st = DeviceApi.BSApiHelper.sam_slt_reset(_fd, timeout, 0, ref length, ref msg[0]);
@@ -96,7 +96,7 @@ namespace ABC.BackSplint
             byte[] bLen = new byte[2];
             System.Array.Copy(buffer, index, bLen, 0, 2);
             index += 2;
-            iLen = bLen.ByteArrayToIntH();
+            iLen = bLen.ToIntH();
             byte[] bApdu = new byte[iLen];
             System.Array.Copy(buffer, index, bApdu, 0, iLen);
 //             String sApdu = Encoding.Default.GetString(bApdu);

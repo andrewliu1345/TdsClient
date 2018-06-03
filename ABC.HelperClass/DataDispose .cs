@@ -39,7 +39,7 @@ namespace ABC.HelperClass
             byte[] bBuffLen = new byte[2];
             int iBuffler = 0;
             System.Array.Copy(buffer, 1, bBuffLen, 0, 2);
-            iBuffler = bBuffLen.ByteArrayToIntH();
+            iBuffler = bBuffLen.ToIntH();
 
             int index = 6;
             List<byte[]> list = new List<byte[]>();
@@ -48,7 +48,7 @@ namespace ABC.HelperClass
                 byte[] bLen = new byte[2];
                 int iLen = 0;
                 System.Array.Copy(buffer, index, bLen, 0, 2);
-                iLen = bLen.ByteArrayToIntH();
+                iLen = bLen.ToIntH();
                 index += 2;
 
                 byte[] bParm = new byte[iLen];

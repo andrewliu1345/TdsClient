@@ -1,6 +1,7 @@
 #pragma once
 #include <winsock2.h>  
 #include <thread>
+#include "CSocketDelegete.h"
 class TranSocket
 {
 public:
@@ -13,7 +14,7 @@ public:
 	// Returns:   TranSocket*
 	// Qualifier:
 	//************************************
-	static TranSocket* GetInstance();
+	static TranSocket* GetInstance(CSocketDelegete *socketEvent);
 
 	bool GetIsConnected();
 
@@ -49,11 +50,14 @@ private:
 	static SOCKET sclient;
 	static unsigned __stdcall Heart_Thead(LPVOID lpParameter);
 	HANDLE hThread;
+	static HANDLE hReadThread;
 	static HANDLE g_hMutex;//互斥量
 	static UINT g_dwDefThreadId;//异步处理线程ID。
+	static UINT g_ReadThreadId;
 	static UCHAR heartData[8];
 	static int _write(const char* buffer, int length);
 	static int _read(char* refbuffer, int *length, int timeout);
-
+	static CSocketDelegete *socketDeleget;
+	static unsigned __stdcall Read_Thead(LPVOID lpParameter);
 };
 

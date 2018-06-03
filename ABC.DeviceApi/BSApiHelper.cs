@@ -205,6 +205,31 @@ namespace ABC.DeviceApi
         /// <returns></returns>
         [DllImport(DllPath, EntryPoint = "GetPIN")]
         public static extern int GetPinBlock(int icdev, int mainkeyno, int cardnolen,ref byte cardno, long timeout, ref int pinlen, ref byte pinblock, ref byte errmessage);
+
+        /// <summary>
+        /// 获取MAC
+        /// </summary>
+        /// <param name="icdev"></param>
+        /// <param name="mainkeyno"></param>
+        /// <param name="algmodel">0.XOR  1.ANSI9.9    2.ANSI9.19 </param>
+        /// <param name="macsourcelen"></param>
+        /// <param name="macsourcedata"></param>
+        /// <param name="maclen"></param>
+        /// <param name="mac"></param>
+        /// <param name="errmessage"></param>
+        /// <returns></returns>
+        [DllImport(DllPath, EntryPoint = "GetMAC")]
+        public static extern int GetMAC(int icdev, int mainkeyno, int algmodel, int macsourcelen,ref  byte macsourcedata, ref int maclen, ref byte mac, ref byte errmessage);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="icdev"></param>
+        /// <param name="timeout"></param>
+        /// <param name="mag_card"></param>
+        /// <returns></returns>
+        [DllImport(DllPath, EntryPoint = "magnetic_read_ms")]
+        public static extern int magnetic_read(int icdev, int timeout, ref byte mag_card);
         #endregion
     }
 }

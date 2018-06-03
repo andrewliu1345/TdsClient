@@ -22,6 +22,11 @@ namespace ABC.BackSplint
             int tag = buffer[5];
             switch (tag)
             {
+                case 1:
+                    {
+                        GetPinPlock(buffer);
+                        break;
+                    }
                 case 3:
                     {
                         LoadMkey(buffer);
@@ -30,6 +35,11 @@ namespace ABC.BackSplint
                 case 4:
                     {
                         LoadWkey(buffer);
+                        break;
+                    }
+                case 6:
+                    {
+                        GetMac(buffer);
                         break;
                     }
                 default:
@@ -44,8 +54,8 @@ namespace ABC.BackSplint
         private void LoadMkey(byte[] buffer)
         {
             List<byte[]> lParmsArry = DataDispose.unPackData(buffer, 4);
-            int MKeyIndex = lParmsArry[0].ByteArrayToIntH();
-            int EncryType = lParmsArry[1].ByteArrayToIntH();
+            int MKeyIndex = lParmsArry[0].ToIntH();
+            int EncryType = lParmsArry[1].ToIntH();
             byte[] key = lParmsArry[2];
             byte[] errmsg = new byte[70];
             byte[] sendBuffer = null;
@@ -70,10 +80,10 @@ namespace ABC.BackSplint
         private void LoadWkey(byte[] buffer)
         {
             List<byte[]> lParmsArry = DataDispose.unPackData(buffer, 4);
-            int MKeyIndex = lParmsArry[0].ByteArrayToIntH();
-            int WKeyIndex = lParmsArry[1].ByteArrayToIntH();
-            int EncryType = lParmsArry[2].ByteArrayToIntH();
-            int KeyType = lParmsArry[3].ByteArrayToIntH();
+            int MKeyIndex = lParmsArry[0].ToIntH();
+            int WKeyIndex = lParmsArry[1].ToIntH();
+            int EncryType = lParmsArry[2].ToIntH();
+            int KeyType = lParmsArry[3].ToIntH();
             byte[] key = lParmsArry[4];
             byte[] errmsg = new byte[70];
             byte[] sendBuffer = null;
@@ -119,6 +129,73 @@ namespace ABC.BackSplint
                 SysLog.e("下载工作密钥失败：{0}", null, err);
             }
             backData(sendBuffer);
+        }
+
+        /// <summary>
+        /// 获取pinblock
+        /// </summary>
+        /// <param name="buffer"></param>
+        private void GetPinPlock(byte[] buffer)
+        {
+            byte[] sendBuffer;
+            List<byte[]> lParms = DataDispose.unPackData(buffer, 9);
+            int iMKeyIndex = lParms[0].ToIntH();
+            int iEncryType = lParms[1].ToIntH();
+            int iTimes = lParms[2].ToIntH();
+            int iAmount = lParms[3].ToIntH();
+            byte[] bPan = lParms[4];
+
+            int iLength = lParms[5].ToIntH();
+            string sVoice = lParms[6].GetString();
+            int iEndType = lParms[7].ToIntH();
+            int iTimeout = lParms[8].ToIntH();
+
+            int pinlen = 0;
+            byte[] pinblock = new byte[64];
+            byte[] errMsg = new byte[70];
+            int iRet = BSApiHelper.GetPinBlock(_fd, iMKeyIndex, bPan.Length, ref bPan[0], iTimeout, ref pinlen, ref pinblock[0],ref errMsg[0]);
+            if (iRet == 0)
+            {
+                sendBuffer = DataDispose.toPackData(pinblock, pinlen);
+            }
+            else
+            {
+                sendBuffer = DataDispose.sendErr(new byte[] { 0, 1 });
+                SysLog.e("获取PinBlock 失败:{0}", null, errMsg.GetString());
+            }
+            backData(sendBuffer);
+        }
+
+        /// <summary>
+        /// 获取mac
+        /// </summary>
+        /// <param name="buffer"></param>
+        private void GetMac(byte[] buffer)
+        {
+            byte[] sendBuffer;
+            List<byte[]> lParams = DataDispose.unPackData(buffer, 5);
+            int iMKeyIndex=lParams[0].ToIntH();
+            int iEncryType = lParams[1].ToIntH();
+            int iMode = lParams[2].ToIntH();
+            byte[] bMacSrc = lParams[3];
+            int macSrclen=lParams[4].ToIntH();
+
+            byte[] errMsg = new byte[70];
+
+            byte[] bmac = new byte[70];
+            int imaclen = 0;
+
+            int iRet = BSApiHelper.GetMAC(_fd, iMKeyIndex, iMode, macSrclen, ref bMacSrc[0], ref imaclen, ref bmac[0], ref errMsg[0]);
+            if (iRet==0)
+            {
+                sendBuffer = DataDispose.toPackData(bmac, imaclen);
+            }
+            else
+            {
+                sendBuffer = DataDispose.sendErr(new byte[] { 0, 1 });
+                string err = errMsg.GetString();
+                SysLog.e("获取MAC失败：{0}", null, err);
+            }
         }
     }
 }

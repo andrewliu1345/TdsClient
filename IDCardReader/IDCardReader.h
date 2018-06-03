@@ -2,12 +2,24 @@
 #include "ICardReader.h"
 #include "ICardReaderEventHandler.h"
 #include <TranSocket.h>
+#include "../libNetWorkConnet/CSocketDelegete.h"
 #define CLASSNAME "IDCardRead"
-class IDCardRead :public ICardReader
+class IDCardRead :public ICardReader, public CSocketDelegete
 {
 public:
+
+	void socketRevCallBack(unsigned char *buffer);
+
+	void socketSendCallBack(unsigned char *buffer);
+
+	void socketdidConnectCallBack();
+
+	void socketdisConnectCallBack();
+
+	void socketErrCallBack();
+
 	IDCardRead();
-	virtual void setDeviceEventHandler(void* pHandler);
+	void setDeviceEventHandler(void* pHandler);
 	void initialize(XmlParser* pConfig);
 	const char* getDeviceId();
 	bool isBusy();
@@ -71,6 +83,6 @@ public:
 	// 	  const int getVendorInfo(const char* key, char* val, unsigned int len);
 	// #endif
 private:
-	TranSocket *transoket;
+	TranSocket * transoket;
 };
 __declspec(dllimport)   ICardReader * __stdcall  createDevice();

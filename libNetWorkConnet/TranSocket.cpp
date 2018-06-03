@@ -3,17 +3,20 @@
 #include <WS2tcpip.h>
 #include <process.h>
 
+CSocketDelegete *TranSocket::socketDeleget = NULL;
 UCHAR TranSocket::heartData[8] = { 0x02 ,0x00 ,0x03 ,0x31 ,0x11 ,0x01 ,0x21, 0x03 };
 
 bool TranSocket::isConnected = false;
 sockaddr_in TranSocket::serAddr;
 SOCKET TranSocket::sclient = NULL;
 HANDLE TranSocket::g_hMutex = NULL;
-
 UINT TranSocket::g_dwDefThreadId = 0;
+UINT TranSocket::g_ReadThreadId = 0;
+HANDLE TranSocket::hReadThread = NULL;
 TranSocket *TranSocket::m_instance = new TranSocket();
-TranSocket * TranSocket::GetInstance()
+TranSocket * TranSocket::GetInstance(CSocketDelegete *socketEvent)
 {
+	socketDeleget = socketEvent;
 	//thread_exit= CreateEvent(NULL, TRUE, FALSE, NULL);
 	return m_instance;
 }
@@ -36,7 +39,7 @@ TranSocket::TranSocket()
 // 		NULL,
 // 		0,
 // 		NULL);
-	hThread= (HANDLE)_beginthreadex(NULL, 0, &Heart_Thead, NULL, 0, &g_dwDefThreadId);
+	hThread = (HANDLE)_beginthreadex(NULL, 0, &Heart_Thead, NULL, 0, &g_dwDefThreadId);
 
 }
 
@@ -94,8 +97,15 @@ unsigned __stdcall TranSocket::Heart_Thead(LPVOID lpParameter)
 			if (iRet == 0)
 			{
 				isConnected = true;
+				if (hReadThread!=NULL)
+				{
+					CloseHandle(hReadThread);
+					hReadThread = NULL;
+				}
+				hReadThread = (HANDLE)_beginthreadex(NULL, 0, &Read_Thead, NULL, 0, &g_ReadThreadId);//开启读线程
 			}
 		}
+		WaitForSingleObject(g_hMutex, INFINITE);
 		iRet = _write((const char *)heartData, 8);//发送心跳包
 		if (iRet != 0)
 		{
@@ -105,7 +115,9 @@ unsigned __stdcall TranSocket::Heart_Thead(LPVOID lpParameter)
 		Sleep(1000);
 		unsigned char  rebuff[7] = { 0 };
 		int relen = 7;
-		iRet = _read((char *)rebuff, &relen, 2000);//接收服务器返回
+
+		iRet = _read((char *)rebuff, &relen, 500);//接收服务器返回
+		ReleaseMutex(g_hMutex);
 		if (iRet == 0 || iRet == SOCKET_ERROR)
 		{
 			isConnected = false;
@@ -135,6 +147,41 @@ int TranSocket::_read(char * refbuffer, int * length, int timeout)
 	return *length;
 }
 
+unsigned _stdcall TranSocket::Read_Thead(LPVOID lpParameter)
+{
+	UCHAR * refbuffer = new UCHAR[4096];
+	int length = 4096;
+	int iRet = 0;
+	while (true)
+	{
+		if (!isConnected)
+		{
+			break;
+		}
+		memset(refbuffer, 0, length);
+		WaitForSingleObject(g_hMutex, INFINITE);
+		iRet = recv(sclient, (char *)refbuffer, length, 0);
+		ReleaseMutex(g_hMutex);
+		if (socketDeleget == NULL)
+			if (iRet > 0)
+			{
+				socketDeleget->socketRevCallBack(refbuffer);//收到数据时的回调
+			}
+			else if (iRet == 0)
+			{
+				socketDeleget->socketdisConnectCallBack();//网络短开回调
+				break;
+			}
+			else if (iRet == SOCKET_ERROR)
+			{
+				socketDeleget->socketErrCallBack();//连接出错回调
+			}
+		Sleep(200);
+	}
+	delete[]refbuffer;
+	return 0;
+}
+
 int TranSocket::WriteData(unsigned char * buffer, int length)
 {
 	WaitForSingleObject(g_hMutex, INFINITE);
@@ -155,3 +202,4 @@ int TranSocket::ReadData(unsigned char * refbuffer, int * reflegth, unsigned lon
 	ReleaseMutex(g_hMutex);
 	return 0;
 }
+

@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DeviceTest"
         mc:Ignorable="d"
-        Title="MainWindow" Height="732.378" Width="528.931">
+        Title="MainWindow" Height="732.378" Width="558.531">
     <Grid>
-        <GroupBox Header="背夹" HorizontalAlignment="Left" Height="313" Margin="10,41,0,0" VerticalAlignment="Top" Width="502">
+        <GroupBox Header="背夹" HorizontalAlignment="Left" Height="313" Margin="10,41,0,0" VerticalAlignment="Top" Width="532">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,0,-1.6,0" Width="492" Height="24" VerticalAlignment="Top">
                 <Label Content="串口" HorizontalAlignment="Left"  VerticalAlignment="Top"/>
                 <ComboBox x:Name="cbbSerialPort" HorizontalAlignment="Left"   Width="120"/>
@@ -15,6 +15,7 @@
                 <Button x:Name="btnClose" Content="断开" HorizontalAlignment="Left"   Width="75" Click="btnClose_Click"/>
                 <Button x:Name="btnGetStatus" Content="获取状态" HorizontalAlignment="Left"  Width="75" Click="btnGetStatus_Click" />
                 <Button x:Name="btnSynRCT" Content="同步时间" HorizontalAlignment="Left"   Width="75" Click="btnSynRCT_Click"/>
+                <Button x:Name="btnMagneticCard" Content="磁条卡" Width="75" RenderTransformOrigin="0.952,0.475" Click="btnMagneticCard_Click"/>
             </StackPanel>
         </GroupBox>
         <GroupBox Header="打印机" Height="333" Margin="0,359,10.4,0" VerticalAlignment="Top">

@@ -34,6 +34,16 @@ namespace DeviceTest
         [DllImport("DLL\\Print_32.dll", EntryPoint = "device_close")]
         public static extern int device_close_print(int icdev);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="icdev"></param>
+        /// <param name="timeout"></param>
+        /// <param name="mag_card"></param>
+        /// <returns></returns>
+        [DllImport("DLL\\mtx_32.dll", EntryPoint = "magnetic_read_ms")]
+        public static extern int magnetic_read(int icdev, int timeout, ref byte mag_card);
+
         //打印
         [DllImport("DLL\\Print_32.dll", EntryPoint = "Print_CHS")]
         public static extern int Print_CHS(int icdev, string str, int length);

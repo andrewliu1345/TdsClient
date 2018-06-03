@@ -176,5 +176,15 @@ namespace DeviceTest
                 MessageBox.Show(msg);
             }
         }
+        
+        private void btnMagneticCard_Click(object sender, RoutedEventArgs e)
+        {
+            byte[] msg = new byte[256];
+            int iRet = Api.magnetic_read(deiceID, 10000, ref msg[0]);
+            if (iRet==0)
+            {
+
+            }
+        }
     }
 }
