@@ -43,6 +43,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ABC.Enity\ABC.Enity.csproj">
+      <Project>{9b2ff05f-d632-4312-80bb-3d0c0e0b79a7}</Project>
+      <Name>ABC.Enity</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ABC.HelperClass\ABC.HelperClass.csproj">
+      <Project>{c10d892e-3047-43fb-8953-3e4e7c6c1ab9}</Project>
+      <Name>ABC.HelperClass</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ABC.Listener\ABC.Listener.csproj">
       <Project>{69A0CE27-EBA8-42F9-A7DF-29C575AE651F}</Project>
       <Name>ABC.Listener</Name>

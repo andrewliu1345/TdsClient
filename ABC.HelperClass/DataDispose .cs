@@ -7,26 +7,63 @@ namespace ABC.HelperClass
 {
     public class DataDispose
     {
-        /// <summary>
-        /// 打包返回数据
-        /// </summary>
-        /// <param name="returnData">需要打包的数据</param>
-        /// <param name="writeLen">需要打包的数据的长度</param>
-        /// <returns>打包好的数据</returns>
-        public static byte[] toPackData(byte[] returnData, int writeLen)
-        {
-            int len = writeLen + 2;
-            byte[] Writebuffer = new byte[len + 5];
-            Writebuffer[0] = 2;
-            Writebuffer[1] = (byte)(len >> 8);
-            Writebuffer[2] = (byte)(len % 256);
-            Writebuffer[3] = 0;
-            Writebuffer[4] = 0;
+        ///// <summary>
+        ///// 打包返回数据
+        ///// </summary>
+        ///// <param name="returnData">需要打包的数据</param>
+        ///// <param name="writeLen">需要打包的数据的长度</param>
+        ///// <returns>打包好的数据</returns>
+        //public static byte[] toPackData(byte[] returnData, int writeLen)
+        //{
+        //    int len = writeLen + 2;
+        //    byte[] Writebuffer = new byte[len + 5];
+        //    Writebuffer[0] = 2;
+        //    Writebuffer[1] = (byte)(len >> 8);
+        //    Writebuffer[2] = (byte)(len % 256);
+        //    Writebuffer[3] = 0;
+        //    Writebuffer[4] = 0;
 
-            System.Array.Copy(returnData, 0, Writebuffer, 5, writeLen);
-            Writebuffer[5 + writeLen] = cr_bcc(returnData);
-            Writebuffer[6 + writeLen] = 3;
-            return Writebuffer;
+        //    System.Array.Copy(returnData, 0, Writebuffer, 5, writeLen);
+        //    Writebuffer[5 + writeLen] = cr_bcc(returnData);
+        //    Writebuffer[6 + writeLen] = 3;
+        //    return Writebuffer;
+        //}
+        /// <summary>
+        /// 新的返回格式
+        /// </summary>
+        /// <param name="cmd"></param>
+        /// <param name="flag"></param>
+        /// <param name="packdata"></param>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        public static byte[] toPackData(byte[] cmd, byte[] flag, byte[] packdata, int length)
+        {
+
+            int tmplen = cmd.Length + flag.Length + length;
+            byte[] rData = new byte[tmplen + 5];
+            byte[] tmp = new byte[tmplen];
+            int index = 0;
+            System.Array.ConstrainedCopy(cmd, 0, tmp, index, cmd.Length);
+            index += cmd.Length;
+            System.Array.ConstrainedCopy(flag, 0, tmp, index, flag.Length);
+            index += flag.Length;
+            if (length != 0)
+            {
+                if (packdata.Length < length)
+                {
+                    return null;
+                }
+                System.Array.ConstrainedCopy(packdata, 0, tmp, index, length);
+            }
+
+            byte crc = cr_bcc(tmp);
+            rData[0] = 2;
+            rData[1] = (byte)(tmplen >> 8);
+            rData[2] = (byte)(tmplen % 256);
+            System.Array.ConstrainedCopy(tmp, 0, rData, 3, tmplen);
+            rData[tmplen + 3] = crc;
+            rData[tmplen + 4] = (byte)0x03;
+            return rData;
         }
         /// <summary>
         /// 解包
@@ -94,5 +131,6 @@ namespace ABC.HelperClass
             Writebuffer[6] = 3;
             return Writebuffer;
         }
+
     }
 }

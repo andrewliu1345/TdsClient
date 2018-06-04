@@ -35,10 +35,11 @@ namespace ABC.BackSplint
         private static bool ReadOK = false;
         public override void SetData(byte[] buffer)
         {
+            base.SetData(buffer);
 
-//             byte[] bLen = new byte[2];
-//             System.Array.Copy(buffer, 1, bLen, 0, 2);
-//             int iLen = bLen.ByteArrayToIntH();
+            //             byte[] bLen = new byte[2];
+            //             System.Array.Copy(buffer, 1, bLen, 0, 2);
+            //             int iLen = bLen.ByteArrayToIntH();
             int tag = buffer[5] & 0xff;
             byte[] bDateLen = new byte[1];
             System.Array.Copy(buffer, 6, bDateLen, 0, 1);
@@ -72,8 +73,8 @@ namespace ABC.BackSplint
                     }
                 default:
                     {
-                        byte[] bErrBuff = DataDispose.sendErr(new byte[] { 0, 1 });//失败获取
-                        backData(bErrBuff);
+                        backErrData(new byte[] { 0, 1 });//失败获取
+                        
                         break;
                     }
             }
@@ -81,20 +82,20 @@ namespace ABC.BackSplint
         }
         public IDCard()
         {
-            lcd = LedControl.Instance(DeviceIDs.ReadCard_fd);
+            lcd = LedControl.Instance();
         }
         private void GetBaseIDCard()
         {
-            backData(null);
+            backData(null,0);
         }
         private void GetFpIDCard()
         {
 
             ReadOK = false;
-            byte[] bSendBuff = null;
+          
             if (DeviceIDs.ReadCard_fd <= 0)
             {
-                bSendBuff = DataDispose.sendErr(new byte[] { 0, 1 });//超时
+                backErrData(new byte[] { 0, 1 });//超时
 
             }
             else
@@ -108,7 +109,7 @@ namespace ABC.BackSplint
                     long lTime = stopwatch.ElapsedMilliseconds;
                     if (lTime > m_TimeOut)
                     {
-                        bSendBuff = DataDispose.sendErr(new byte[] { 0, 2 });//超时
+                        backErrData(new byte[] { 0, 2 });//超时
                         break;
                     }
                     StringBuilder stringBuilder = new StringBuilder(70);
@@ -119,7 +120,7 @@ namespace ABC.BackSplint
                         ReadOK = true;
                         string msg = stringBuilder.ToString();
                         SysLog.d("获取身份证返回:{0}", null, msg);
-                        bSendBuff = DataDispose.sendOK();
+                        backData(null,0);
 
                         break;
                     }
@@ -127,12 +128,12 @@ namespace ABC.BackSplint
                 }
             }
             lcd.ClearALL();
-            backData(bSendBuff);
+           
         }
 
         private void GetIDCardData(string name)
         {
-            byte[] bSendBuff = null;
+          
             eDataType type = (eDataType)Enum.Parse(typeof(eDataType), name);//字符串转enum
             if (ReadOK == true && DeviceIDs.ReadCard_fd > 0)
             {
@@ -145,7 +146,7 @@ namespace ABC.BackSplint
                             BSApiHelper.IDCard_GetCardInfo(DeviceIDs.ReadCard_fd, 1, ref bdata[0]);
                             string sSex = Encoding.Default.GetString(bdata).Replace("\0", "").Trim();
                             int sex = UnBackCode.UnBackSexCode(sSex);
-                            bSendBuff = DataDispose.toPackData(new byte[] { (byte)sex }, 1);
+                            backData(new byte[] { (byte)sex }, 1);
                             break;
                         }
                     case eDataType.NATION_Code:
@@ -153,22 +154,22 @@ namespace ABC.BackSplint
                             BSApiHelper.IDCard_GetCardInfo(DeviceIDs.ReadCard_fd, 2, ref bdata[0]);
                             string sNation = Encoding.Default.GetString(bdata).Replace("\0", "").Trim();
                             int iNation = UnBackCode.UnBackSexCode(sNation);
-                            bSendBuff = DataDispose.toPackData(new byte[] { (byte)iNation }, 1);
+                            backData(new byte[] { (byte)iNation }, 1);
                             break;
                         }
                     default:
                         {
                             BSApiHelper.IDCard_GetCardInfo(DeviceIDs.ReadCard_fd, (int)type, ref bdata[0]);
-                            bSendBuff = DataDispose.toPackData(bdata, 70);
+                            backData(bdata, 70);
                             break;
                         }
                 }
             }
             else
             {
-                bSendBuff = DataDispose.sendErr(new byte[] { 0, 1 });//失败获取
+                backErrData(new byte[] { 0, 1 });//失败获取
             }
-            backData(bSendBuff);
+
         }
 
     }

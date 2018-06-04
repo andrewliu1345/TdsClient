@@ -58,6 +58,8 @@ namespace ABC.DeviceApi
         /// <returns></returns>
         [DllImport(DllPath, EntryPoint = "device_beep")]
         public static extern int device_beep(int icdev, int delaytime, int times);
+
+      
         #endregion
         #region 二代证
 

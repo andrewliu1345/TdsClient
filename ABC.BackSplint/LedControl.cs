@@ -1,4 +1,5 @@
 ﻿using ABC.DeviceApi;
+using ABC.Enity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,9 +25,9 @@ namespace ABC.BackSplint
         private LedControl()
         { }
         static int _fd = -1;
-        public static LedControl Instance(int fd)
+        public static LedControl Instance()
         {
-            _fd = fd;
+            _fd = DeviceIDs.ReadCard_fd;
             return m_instance;
         }
         public void ClearALL()
