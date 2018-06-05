@@ -38,8 +38,8 @@ namespace ABC.HelperClass
         /// <returns></returns>
         public static byte[] toPackData(byte[] cmd, byte[] flag, byte[] packdata, int length)
         {
-
-            int tmplen = cmd.Length + flag.Length + length;
+            byte[] blen = length.intToByteArray();
+            int tmplen = cmd.Length + flag.Length + blen.Length+length;
             byte[] rData = new byte[tmplen + 5];
             byte[] tmp = new byte[tmplen];
             int index = 0;
@@ -53,6 +53,8 @@ namespace ABC.HelperClass
                 {
                     return null;
                 }
+                System.Array.ConstrainedCopy(blen, 0, tmp, index, blen.Length);
+                index += blen.Length;
                 System.Array.ConstrainedCopy(packdata, 0, tmp, index, length);
             }
 

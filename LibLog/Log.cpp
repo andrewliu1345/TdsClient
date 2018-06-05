@@ -6,7 +6,7 @@
 
 
 
-void Log::i(char * classname, char * msg, ...)
+void Log::i(const char * classname,const char * msg, ...)
 {
 	FILE *fp;
 	va_list argp;

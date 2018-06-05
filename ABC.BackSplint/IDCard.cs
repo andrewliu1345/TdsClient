@@ -4,6 +4,7 @@ using ABC.Enity;
 using ABC.HelperClass;
 using ABC.Logs;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 
@@ -36,45 +37,27 @@ namespace ABC.BackSplint
         public override void SetData(byte[] buffer)
         {
             base.SetData(buffer);
-
-            //             byte[] bLen = new byte[2];
-            //             System.Array.Copy(buffer, 1, bLen, 0, 2);
-            //             int iLen = bLen.ByteArrayToIntH();
             int tag = buffer[5] & 0xff;
-            byte[] bDateLen = new byte[1];
-            System.Array.Copy(buffer, 6, bDateLen, 0, 1);
-            int iDataLen = bDateLen.ToIntH();
+
             switch (tag)
             {
                 case 1://readCard
                     {
-                        byte[] bData = new byte[iDataLen];
-                        System.Array.Copy(buffer, 7, bData, 0, iDataLen);
-                        int itimeout = bData.ToIntH();
-                        if (itimeout == 0)
-                        {
-                            m_TimeOut = 30000;
-                        }
-                        else
-                        {
-                            m_TimeOut = itimeout * 1000;
-                        }
-                        GetFpIDCard();
+                        DeviceApi.BSApiHelper.device_beep(DeviceIDs.ReadCard_fd, 0, 1);
+                        lcd.ShowLCD(LCDType.IDCARD);
+                        GetFpIDCard(buffer);
+                        lcd.ClearALL();
                         break;
-
                     }
                 case 2://getData
                     {
-                        byte[] bData = new byte[iDataLen];
-                        System.Array.Copy(buffer, 7, bData, 0, iDataLen);
-                        string sData = Encoding.Default.GetString(bData);
-                        GetIDCardData(sData);
+                        GetIDCardData(buffer);
                         break;
                     }
                 default:
                     {
                         backErrData(new byte[] { 0, 1 });//失败获取
-                        
+
                         break;
                     }
             }
@@ -86,13 +69,24 @@ namespace ABC.BackSplint
         }
         private void GetBaseIDCard()
         {
-            backData(null,0);
+            backData(null, 0);
         }
-        private void GetFpIDCard()
+        private void GetFpIDCard(byte[] buffer)
         {
+            List<byte[]> lParams = DataDispose.unPackData(buffer, 1);
+            int itimeout = lParams[0].ToIntH();
+            if (itimeout == 0)
+            {
+                m_TimeOut = 30000;
+            }
+            else
+            {
+                m_TimeOut = itimeout * 1000;
+            }
+
 
             ReadOK = false;
-          
+
             if (DeviceIDs.ReadCard_fd <= 0)
             {
                 backErrData(new byte[] { 0, 1 });//超时
@@ -100,8 +94,7 @@ namespace ABC.BackSplint
             }
             else
             {
-                DeviceApi.BSApiHelper.device_beep(DeviceIDs.ReadCard_fd, 0, 1);
-                lcd.ShowLCD(LCDType.IDCARD);
+
                 Stopwatch stopwatch = new Stopwatch();
                 stopwatch.Start();
                 while (true)
@@ -116,24 +109,24 @@ namespace ABC.BackSplint
                     int iRet = BSApiHelper.IDCard_ReadCard_finger(DeviceIDs.ReadCard_fd, stringBuilder);
                     if (iRet == 0)
                     {
-                        DeviceApi.BSApiHelper.device_beep(DeviceIDs.ReadCard_fd, 0, 1);
                         ReadOK = true;
                         string msg = stringBuilder.ToString();
                         SysLog.d("获取身份证返回:{0}", null, msg);
-                        backData(null,0);
+                        backData(null, 0);
 
                         break;
                     }
 
                 }
             }
-            lcd.ClearALL();
-           
+
+
         }
 
-        private void GetIDCardData(string name)
+        private void GetIDCardData(byte[] buffer)
         {
-          
+            List<byte[]> lParams = DataDispose.unPackData(buffer, 1);
+            string name = lParams[0].GetString();
             eDataType type = (eDataType)Enum.Parse(typeof(eDataType), name);//字符串转enum
             if (ReadOK == true && DeviceIDs.ReadCard_fd > 0)
             {

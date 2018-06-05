@@ -84,5 +84,6 @@ public:
 	// #endif
 private:
 	TranSocket * transoket;
+	void RevReadCard(UCHAR* buffer);
 };
 __declspec(dllimport)   ICardReader * __stdcall  createDevice();

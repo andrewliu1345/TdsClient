@@ -186,6 +186,8 @@ namespace ABC.Background
                 catch (System.Exception ex)
                 {
                     SysLog.e("链接出错", ex);
+                    DisConnectDev();
+                    socketSend.Close();
                     break;
                 }
 
@@ -247,6 +249,19 @@ namespace ABC.Background
             }
             DeviceIDs.Print_fd = DeviceApi.PrintApiHelper.device_open_print(comPrint, baudPrint);
 
+        }
+        private void DisConnectDev()
+        {
+            if (DeviceIDs.ReadCard_fd > 0)
+            {
+                DeviceApi.BSApiHelper.device_close(DeviceIDs.ReadCard_fd);
+                DeviceIDs.ReadCard_fd = -1;
+            }
+            if (DeviceIDs.Print_fd > 0)
+            {
+                DeviceApi.PrintApiHelper.device_close_print(DeviceIDs.Print_fd);
+                DeviceIDs.Print_fd = -1;
+            }
         }
     }
 }

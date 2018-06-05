@@ -3,7 +3,7 @@
 #include <WS2tcpip.h>
 #include <process.h>
 
-CSocketDelegete *TranSocket::socketDeleget = NULL;
+//CSocketDelegete *TranSocket::socketDeleget = NULL;
 UCHAR TranSocket::heartData[8] = { 0x02 ,0x00 ,0x03 ,0x31 ,0x11 ,0x01 ,0x21, 0x03 };
 
 bool TranSocket::isConnected = false;
@@ -14,9 +14,9 @@ UINT TranSocket::g_dwDefThreadId = 0;
 UINT TranSocket::g_ReadThreadId = 0;
 HANDLE TranSocket::hReadThread = NULL;
 TranSocket *TranSocket::m_instance = new TranSocket();
-TranSocket * TranSocket::GetInstance(CSocketDelegete *socketEvent)
+TranSocket * TranSocket::GetInstance()
 {
-	socketDeleget = socketEvent;
+	//socketDeleget = socketEvent;
 	//thread_exit= CreateEvent(NULL, TRUE, FALSE, NULL);
 	return m_instance;
 }
@@ -41,6 +41,13 @@ TranSocket::TranSocket()
 // 		NULL);
 	hThread = (HANDLE)_beginthreadex(NULL, 0, &Heart_Thead, NULL, 0, &g_dwDefThreadId);
 
+}
+
+int TranSocket::ReadData( CSocketDelegete * socketDelegete,int timeout)
+{
+	setsockopt(sclient, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(int));
+	hReadThread = (HANDLE)_beginthreadex(NULL, 0, &Read_Thead, (LPVOID)socketDelegete, 0, &g_ReadThreadId);//开启读线程
+	return 0;
 }
 
 TranSocket::~TranSocket()
@@ -97,12 +104,12 @@ unsigned __stdcall TranSocket::Heart_Thead(LPVOID lpParameter)
 			if (iRet == 0)
 			{
 				isConnected = true;
-				if (hReadThread!=NULL)
+				if (hReadThread != NULL)
 				{
 					CloseHandle(hReadThread);
 					hReadThread = NULL;
 				}
-				hReadThread = (HANDLE)_beginthreadex(NULL, 0, &Read_Thead, NULL, 0, &g_ReadThreadId);//开启读线程
+
 			}
 		}
 		WaitForSingleObject(g_hMutex, INFINITE);
@@ -136,8 +143,8 @@ int TranSocket::_write(const char * buffer, int length)
 	int	nNetTimeout = 1000;
 	//发送时限
 	setsockopt(sclient, SOL_SOCKET, SO_SNDTIMEO, (char *)& nNetTimeout, sizeof(int));
-	send(sclient, buffer, length, 0);
-	return 0;
+	int iret = send(sclient, buffer, length, 0);
+	return iret;
 }
 
 int TranSocket::_read(char * refbuffer, int * length, int timeout)
@@ -149,6 +156,7 @@ int TranSocket::_read(char * refbuffer, int * length, int timeout)
 
 unsigned _stdcall TranSocket::Read_Thead(LPVOID lpParameter)
 {
+	CSocketDelegete *socketDeleget = (CSocketDelegete *)lpParameter;
 	UCHAR * refbuffer = new UCHAR[4096];
 	int length = 4096;
 	int iRet = 0;
@@ -166,6 +174,7 @@ unsigned _stdcall TranSocket::Read_Thead(LPVOID lpParameter)
 			if (iRet > 0)
 			{
 				socketDeleget->socketRevCallBack(refbuffer);//收到数据时的回调
+				break;
 			}
 			else if (iRet == 0)
 			{
@@ -175,6 +184,7 @@ unsigned _stdcall TranSocket::Read_Thead(LPVOID lpParameter)
 			else if (iRet == SOCKET_ERROR)
 			{
 				socketDeleget->socketErrCallBack();//连接出错回调
+				break;
 			}
 		Sleep(200);
 	}

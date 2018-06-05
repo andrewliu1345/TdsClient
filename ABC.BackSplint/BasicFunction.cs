@@ -12,7 +12,7 @@ namespace ABC.BackSplint
         public override void SetData(byte[] buffer)
         {
             base.SetData(buffer);
-           // byte[] sendBuffer = DataDispose.sendOK();//返回心跳确认包
+           //返回心跳确认包
             backData(null,0);
         }
     }

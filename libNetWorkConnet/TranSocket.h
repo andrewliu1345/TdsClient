@@ -14,7 +14,7 @@ public:
 	// Returns:   TranSocket*
 	// Qualifier:
 	//************************************
-	static TranSocket* GetInstance(CSocketDelegete *socketEvent);
+	static TranSocket* GetInstance();
 
 	bool GetIsConnected();
 
@@ -40,6 +40,9 @@ public:
 	// Parameter: unsigned long timeout ³¬Ê±Ê±¼ä
 	//************************************
 	int ReadData(unsigned char * refbuffer, int* reflegth, unsigned long timeout);
+
+
+	int ReadData(CSocketDelegete * socketDelegete, int timeout);
 	~TranSocket();
 private:
 	static bool isConnected;
@@ -57,7 +60,7 @@ private:
 	static UCHAR heartData[8];
 	static int _write(const char* buffer, int length);
 	static int _read(char* refbuffer, int *length, int timeout);
-	static CSocketDelegete *socketDeleget;
+	//static CSocketDelegete *socketDeleget;
 	static unsigned __stdcall Read_Thead(LPVOID lpParameter);
 };
 

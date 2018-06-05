@@ -60,18 +60,18 @@ namespace ABC.abstractFun
         {
             if (m_callBackListenner != null)
             {
-                int len = lenght + bcmd.Length;
-                byte[] sendbuffer = new byte[len];
-                int index = 0;
-                System.Array.Copy(bcmd, 0, sendbuffer, index, bcmd.Length);
-                if (lenght != 0)
-                {
-                    index += bcmd.Length;
-                    System.Array.Copy(buffer, 0, sendbuffer, index, lenght);
-                }
+                //int len = lenght + bcmd.Length;
+                //byte[] sendbuffer = new byte[len];
+                //int index = 0;
+                //System.Array.Copy(bcmd, 0, sendbuffer, index, bcmd.Length);
+                //if (lenght != 0)
+                //{
+                //    index += bcmd.Length;
+                //    System.Array.Copy(buffer, 0, sendbuffer, index, lenght);
+                //}
 
 
-                byte[] bsendbuffer = DataDispose.toPackData(bcmd, Common.SUCCEE_CODE, sendbuffer, len);
+                byte[] bsendbuffer = DataDispose.toPackData(bcmd, Common.SUCCEE_CODE, buffer, lenght);
                 m_callBackListenner.backData(bsendbuffer);
             }
         }
