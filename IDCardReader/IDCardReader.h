@@ -19,6 +19,8 @@ public:
 	void socketErrCallBack();
 
 	IDCardRead();
+	~IDCardRead();
+
 	void setDeviceEventHandler(void* pHandler);
 	void initialize(XmlParser* pConfig);
 	const char* getDeviceId();

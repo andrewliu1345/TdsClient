@@ -2,6 +2,7 @@
 #include "TranSocket.h"
 #include <WS2tcpip.h>
 #include <process.h>
+#include "../LibLog/Log.h"
 
 //CSocketDelegete *TranSocket::socketDeleget = NULL;
 UCHAR TranSocket::heartData[8] = { 0x02 ,0x00 ,0x03 ,0x31 ,0x11 ,0x01 ,0x21, 0x03 };
@@ -13,6 +14,7 @@ HANDLE TranSocket::g_hMutex = NULL;
 UINT TranSocket::g_dwDefThreadId = 0;
 UINT TranSocket::g_ReadThreadId = 0;
 HANDLE TranSocket::hReadThread = NULL;
+HANDLE TranSocket::hThread = NULL;
 TranSocket *TranSocket::m_instance = new TranSocket();
 TranSocket * TranSocket::GetInstance()
 {
@@ -39,11 +41,12 @@ TranSocket::TranSocket()
 // 		NULL,
 // 		0,
 // 		NULL);
+	Log::i("TranSocket", "启动线程", NULL);
 	hThread = (HANDLE)_beginthreadex(NULL, 0, &Heart_Thead, NULL, 0, &g_dwDefThreadId);
 
 }
 
-int TranSocket::ReadData( CSocketDelegete * socketDelegete,int timeout)
+int TranSocket::ReadData(CSocketDelegete * socketDelegete, int timeout)
 {
 	setsockopt(sclient, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(int));
 	hReadThread = (HANDLE)_beginthreadex(NULL, 0, &Read_Thead, (LPVOID)socketDelegete, 0, &g_ReadThreadId);//开启读线程
@@ -52,10 +55,10 @@ int TranSocket::ReadData( CSocketDelegete * socketDelegete,int timeout)
 
 TranSocket::~TranSocket()
 {
-	WSACleanup();//释放Winsock库
-	CloseHandle(hThread);
+
 	delete m_instance;
 }
+
 int TranSocket::Connet()
 {
 
@@ -71,6 +74,7 @@ int TranSocket::Connet()
 	if (sclient == INVALID_SOCKET)
 	{
 		//printf("invalid socket!");
+		Log::i("TranSocket", "invalid socket!", NULL);
 		isConnected = false;
 		return -1;
 	}
@@ -82,11 +86,22 @@ int TranSocket::Connet()
 	if (connect(sclient, (sockaddr *)&serAddr, sizeof(serAddr)) == SOCKET_ERROR)//建立链接
 	{  //连接失败   
 		//printf("connect error !");
+		Log::i("TranSocket", "connect error !", NULL);
 		closesocket(sclient);
 		isConnected = false;
 		return -1;
 	}
+	Log::i("TranSocket", "connect ok !", NULL);
 	isConnected = true;
+	return 0;
+}
+
+int TranSocket::unConnet()
+{
+	Log::i("TranSocket", "~TranSocket", NULL);
+	closesocket(sclient);
+	WSACleanup();//释放Winsock库
+	CloseHandle(hThread);
 	return 0;
 }
 
@@ -96,6 +111,7 @@ unsigned __stdcall TranSocket::Heart_Thead(LPVOID lpParameter)
 	while (true)
 	{
 		int iRet = -1;
+		Log::i("TranSocket.Heart_Thead", "isConnected=%d", isConnected);
 		if (!isConnected)
 		{
 			WaitForSingleObject(g_hMutex, INFINITE);
@@ -114,8 +130,10 @@ unsigned __stdcall TranSocket::Heart_Thead(LPVOID lpParameter)
 		}
 		WaitForSingleObject(g_hMutex, INFINITE);
 		iRet = _write((const char *)heartData, 8);//发送心跳包
-		if (iRet != 0)
+		Log::i("TranSocket.Heart_Thead", "_write=%d", iRet);
+		if (iRet <= 0)
 		{
+			unConnet();
 			isConnected = false;
 			continue;
 		}
@@ -124,9 +142,11 @@ unsigned __stdcall TranSocket::Heart_Thead(LPVOID lpParameter)
 		int relen = 7;
 
 		iRet = _read((char *)rebuff, &relen, 500);//接收服务器返回
+		Log::i("TranSocket.Heart_Thead", "_read=%d", iRet);
 		ReleaseMutex(g_hMutex);
 		if (iRet == 0 || iRet == SOCKET_ERROR)
 		{
+			unConnet();
 			isConnected = false;
 			continue;
 		}

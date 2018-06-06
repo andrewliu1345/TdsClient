@@ -50,9 +50,10 @@ private:
 	static sockaddr_in serAddr;
 	TranSocket();
 	static int Connet();
+	static int unConnet();
 	static SOCKET sclient;
 	static unsigned __stdcall Heart_Thead(LPVOID lpParameter);
-	HANDLE hThread;
+	static HANDLE hThread;
 	static HANDLE hReadThread;
 	static HANDLE g_hMutex;//互斥量
 	static UINT g_dwDefThreadId;//异步处理线程ID。

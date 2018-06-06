@@ -49,6 +49,7 @@ namespace ABC.HelperClass
         }
         public static byte[] intToByteArray(this int a)
         {
+
             return new byte[]{
                 (byte) ((a >> 8) & 0xFF),
                 (byte) (a & 0xFF)
