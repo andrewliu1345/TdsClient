@@ -197,7 +197,7 @@ namespace ABC.Background
                 catch (System.Exception ex)
                 {
                     SysLog.e("链接出错", ex);
-                    DisConnectDev();
+                    //DisConnectDev();
                     socketSend.Close();
                     break;
                 }
