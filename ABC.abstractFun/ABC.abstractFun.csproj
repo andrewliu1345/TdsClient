@@ -43,6 +43,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ABC.DeviceApi\ABC.DeviceApi.csproj">
+      <Project>{D64AE845-8508-472D-A7A1-2124819945B4}</Project>
+      <Name>ABC.DeviceApi</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ABC.Enity\ABC.Enity.csproj">
       <Project>{9b2ff05f-d632-4312-80bb-3d0c0e0b79a7}</Project>
       <Name>ABC.Enity</Name>

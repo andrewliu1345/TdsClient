@@ -1,10 +1,6 @@
 ﻿using ABC.Enity;
 using ABC.HelperClass;
 using ABC.Listener;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace ABC.abstractFun
 {
@@ -31,7 +27,10 @@ namespace ABC.abstractFun
             }
 
         }
-
+        public int GetDevice()
+        {
+            return 1;
+        }
         public iCallBackListenner SetBackListener
         {
             set
@@ -60,17 +59,6 @@ namespace ABC.abstractFun
         {
             if (m_callBackListenner != null)
             {
-                //int len = lenght + bcmd.Length;
-                //byte[] sendbuffer = new byte[len];
-                //int index = 0;
-                //System.Array.Copy(bcmd, 0, sendbuffer, index, bcmd.Length);
-                //if (lenght != 0)
-                //{
-                //    index += bcmd.Length;
-                //    System.Array.Copy(buffer, 0, sendbuffer, index, lenght);
-                //}
-
-
                 byte[] bsendbuffer = DataDispose.toPackData(bcmd, Common.SUCCEE_CODE, buffer, lenght);
                 m_callBackListenner.backData(bsendbuffer);
             }
@@ -83,5 +71,6 @@ namespace ABC.abstractFun
                 m_callBackListenner.backData(bsendbuffer);
             }
         }
+      
     }
 }

@@ -5,6 +5,7 @@
 
 Utility::Utility()
 {
+
 }
 
 
@@ -12,14 +13,14 @@ Utility::~Utility()
 {
 }
 
-unsigned char * Utility::toPackData(unsigned char *cmd, unsigned char fun, int count, ...)
+int Utility::toPackData(unsigned char *cmd, unsigned char fun, unsigned char * _Dst, int _size, int *outlen, int count, ...)
 {
-	unsigned char tmp[4096000] = { 0 };
+	unsigned char tmp[38862] = { 0 };
 	int len = 3;//总长度
 	int datalen = 0;//数据长度
 	int index = 0;//游标
-	//PARAMLIST paramarry;
-	//PARAMLIST::iterator  param;
+				  //PARAMLIST paramarry;
+				  //PARAMLIST::iterator  param;
 	va_list params;
 	va_start(params, count);
 	memcpy(&tmp[index], cmd, 2);//模块
@@ -43,19 +44,30 @@ unsigned char * Utility::toPackData(unsigned char *cmd, unsigned char fun, int c
 
 
 	index = 0;
-	unsigned char *sendBuffer = new unsigned char[len + datalen];
-	memset(sendBuffer, 0, len);
-	sendBuffer[index] = 0x02;
+	//unsigned char *sendBuffer = new unsigned char[len + datalen];
+	memset(_Dst, 0, _size);
+	_Dst[index] = 0x02;
 	index++;
-	intToByteArray(datalen, &sendBuffer[index]);//数据长度
+	intToByteArray(datalen, &_Dst[index]);//数据长度
 	index += 2;
-	memcpy(&sendBuffer[index], tmp, datalen);
+	memcpy(&_Dst[index], tmp, datalen);
 	index += datalen;
-	sendBuffer[index++] = cr_bcc(tmp, datalen);
-	sendBuffer[index] = 0x03;
-	return sendBuffer;
+	_Dst[index++] = cr_bcc(tmp, datalen);
+	_Dst[index++] = 0x03;
+	*outlen = index;
+	return 0;
 }
 
+//************************************
+// Method:    解包
+// FullName:  Utility::unPackData
+// Access:    public static 
+// Returns:   int
+// Qualifier:
+// Parameter: unsigned char * buffer
+// Parameter: int mun
+// Parameter: PARAMLIST * params
+//************************************
 int Utility::unPackData(unsigned char * buffer, int mun, PARAMLIST *params)
 {
 	int len = 0;
@@ -144,4 +156,24 @@ int Utility::GB18030ToUTF8(char * pStrGB18030, unsigned char ** pStrUtf8)
 
 	return 0;
 }
+std::string Utility::bytesToHexstring(unsigned char *bytes, int bytelength) {
+	std::string hexstr;
+	for (int i = 0; i < bytelength; i++) {
+		char hex1;
+		char hex2;
+		int value = bytes[i];
+		int v1 = value / 16;
+		int v2 = value % 16;
+		if (v1 >= 0 && v1 <= 9)
+			hex1 = (char)(48 + v1);
+		else
+			hex1 = (char)(55 + v1);
+		if (v2 >= 0 && v2 <= 9)
+			hex2 = (char)(48 + v2);
+		else
+			hex2 = (char)(55 + v2);
 
+		hexstr = hexstr + hex1 + hex2 + " ";
+	}
+	return hexstr;
+}

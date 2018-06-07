@@ -5,9 +5,11 @@
 
 
 
+HANDLE Log::g_hMutex= CreateMutex(NULL, FALSE, NULL);
 
 void Log::i(const char * classname, const char * msg, ...)
 {
+
 	FILE *fp;
 	va_list argp;
 	char szTime[32] = { 0 };
@@ -17,6 +19,7 @@ void Log::i(const char * classname, const char * msg, ...)
 	char filepath[256] = { 0 };
 	sprintf_s(filepath, "c:\\mlog\\%s.log", szDay);
 	//CString filepath=CString.Format("c:\\mlog\\%s", szTime)
+	WaitForSingleObject(g_hMutex, INFINITE);
 	fopen_s(&fp, filepath, "a+");
 	fprintf(fp, "[%s]", szTime);
 	fprintf(fp, "[%s]", classname);
@@ -25,6 +28,7 @@ void Log::i(const char * classname, const char * msg, ...)
 	va_end(argp);
 	fprintf(fp, "\n");
 	fclose(fp);
+	ReleaseMutex(g_hMutex);
 }
 
 void Log::starGetTime(char * pszTime)

@@ -1,4 +1,5 @@
 ﻿using ABC.Config;
+using ABC.DeviceApi;
 using ABC.Enity;
 using ABC.HelperClass;
 using ABC.Listener;
@@ -37,7 +38,7 @@ namespace ABC.Background
         /// <summary>
         /// 接收回调
         /// </summary>
-       // public event ReceiveMsgCallBack receiveCallBack;
+        // public event ReceiveMsgCallBack receiveCallBack;
 
         /// <summary>
         /// 发送回调
@@ -45,7 +46,7 @@ namespace ABC.Background
         //public event SendFileCallBack sendCallBack;
 
         //用于通信的Socket
-        Socket socketSend;
+
         //用于监听的SOCKET
         Socket socketWatch;
 
@@ -97,6 +98,7 @@ namespace ABC.Background
         /// <param name="obj"></param>
         private void StartListen(object obj)
         {
+            ConnectDev();//连接设备
             ThreadPool.SetMaxThreads(10, 10);
             Socket socketWatch = obj as Socket;
             while (true)
@@ -108,33 +110,35 @@ namespace ABC.Background
                 try
                 {
 
-
-
                     //等待客户端的连接，并且创建一个用于通信的Socket
-                    socketSend = socketWatch.Accept();
-                    //获取远程主机的ip地址和端口号
-                    string strIp = socketSend.RemoteEndPoint.ToString();
-                    if (dicSocket.ContainsKey(strIp))
+                    Socket socketSend = socketWatch.Accept();
+                    if (socketSend.Connected)
                     {
-                        dicSocket[strIp] = socketSend;//修改
+                        //获取远程主机的ip地址和端口号
+                        string strIp = socketSend.RemoteEndPoint.ToString();
+                        if (dicSocket.ContainsKey(strIp))
+                        {
+                            dicSocket[strIp] = socketSend;//修改
+                        }
+                        else
+                        {
+                            dicSocket.Add(strIp, socketSend);//添加
+                        }
+
+                        //  this.cmb_Socket.Invoke(setCmbCallBack, strIp);
+                        string strMsg = "远程主机：" + socketSend.RemoteEndPoint + "连接成功";
+                        SysLog.i(strMsg);
+                        //使用回调
+                        // txt_Log.Invoke(setCallBack, strMsg);
+
+                        //定义接收客户端消息的线程
+
+                        ThreadPool.QueueUserWorkItem(Receive, socketSend);
+                        //threadReceive = new Thread(new ParameterizedThreadStart(Receive));
+                        //threadReceive.IsBackground = true;
+                        //threadReceive.Start(socketSend);
                     }
-                    else
-                    {
-                        dicSocket.Add(strIp, socketSend);//添加
-                    }
 
-                    //  this.cmb_Socket.Invoke(setCmbCallBack, strIp);
-                    string strMsg = "远程主机：" + socketSend.RemoteEndPoint + "连接成功";
-                    SysLog.i(strMsg);
-                    //使用回调
-                    // txt_Log.Invoke(setCallBack, strMsg);
-
-                    //定义接收客户端消息的线程
-
-                    ThreadPool.QueueUserWorkItem(Receive, socketSend);
-                    //threadReceive = new Thread(new ParameterizedThreadStart(Receive));
-                    //threadReceive.IsBackground = true;
-                    //threadReceive.Start(socketSend);
                 }
                 catch (System.Exception ex)
                 {
@@ -148,7 +152,7 @@ namespace ABC.Background
         /// <param name="obj"></param>
         private void Receive(object obj)
         {
-            ConnectDev();
+
             // int n = 0;
             Socket socketSend = obj as Socket;
             byte[] buffer = new byte[4096];
@@ -160,27 +164,34 @@ namespace ABC.Background
                 }
                 try
                 {
-                    if (DeviceIDs.ReadCard_fd < 0 || DeviceIDs.Print_fd < 0)
-                    {
-                        ConnectDev();
-                    }
+
                     //客户端连接成功后，服务器接收客户端发送的消息
 
                     //实际接收到的有效字节数
 
                     int count = socketSend.Receive(buffer);
-
+                    string str = buffer.bytesToHexString(count);//DataConver.bytesToHexString(buffer, count);
+                    string strReceiveMsg = "接收：" + socketSend.RemoteEndPoint + "发送的消息:" + str;
+                    SysLog.i(strReceiveMsg);
                     if (count == 0)//count 表示客户端关闭，要退出循环
                     {
                         continue;
                     }
                     else
                     {
-                        string str = buffer.bytesToHexString(count);//DataConver.bytesToHexString(buffer, count);
-                        string strReceiveMsg = "接收：" + socketSend.RemoteEndPoint + "发送的消息:" + str;
-                        SysLog.i(strReceiveMsg);
+                        if (DeviceIDs.ReadCard_fd < 0 || DeviceIDs.Print_fd < 0)
+                        {
+                            ConnectDev();
+                        }
+                        int iRet = GetDeviceStatus();
+                        if (iRet != 0)
+                        {
+                            ConnectDev();
+                        }
+
                         Factory.FunFactory.Instance.NetSocket = socketSend;
                         Factory.FunFactory.Instance.SetData(buffer, count);
+
                     }
                 }
                 catch (System.Exception ex)
@@ -233,34 +244,48 @@ namespace ABC.Background
 
             if (DeviceIDs.ReadCard_fd > 0)
             {
-                DeviceApi.BSApiHelper.device_close(DeviceIDs.ReadCard_fd);
+                BSApiHelper.device_close(DeviceIDs.ReadCard_fd);
                 DeviceIDs.ReadCard_fd = -1;
             }
             DeviceIDs.ReadCard_fd = DeviceApi.BSApiHelper.device_open(comBs - 1, baudBs);
-            if (DeviceIDs.ReadCard_fd > 0) {
-                DeviceApi.BSApiHelper.Set_RCT_Timer(DeviceIDs.ReadCard_fd);
-                DeviceApi.BSApiHelper.device_beep(DeviceIDs.ReadCard_fd,2,2);
+            if (DeviceIDs.ReadCard_fd > 0)
+            {
+                BSApiHelper.Set_RCT_Timer(DeviceIDs.ReadCard_fd);
+                DeviceApi.BSApiHelper.device_beep(DeviceIDs.ReadCard_fd, 2, 2);
             }
 
             if (DeviceIDs.Print_fd > 0)
             {
-                DeviceApi.PrintApiHelper.device_close_print(DeviceIDs.Print_fd);
+                PrintApiHelper.device_close_print(DeviceIDs.Print_fd);
                 DeviceIDs.Print_fd = -1;
             }
-            DeviceIDs.Print_fd = DeviceApi.PrintApiHelper.device_open_print(comPrint, baudPrint);
+            DeviceIDs.Print_fd = PrintApiHelper.device_open_print(comPrint, baudPrint);
 
         }
         private void DisConnectDev()
         {
             if (DeviceIDs.ReadCard_fd > 0)
             {
-                DeviceApi.BSApiHelper.device_close(DeviceIDs.ReadCard_fd);
+                BSApiHelper.device_close(DeviceIDs.ReadCard_fd);
                 DeviceIDs.ReadCard_fd = -1;
             }
             if (DeviceIDs.Print_fd > 0)
             {
-                DeviceApi.PrintApiHelper.device_close_print(DeviceIDs.Print_fd);
+                PrintApiHelper.device_close_print(DeviceIDs.Print_fd);
                 DeviceIDs.Print_fd = -1;
+            }
+        }
+        private int GetDeviceStatus()
+        {
+            byte[] buffer = new byte[1];
+            int iRet = BSApiHelper.get_device_status(DeviceIDs.ReadCard_fd, ref buffer[0]);
+            if (iRet != 0)
+            {
+                return -1;
+            }
+            else
+            {
+                return buffer[0];
             }
         }
     }

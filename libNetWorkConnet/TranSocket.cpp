@@ -3,6 +3,7 @@
 #include <WS2tcpip.h>
 #include <process.h>
 #include "../LibLog/Log.h"
+#include "../libUtility/Utility.h"
 
 //CSocketDelegete *TranSocket::socketDeleget = NULL;
 UCHAR TranSocket::heartData[8] = { 0x02 ,0x00 ,0x03 ,0x31 ,0x11 ,0x01 ,0x21, 0x03 };
@@ -10,7 +11,8 @@ UCHAR TranSocket::heartData[8] = { 0x02 ,0x00 ,0x03 ,0x31 ,0x11 ,0x01 ,0x21, 0x0
 bool TranSocket::isConnected = false;
 sockaddr_in TranSocket::serAddr;
 SOCKET TranSocket::sclient = NULL;
-HANDLE TranSocket::g_hMutex = NULL;
+//创建一个互斥量
+HANDLE TranSocket::g_hMutex = CreateMutex(NULL, FALSE, NULL);
 UINT TranSocket::g_dwDefThreadId = 0;
 UINT TranSocket::g_ReadThreadId = 0;
 HANDLE TranSocket::hReadThread = NULL;
@@ -31,9 +33,9 @@ bool TranSocket::GetIsConnected()
 
 TranSocket::TranSocket()
 {
+	Log::i("TranSocket", "TranSocket() 构造", NULL);
 	isConnected = false;
-	//创建一个互斥量
-	g_hMutex = CreateMutex(NULL, FALSE, NULL);
+	
 	//启动线程
 // 	hThread = CreateThread(NULL,
 // 		0,
@@ -41,8 +43,9 @@ TranSocket::TranSocket()
 // 		NULL,
 // 		0,
 // 		NULL);
-	Log::i("TranSocket", "启动线程", NULL);
+	
 	hThread = (HANDLE)_beginthreadex(NULL, 0, &Heart_Thead, NULL, 0, &g_dwDefThreadId);
+	//Sleep(5000);//让线程起来
 
 }
 
@@ -55,7 +58,7 @@ int TranSocket::ReadData(CSocketDelegete * socketDelegete, int timeout)
 
 TranSocket::~TranSocket()
 {
-
+	CloseHandle(hThread);
 	delete m_instance;
 }
 
@@ -98,23 +101,25 @@ int TranSocket::Connet()
 
 int TranSocket::unConnet()
 {
-	Log::i("TranSocket", "~TranSocket", NULL);
+	Log::i("TranSocket", "unConnet()", NULL);
 	closesocket(sclient);
 	WSACleanup();//释放Winsock库
-	CloseHandle(hThread);
+	
 	return 0;
 }
 
 unsigned __stdcall TranSocket::Heart_Thead(LPVOID lpParameter)
 {
-
+	Log::i("TranSocket", "启动线程", NULL);
 	while (true)
 	{
 		int iRet = -1;
 		Log::i("TranSocket.Heart_Thead", "isConnected=%d", isConnected);
 		if (!isConnected)
 		{
+			Log::i("TranSocket.Heart_Thead", "!isConnected=ture");
 			WaitForSingleObject(g_hMutex, INFINITE);
+			Log::i("TranSocket.Heart_Thead", "WaitForSingleObject(g_hMutex, INFINITE)");
 			iRet = Connet();//连接后台程序
 			ReleaseMutex(g_hMutex);
 			if (iRet == 0)
@@ -130,27 +135,31 @@ unsigned __stdcall TranSocket::Heart_Thead(LPVOID lpParameter)
 		}
 		WaitForSingleObject(g_hMutex, INFINITE);
 		iRet = _write((const char *)heartData, 8);//发送心跳包
-		Log::i("TranSocket.Heart_Thead", "_write=%d", iRet);
 		if (iRet <= 0)
 		{
+			Log::i("TranSocket.Heart_Thead", "_write err=%d", iRet);
 			unConnet();
-			isConnected = false;
+			isConnected = false;	
+			ReleaseMutex(g_hMutex);//发送失败释放信号
+			Sleep(1000);
 			continue;
 		}
-		Sleep(1000);
+
 		unsigned char  rebuff[7] = { 0 };
 		int relen = 7;
 
 		iRet = _read((char *)rebuff, &relen, 500);//接收服务器返回
-		Log::i("TranSocket.Heart_Thead", "_read=%d", iRet);
-		ReleaseMutex(g_hMutex);
 		if (iRet == 0 || iRet == SOCKET_ERROR)
 		{
+			Log::i("TranSocket.Heart_Thead", "_read err=%d", iRet);
 			unConnet();
 			isConnected = false;
+			ReleaseMutex(g_hMutex);//接收失败释放信号
+			Sleep(1000);
 			continue;
 		}
-		Sleep(6000);
+		ReleaseMutex(g_hMutex);
+		Sleep(60000);
 	}
 }
 
@@ -214,6 +223,8 @@ unsigned _stdcall TranSocket::Read_Thead(LPVOID lpParameter)
 
 int TranSocket::WriteData(unsigned char * buffer, int length)
 {
+	string sHexData = Utility::bytesToHexstring(buffer, length);
+	Log::i("TranSocket.WriteData", "writedata=%s", sHexData.c_str());
 	WaitForSingleObject(g_hMutex, INFINITE);
 	int iRet = _write((const char *)buffer, length);
 	ReleaseMutex(g_hMutex);

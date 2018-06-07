@@ -12,8 +12,9 @@
 
 struct sParam
 {
-	unsigned char * ParamData;
 	int ParamLen;
+	unsigned char  *ParamData;
+
 };
 typedef list<sParam> PARAMLIST;
 
@@ -32,7 +33,9 @@ public:
 	// Parameter: int count
 	// Parameter: ...
 	//************************************
-	static unsigned char * toPackData(unsigned char *cmd, unsigned char fun, int count, ...);
+	
+	static int toPackData(unsigned char *cmd, unsigned char fun, unsigned char * _Dst, int _size, int *outlen, int count, ...);
+	
 	//************************************
 	// Method:    ½á°ü
 	// FullName:  Utility::unPackData
@@ -86,6 +89,17 @@ public:
 	// Parameter: unsigned char * * pStrUtf8
 	//************************************
 	static int GB18030ToUTF8(char *pStrGB18030, unsigned char **pStrUtf8);
+
+	//************************************
+	// Method:    ByteArry2HexString
+	// FullName:  Utility::bytesToHexstring
+	// Access:    public static 
+	// Returns:   std::string
+	// Qualifier:
+	// Parameter: unsigned char * bytes
+	// Parameter: int bytelength
+	//************************************
+	static std::string bytesToHexstring(unsigned char *bytes, int bytelength);
 	Utility();
 	~Utility();
 };
