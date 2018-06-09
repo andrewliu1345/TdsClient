@@ -1,14 +1,28 @@
 #pragma once
 #include "ICardReader.h"
 #include "ICardReaderEventHandler.h"
-class CardReader : public ICardReader
+#include "../libNetWorkConnet/TranSocket.h"
+#include "../libNetWorkConnet/CSocketDelegete.h"
+#define CLASSNAME "CardReader"
+
+class CardReader : public ICardReader, public CSocketDelegete
 {
 private:
-	static HANDLE g_hMutex;// = NULL;//SPI互斥量。
-	static HANDLE g_hDefThread;// = NULL;//异步处理线程句柄。
-	static unsigned int g_dwDefThreadId;// = 0;//异步处理线程ID。
-
+	TranSocket * transoket;
+	void RevReadCard(UCHAR * buffer);
 public:
+	void socketRevCallBack(unsigned char *buffer);
+
+	void socketSendCallBack(unsigned char *buffer);
+
+	void socketdidConnectCallBack();
+
+	void socketdisConnectCallBack();
+
+	void socketErrCallBack();
+
+	CardReader();
+	~CardReader();
 	void setDeviceEventHandler(void* pHandler);
 	void initialize(XmlParser* pConfig);
 	const char* getDeviceId();
@@ -74,4 +88,4 @@ public:
 	// 	  const int getVendorInfo(const char* key, char* val, unsigned int len);
 	// #endif
 };
-extern "C"  __declspec(dllimport)   ICardReader* APIENTRY createDevice();
+__declspec(dllimport)  ICardReader*  __stdcall createDevice();

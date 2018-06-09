@@ -74,7 +74,7 @@ int Utility::unPackData(unsigned char * buffer, int mun, PARAMLIST *params)
 	unsigned char blen[2] = { 0 };
 	memcpy(blen, &buffer[1], 2);
 	len = ByteArrayToInt(blen);
-
+	int count = 0;
 	int tag1 = buffer[6];
 	int tag2 = buffer[7];
 	if (tag1 != 0 || tag2 != 0)
@@ -84,6 +84,15 @@ int Utility::unPackData(unsigned char * buffer, int mun, PARAMLIST *params)
 	int index = 8;
 	if (len > 5)
 	{
+		unsigned char b_crc = buffer[len + 3];
+		unsigned char* tmp = new unsigned char[len];
+		memset(tmp, 0, len);
+		memcpy(tmp, &buffer[3], len);
+		unsigned char c_crc = Utility::cr_bcc(tmp, len);
+		if (b_crc != c_crc)
+		{
+			return -2;//校验出错
+		}
 		for (size_t i = 0; i < mun; i++)
 		{
 			sParam _param;
@@ -99,10 +108,16 @@ int Utility::unPackData(unsigned char * buffer, int mun, PARAMLIST *params)
 			index += lenx;
 			_param.ParamLen = lenx;
 			params->push_back(_param);
+			count++;
 		}
-
+		return 0;
 	}
-	return 0;
+	else
+	{
+		return -1;//数据长度不对
+	}
+
+
 }
 
 void Utility::intToByteArray(int a, unsigned char *b)
@@ -176,4 +191,23 @@ std::string Utility::bytesToHexstring(unsigned char *bytes, int bytelength) {
 		hexstr = hexstr + hex1 + hex2 + " ";
 	}
 	return hexstr;
+}
+
+int Utility::HexstringToBytes(const void * hexstr, unsigned char * bytes, int length)
+{
+	return 0;
+}
+
+void Utility::dleteAllMark(string &s, const string &mark)
+{
+	size_t hSize = mark.size();
+	while (true)
+	{
+		size_t pos = s.find(mark);
+		if (pos == string::npos)
+		{
+			return;
+		}
+		s.erase(pos, hSize);
+	}
 }

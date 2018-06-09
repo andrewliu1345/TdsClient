@@ -87,5 +87,6 @@ public:
 private:
 	TranSocket * transoket;
 	void RevReadCard(UCHAR* buffer);
+	static unsigned char g_data[70];
 };
-__declspec(dllimport)   ICardReader * __stdcall  createDevice();
+__declspec(dllimport)   ICardReader * APIENTRY  createDevice();

@@ -15,7 +15,12 @@ SOCKET TranSocket::sclient = NULL;
 HANDLE TranSocket::g_hMutex = CreateMutex(NULL, FALSE, NULL);
 UINT TranSocket::g_dwDefThreadId = 0;
 UINT TranSocket::g_ReadThreadId = 0;
+UINT TranSocket::g_FlushThreadId = 0;
+
 HANDLE TranSocket::hReadThread = NULL;
+
+HANDLE TranSocket::hFlushThread = NULL;
+
 HANDLE TranSocket::hThread = NULL;
 TranSocket *TranSocket::m_instance = new TranSocket();
 TranSocket * TranSocket::GetInstance()
@@ -56,6 +61,8 @@ int TranSocket::ReadData(CSocketDelegete * socketDelegete, int timeout)
 	return 0;
 }
 
+
+
 TranSocket::~TranSocket()
 {
 	CloseHandle(hThread);
@@ -86,6 +93,14 @@ int TranSocket::Connet()
 	serAddr.sin_family = AF_INET;
 	serAddr.sin_port = htons(9988);//端口号
 	InetPton(AF_INET, ip, &serAddr.sin_addr.S_un.S_addr);//Ip地址
+
+														 //接收缓存区
+	int nRecvBuf = 4 * 1024;//设置为4K
+	setsockopt(sclient, SOL_SOCKET, SO_RCVBUF, (const char*)&nRecvBuf, sizeof(int));
+	//发送缓冲区
+	int nSendBuf = 4 * 1024;//设置为4K
+	setsockopt(sclient, SOL_SOCKET, SO_SNDBUF, (const char*)&nSendBuf, sizeof(int));
+
 	if (connect(sclient, (sockaddr *)&serAddr, sizeof(serAddr)) == SOCKET_ERROR)//建立链接
 	{  //连接失败   
 		//printf("connect error !");
@@ -148,7 +163,7 @@ unsigned __stdcall TranSocket::Heart_Thead(LPVOID lpParameter)
 		unsigned char  rebuff[7] = { 0 };
 		int relen = 7;
 
-		iRet = _read((char *)rebuff, &relen, 2000);//接收服务器返回
+		iRet = _read((char *)rebuff, &relen, 4000);//接收服务器返回
 		if (iRet == 0 || iRet == SOCKET_ERROR)
 		{
 			Log::i("TranSocket.Heart_Thead", "_read err=%d", iRet);
@@ -194,19 +209,22 @@ unsigned _stdcall TranSocket::Read_Thead(LPVOID lpParameter)
 	UCHAR  refbuffer[4096] = { 0 };
 	int length = 4096;
 	int iRet = 0;
+	WaitForSingleObject(g_hMutex, INFINITE);
+	Sleep(100);
 	while (true)
 	{
-		if (!isConnected)
-		{
-			break;
-		}
-		memset(refbuffer, 0, length);
-		WaitForSingleObject(g_hMutex, INFINITE);
-		iRet = recv(sclient, (char *)refbuffer, length, 0);
-		string str = Utility::bytesToHexstring(refbuffer, iRet);
-		Log::i("TranSocket.Read_Thead", "recv iRet=%d refbuffer=%s ", iRet, str);
-		ReleaseMutex(g_hMutex);
-		if (socketDeleget != NULL)
+		if (socketDeleget != NULL) {
+			if (!isConnected)
+			{
+				socketDeleget->socketErrCallBack();//连接出错回调
+			}
+			memset(refbuffer, 0, length);
+
+			iRet = recv(sclient, (char *)refbuffer, length, 0);
+			string str = Utility::bytesToHexstring(refbuffer, iRet);
+			Log::i("TranSocket.Read_Thead", "recv iRet=%d refbuffer=%s ", iRet, str.c_str());
+
+
 			if (iRet > 0)
 			{
 
@@ -223,14 +241,34 @@ unsigned _stdcall TranSocket::Read_Thead(LPVOID lpParameter)
 				socketDeleget->socketErrCallBack();//连接出错回调
 				break;
 			}
-		Sleep(200);
+			Sleep(200);
+		}
 	}
+	ReleaseMutex(g_hMutex);
 	//delete[]refbuffer;
 	return 0;
 }
 
+
+
+unsigned __stdcall TranSocket::Flush_Thead(LPVOID lpParameter)
+{
+	unsigned char refbuffer[4 * 1024] = { 0 };
+	int length = 4 * 1024;
+	WaitForSingleObject(g_hMutex, INFINITE);
+	int iRet = _read((char *)refbuffer, &length, 500);
+	ReleaseMutex(g_hMutex);
+	return 0;
+}
+
+void TranSocket::Flush()
+{
+	hFlushThread = (HANDLE)_beginthreadex(NULL, 0, &Flush_Thead, NULL, 0, &g_FlushThreadId);//开启读线程
+}
+
 int TranSocket::WriteData(unsigned char * buffer, int length)
 {
+	Flush();//清空接收缓存
 	string sHexData = Utility::bytesToHexstring(buffer, length);
 	Log::i("TranSocket.WriteData", "writedata=%s", sHexData.c_str());
 	WaitForSingleObject(g_hMutex, INFINITE);

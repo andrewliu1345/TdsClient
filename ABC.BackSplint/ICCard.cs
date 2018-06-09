@@ -4,6 +4,7 @@ using ABC.HelperClass;
 using ABC.Logs;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -48,45 +49,67 @@ namespace ABC.BackSplint
         private void ICCardPowerOn(byte[] buffer)
         {
             List<byte[]> lParams = DataDispose.unPackData(buffer, 1);
-            int timeout = 0;
-            timeout = lParams[0].ToIntH() * 1000;//毫秒为单位
-            byte[] msg = new byte[1024];
-            int length = 0;
-            
-            int st = DeviceApi.BSApiHelper.sam_slt_reset(_fd, timeout, 0, ref length, ref msg[0]);
-            if (st != 0)
+            int timeout = lParams[0].ToIntH();
+            if (timeout == 0)
             {
-                byte[] cardtype = { 0 };
-                byte[] snrlen = { 0 };
-                byte[] snr = new byte[4];
-                st = DeviceApi.BSApiHelper.open_card(_fd, timeout, ref cardtype[0], ref snrlen[0], ref snr[0], ref length, ref msg[0]);
-
-                if (st == 0)
-                {
-                   
-                    CardNo = 0xFF;
-                    SysLog.i("读取到非接卡");
-                    //byte[] sendBuffer = DataDispose.sendOK();
-                    backData(null,0);
-                    return;
-                }
-                else
-                {
-                    CardNo = -1;
-                    SysLog.i("读取失败");
-                    byte[] sendBuffer = DataDispose.sendErr(new byte[] { 0, 1 });
-                    backErrData(new byte[] { 0, 1 });
-                    return;
-                }
+                timeout = 30000;
             }
             else
             {
-                CardNo = 0xFF;
-                SysLog.i("读取到接触卡");
-                byte[] sendBuffer = DataDispose.sendOK();
-                backData(null, 0);
-                return;
+                timeout *= 1000;
             }
+            //毫秒为单位
+            byte[] msg = new byte[1024];
+            int length = 0;
+
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            CardNo = -1;
+            while (true)
+            {
+                long lTime = stopwatch.ElapsedMilliseconds;
+                if (lTime > timeout)
+                {
+                    backErrData(new byte[] { 0, 2 });//超时
+                    break;
+                }
+
+                int st = DeviceApi.BSApiHelper.sam_slt_reset(_fd, 1000, 0, ref length, ref msg[0]);
+                if (st != 0)
+                {
+                    byte[] cardtype = { 0 };
+                    byte[] snrlen = { 0 };
+                    byte[] snr = new byte[4];
+                    st = DeviceApi.BSApiHelper.open_card(_fd, 1000, ref cardtype[0], ref snrlen[0], ref snr[0], ref length, ref msg[0]);
+
+                    if (st == 0)
+                    {
+
+                        CardNo = 0xFF;
+                        SysLog.i("读取到非接卡");
+                        //byte[] sendBuffer = DataDispose.sendOK();
+                        backData(null, 0);
+                        break;
+                    }
+
+                }
+                else
+                {
+                    CardNo = 0xFF;
+                    SysLog.i("读取到接触卡");
+                    //byte[] sendBuffer = DataDispose.sendOK();
+                    backData(null, 0);
+                    break;
+                }
+            }
+            if (CardNo == -1)
+            {
+                SysLog.i("读取失败");
+                //  byte[] sendBuffer = DataDispose.sendErr(new byte[] { 0, 1 });
+                backErrData(new byte[] { 0, 1 });
+            }
+
+            stopwatch.Stop();
         }
 
         private void ICCardAPDU(byte[] buffer)
@@ -100,7 +123,7 @@ namespace ABC.BackSplint
             {
                 DeviceApi.BSApiHelper.device_beep(DeviceIDs.ReadCard_fd, 0, 1);
                 //byte[] sendBuffer = DataDispose.toPackData(recBuffer, reclen);
-                backData(recBuffer,reclen);
+                backData(recBuffer, reclen);
             }
             else
             {

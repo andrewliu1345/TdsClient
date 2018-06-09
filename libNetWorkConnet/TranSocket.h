@@ -55,13 +55,18 @@ private:
 	static unsigned __stdcall Heart_Thead(LPVOID lpParameter);
 	static HANDLE hThread;
 	static HANDLE hReadThread;
+	static HANDLE hFlushThread;
 	static HANDLE g_hMutex;//互斥量
 	static UINT g_dwDefThreadId;//异步处理线程ID。
 	static UINT g_ReadThreadId;
+	static UINT g_FlushThreadId;
 	static UCHAR heartData[8];
 	static int _write(const char* buffer, int length);
 	static int _read(char* refbuffer, int *length, int timeout);
 	//static CSocketDelegete *socketDeleget;
 	static unsigned __stdcall Read_Thead(LPVOID lpParameter);
+	static unsigned __stdcall Flush_Thead(LPVOID lpParameter);
+	void Flush();
+
 };
 

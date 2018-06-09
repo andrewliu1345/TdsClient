@@ -100,6 +100,21 @@ public:
 	// Parameter: int bytelength
 	//************************************
 	static std::string bytesToHexstring(unsigned char *bytes, int bytelength);
+
+
+	//************************************
+	// Method:    HexstringToBytes
+	// FullName:  Utility::HexstringToBytes
+	// Access:    public static 
+	// Returns:   int
+	// Qualifier:
+	// Parameter: const void * hexstr
+	// Parameter: unsigned char * bytes
+	// Parameter: int length
+	//************************************
+	static int HexstringToBytes(const void * hexstr, unsigned char * bytes, int length);
+
+	static void dleteAllMark(string &s, const string &mark);
 	Utility();
 	~Utility();
 };
