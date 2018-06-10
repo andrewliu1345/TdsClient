@@ -1,8 +1,6 @@
 ﻿using ABC.Config;
-using ABC.DeviceApi;
-using ABC.Enity;
+using ABC.Factory;
 using ABC.HelperClass;
-using ABC.Listener;
 using ABC.Logs;
 using System.Collections.Generic;
 using System.Net;
@@ -98,7 +96,7 @@ namespace ABC.Background
         /// <param name="obj"></param>
         private void StartListen(object obj)
         {
-            ConnectDev();//连接设备
+            //ConnectDev();//连接设备
             ThreadPool.SetMaxThreads(10, 10);
             Socket socketWatch = obj as Socket;
             while (true)
@@ -179,19 +177,8 @@ namespace ABC.Background
                     }
                     else
                     {
-                        if (DeviceIDs.ReadCard_fd < 0 || DeviceIDs.Print_fd < 0)
-                        {
-                            ConnectDev();
-                        }
-                        int iRet = GetDeviceStatus();
-                        if (iRet != 0)
-                        {
-                            ConnectDev();
-                        }
-
-                        Factory.FunFactory.Instance.NetSocket = socketSend;
-                        Factory.FunFactory.Instance.SetData(buffer, count);
-
+                        FunFactory fun = new FunFactory(socketSend);
+                        fun.SetData(buffer, count);
                     }
                 }
                 catch (System.Exception ex)
@@ -222,71 +209,6 @@ namespace ABC.Background
                 AcceptSocketThread.Join();
             }
 
-        }
-
-        //重连蓝牙
-        public void RestBTConnect()
-        {
-            ConnectDev();
-        }
-        /// <summary>
-        /// 连接设备
-        /// </summary>
-        private void ConnectDev()
-        {
-            BackSplintClass backSplint = AppConfig.Instance.BackSplint;
-            int comBs = backSplint.Com;
-            int baudBs = backSplint.Baud;
-
-            PrinterClass printer = AppConfig.Instance.Printer;
-            int comPrint = printer.Com;
-            int baudPrint = printer.Baud;
-
-            if (DeviceIDs.ReadCard_fd > 0)
-            {
-                BSApiHelper.device_close(DeviceIDs.ReadCard_fd);
-                DeviceIDs.ReadCard_fd = -1;
-            }
-            DeviceIDs.ReadCard_fd = DeviceApi.BSApiHelper.device_open(comBs - 1, baudBs);
-            if (DeviceIDs.ReadCard_fd > 0)
-            {
-                BSApiHelper.Set_RCT_Timer(DeviceIDs.ReadCard_fd);
-                DeviceApi.BSApiHelper.device_beep(DeviceIDs.ReadCard_fd, 2, 2);
-            }
-
-            if (DeviceIDs.Print_fd > 0)
-            {
-                PrintApiHelper.device_close_print(DeviceIDs.Print_fd);
-                DeviceIDs.Print_fd = -1;
-            }
-            DeviceIDs.Print_fd = PrintApiHelper.device_open_print(comPrint, baudPrint);
-
-        }
-        private void DisConnectDev()
-        {
-            if (DeviceIDs.ReadCard_fd > 0)
-            {
-                BSApiHelper.device_close(DeviceIDs.ReadCard_fd);
-                DeviceIDs.ReadCard_fd = -1;
-            }
-            if (DeviceIDs.Print_fd > 0)
-            {
-                PrintApiHelper.device_close_print(DeviceIDs.Print_fd);
-                DeviceIDs.Print_fd = -1;
-            }
-        }
-        private int GetDeviceStatus()
-        {
-            byte[] buffer = new byte[1];
-            int iRet = BSApiHelper.get_device_status(DeviceIDs.ReadCard_fd, ref buffer[0]);
-            if (iRet != 0)
-            {
-                return -1;
-            }
-            else
-            {
-                return buffer[0];
-            }
         }
     }
 }

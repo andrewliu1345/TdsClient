@@ -15,7 +15,7 @@ public:
 	// Qualifier:
 	//************************************
 	static TranSocket* GetInstance();
-
+	static TranSocket* GetInstance(int _binport);
 	bool GetIsConnected();
 
 	//************************************
@@ -48,9 +48,12 @@ private:
 	static bool isConnected;
 	static TranSocket *m_instance;
 	static sockaddr_in serAddr;
+	static sockaddr_in binAddr;
+	static int bind_port;
 	TranSocket();
 	static int Connet();
 	static int unConnet();
+	static int CloseSocket(__in SOCKET *s);
 	static SOCKET sclient;
 	static unsigned __stdcall Heart_Thead(LPVOID lpParameter);
 	static HANDLE hThread;

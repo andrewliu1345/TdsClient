@@ -91,6 +91,16 @@ public:
 	static int GB18030ToUTF8(char *pStrGB18030, unsigned char **pStrUtf8);
 
 	//************************************
+	// Method:    UnicodeToUtf8
+	// FullName:  Utility::UnicodeToUtf8
+	// Access:    public static 
+	// Returns:   int
+	// Qualifier:
+	// Parameter: const wchar_t * unicode
+	// Parameter: char * * pStrUtf8
+	//************************************
+	static int UnicodeToUtf8(const wchar_t* unicode, unsigned char **pStrUtf8);
+	//************************************
 	// Method:    ByteArry2HexString
 	// FullName:  Utility::bytesToHexstring
 	// Access:    public static 

@@ -22,6 +22,12 @@ namespace ABC.HelperClass
             }
             return buffer;
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="src"></param>
+        /// <param name="length"></param>
+        /// <returns></returns>
         public static String bytesToHexString(this byte[] src, int length)
         {
 
@@ -100,6 +106,11 @@ namespace ABC.HelperClass
         public static string GetString(this byte[] b)
         {
             return Encoding.Default.GetString(b);
+        }
+
+        public static byte[] ToByteArry(this string str)
+        {
+            return System.Text.Encoding.Default.GetBytes(str);
         }
     }
 }

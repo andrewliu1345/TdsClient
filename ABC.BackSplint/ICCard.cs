@@ -2,11 +2,8 @@
 using ABC.Enity;
 using ABC.HelperClass;
 using ABC.Logs;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 
 namespace ABC.BackSplint
 {
@@ -52,7 +49,7 @@ namespace ABC.BackSplint
             int timeout = lParams[0].ToIntH();
             if (timeout == 0)
             {
-                timeout = 30000;
+                timeout = 15000;
             }
             else
             {
@@ -71,7 +68,7 @@ namespace ABC.BackSplint
                 if (lTime > timeout)
                 {
                     backErrData(new byte[] { 0, 2 });//超时
-                    break;
+                    return;
                 }
 
                 int st = DeviceApi.BSApiHelper.sam_slt_reset(_fd, 1000, 0, ref length, ref msg[0]);
@@ -115,7 +112,8 @@ namespace ABC.BackSplint
         private void ICCardAPDU(byte[] buffer)
         {
             List<byte[]> lParams = DataDispose.unPackData(buffer, 1);
-            byte[] bApdu = lParams[0];
+            string sApdu = lParams[0].GetString();
+            byte[] bApdu = sApdu.HexString2ByteArray();
             byte[] recBuffer = new byte[2048];
             int reclen = 0;
             int iRet = DeviceApi.BSApiHelper.card_APDU(_fd, CardNo, bApdu.Length, bApdu, ref reclen, ref recBuffer[0]);
@@ -123,7 +121,10 @@ namespace ABC.BackSplint
             {
                 DeviceApi.BSApiHelper.device_beep(DeviceIDs.ReadCard_fd, 0, 1);
                 //byte[] sendBuffer = DataDispose.toPackData(recBuffer, reclen);
-                backData(recBuffer, reclen);
+                string strRecBuffer = recBuffer.bytesToHexString(reclen);
+                SysLog.d("reADPU={0}", null, strRecBuffer);
+                byte[] bRecBuffer = strRecBuffer.Replace("\0", "").Replace(" ", "").ToByteArry();
+                backData(recBuffer, bRecBuffer.Length);
             }
             else
             {

@@ -152,8 +152,8 @@ int Utility::GB18030ToUTF8(char * pStrGB18030, unsigned char ** pStrUtf8)
 	unsigned char *pUnicodeBuf;
 
 	if ((pStrGB18030 == NULL) || (pStrUtf8 == NULL))
-		return 12;
-
+		return -12;
+	
 	//Convert string from GB18030 to Unicode
 	iLen = strlen(pStrGB18030);
 	iLenUnicode = MultiByteToWideChar(54936, 0, pStrGB18030, -1, NULL, 0);
@@ -163,13 +163,22 @@ int Utility::GB18030ToUTF8(char * pStrGB18030, unsigned char ** pStrUtf8)
 
 	//Convert string from Unicode to UTF8
 	iLen = WideCharToMultiByte(CP_UTF8, 0, (wchar_t *)pUnicodeBuf, -1, NULL, 0, NULL, NULL);
-	*pStrUtf8 = new BYTE[iLen + 1];
+	*pStrUtf8 = new BYTE[iLen+1];
 	memset(*pStrUtf8, 0, iLen + 1);
 	WideCharToMultiByte(CP_UTF8, 0, (wchar_t *)pUnicodeBuf, iLenUnicode * sizeof(wchar_t), (char *)*pStrUtf8, iLen, NULL, NULL);
 
 	delete[] pUnicodeBuf;
 
-	return 0;
+	return iLen;
+}
+int Utility::UnicodeToUtf8(const wchar_t * unicode, unsigned char ** szUtf8)
+{
+	int len;
+	len = WideCharToMultiByte(CP_UTF8, 0, unicode, -1, NULL, 0, NULL, NULL);
+	*szUtf8 = new BYTE[++len];
+	memset(*szUtf8, 0, len);
+	WideCharToMultiByte(CP_UTF8, 0, unicode, -1, (char *)*szUtf8, len, NULL, NULL);
+	return len;
 }
 std::string Utility::bytesToHexstring(unsigned char *bytes, int bytelength) {
 	std::string hexstr;

@@ -11,6 +11,6 @@ namespace ABC.Config
         public const string BACK_SPLINT = "BACK_SPLINT";
         public const string PRINTER = "PRINTER";
         public abstract void Save();
-
+       
     }
 }

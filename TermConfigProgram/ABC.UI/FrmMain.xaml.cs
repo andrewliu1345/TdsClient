@@ -1,6 +1,9 @@
 ﻿using ABC.Background;
+using ABC.BackSplint;
+using ABC.Config;
 using ABC.HelperClass;
 using ABC.Logs;
+using ABC.Printer;
 using System;
 using System.Windows;
 using System.Windows.Forms;
@@ -30,6 +33,8 @@ namespace ABC.UI
         {
             notifyIcon.Visible = false;
             CommServer.Instance.Stop();
+            BluetoothBs.Instance.Stop();
+            BluetoothPrinter.Instance.Stop();
             base.OnClosed(e);
         }
         /// <summary>
@@ -257,7 +262,8 @@ namespace ABC.UI
 
         private void btnBt_Click(object sender, RoutedEventArgs e)//蓝牙重连
         {
-            CommServer.Instance.RestBTConnect();
+            BluetoothBs.Instance.RestBTConnect(AppConfig.Instance.BackSplint);
+            BluetoothPrinter.Instance.RestBTConnect(AppConfig.Instance.Printer);
             System.Windows.MessageBox.Show(" 完成重连");
         }
 

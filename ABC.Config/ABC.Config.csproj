@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="abstractSerialPort .cs" />
     <Compile Include="AppConfig.cs" />
     <Compile Include="BackSplintClass.cs" />
     <Compile Include="BaseConfig.cs" />

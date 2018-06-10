@@ -10,6 +10,11 @@ UCHAR TranSocket::heartData[8] = { 0x02 ,0x00 ,0x03 ,0x31 ,0x11 ,0x01 ,0x21, 0x0
 
 bool TranSocket::isConnected = false;
 sockaddr_in TranSocket::serAddr;
+
+sockaddr_in TranSocket::binAddr;
+
+int TranSocket::bind_port = 8090;
+
 SOCKET TranSocket::sclient = NULL;
 //创建一个互斥量
 HANDLE TranSocket::g_hMutex = CreateMutex(NULL, FALSE, NULL);
@@ -30,6 +35,12 @@ TranSocket * TranSocket::GetInstance()
 	return m_instance;
 }
 
+TranSocket* TranSocket::GetInstance(int _binport)
+{
+	bind_port = _binport;
+	return m_instance;
+}
+
 bool TranSocket::GetIsConnected()
 {
 	return isConnected;
@@ -38,8 +49,16 @@ bool TranSocket::GetIsConnected()
 
 TranSocket::TranSocket()
 {
+	WORD sockVersion = MAKEWORD(2, 2);//加载Winsock库
+	WSADATA data;
+	if (WSAStartup(sockVersion, &data) != 0)////初始化socket资源  
+	{
+		WSACleanup();
+		isConnected = false;
+		
+	}
 	Log::i("TranSocket", "TranSocket() 构造", NULL);
-	isConnected = false;
+
 
 	//启动线程
 // 	hThread = CreateThread(NULL,
@@ -72,13 +91,10 @@ TranSocket::~TranSocket()
 int TranSocket::Connet()
 {
 
-	WORD sockVersion = MAKEWORD(2, 2);//加载Winsock库
-	WSADATA data;
-	if (WSAStartup(sockVersion, &data) != 0)////初始化socket资源  
+	
+	if (sclient > 0 && isConnected == false)
 	{
-		WSACleanup();
-		isConnected = false;
-		return -1;
+		CloseSocket(&sclient);
 	}
 	sclient = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (sclient == INVALID_SOCKET)
@@ -94,6 +110,7 @@ int TranSocket::Connet()
 	serAddr.sin_port = htons(9988);//端口号
 	InetPton(AF_INET, ip, &serAddr.sin_addr.S_un.S_addr);//Ip地址
 
+
 														 //接收缓存区
 	int nRecvBuf = 4 * 1024;//设置为4K
 	setsockopt(sclient, SOL_SOCKET, SO_RCVBUF, (const char*)&nRecvBuf, sizeof(int));
@@ -104,8 +121,9 @@ int TranSocket::Connet()
 	if (connect(sclient, (sockaddr *)&serAddr, sizeof(serAddr)) == SOCKET_ERROR)//建立链接
 	{  //连接失败   
 		//printf("connect error !");
-		Log::i("TranSocket", "connect error !", NULL);
-		closesocket(sclient);
+		DWORD k = GetLastError();
+		Log::i("TranSocket", "connect error ! Err=%u", k);
+		CloseSocket(&sclient);
 		isConnected = false;
 		return -1;
 	}
@@ -117,9 +135,17 @@ int TranSocket::Connet()
 int TranSocket::unConnet()
 {
 	Log::i("TranSocket", "unConnet()", NULL);
-	closesocket(sclient);
+	CloseSocket(&sclient);
+	sclient = INVALID_SOCKET;
 	WSACleanup();//释放Winsock库
 
+	return 0;
+}
+
+int TranSocket::CloseSocket(__in SOCKET *s)
+{
+	closesocket(*s);
+	*s = INVALID_SOCKET;
 	return 0;
 }
 
@@ -153,7 +179,8 @@ unsigned __stdcall TranSocket::Heart_Thead(LPVOID lpParameter)
 		if (iRet <= 0)
 		{
 			Log::i("TranSocket.Heart_Thead", "_write err=%d", iRet);
-			unConnet();
+			CloseSocket(&sclient);
+			//unConnet();
 			isConnected = false;
 			ReleaseMutex(g_hMutex);//发送失败释放信号
 			Sleep(1000);
@@ -167,7 +194,8 @@ unsigned __stdcall TranSocket::Heart_Thead(LPVOID lpParameter)
 		if (iRet == 0 || iRet == SOCKET_ERROR)
 		{
 			Log::i("TranSocket.Heart_Thead", "_read err=%d", iRet);
-			unConnet();
+			CloseSocket(&sclient);
+			//unConnet();
 			isConnected = false;
 			ReleaseMutex(g_hMutex);//接收失败释放信号
 			Sleep(1000);
@@ -256,7 +284,7 @@ unsigned __stdcall TranSocket::Flush_Thead(LPVOID lpParameter)
 	unsigned char refbuffer[4 * 1024] = { 0 };
 	int length = 4 * 1024;
 	WaitForSingleObject(g_hMutex, INFINITE);
-	int iRet = _read((char *)refbuffer, &length, 500);
+	int iRet = _read((char *)refbuffer, &length, 200);
 	ReleaseMutex(g_hMutex);
 	return 0;
 }

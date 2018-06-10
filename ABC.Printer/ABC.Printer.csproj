@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BluetoothPrinter.cs" />
     <Compile Include="Print.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -46,6 +47,14 @@
     <ProjectReference Include="..\ABC.abstractFun\ABC.abstractFun.csproj">
       <Project>{733A853D-25A6-47E1-AB09-FF7331F28DBB}</Project>
       <Name>ABC.abstractFun</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ABC.BT\ABC.BT.csproj">
+      <Project>{83B3A265-ECA4-43A6-9A96-57875E57D815}</Project>
+      <Name>ABC.BT</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ABC.Config\ABC.Config.csproj">
+      <Project>{20B6D062-1745-48F4-9626-BF4B6D76B365}</Project>
+      <Name>ABC.Config</Name>
     </ProjectReference>
     <ProjectReference Include="..\ABC.DeviceApi\ABC.DeviceApi.csproj">
       <Project>{D64AE845-8508-472D-A7A1-2124819945B4}</Project>

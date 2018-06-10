@@ -44,6 +44,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LibLog", "LibLog\LibLog.vcx
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libUtility", "libUtility\libUtility.vcxproj", "{0A14D6EB-7DCF-4227-8E24-EA93E51190D2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ABC.BT", "ABC.BT\ABC.BT.csproj", "{83B3A265-ECA4-43A6-9A96-57875E57D815}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -270,6 +272,18 @@ Global
 		{0A14D6EB-7DCF-4227-8E24-EA93E51190D2}.Release|x64.Build.0 = Release|x64
 		{0A14D6EB-7DCF-4227-8E24-EA93E51190D2}.Release|x86.ActiveCfg = Release|Win32
 		{0A14D6EB-7DCF-4227-8E24-EA93E51190D2}.Release|x86.Build.0 = Release|Win32
+		{83B3A265-ECA4-43A6-9A96-57875E57D815}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83B3A265-ECA4-43A6-9A96-57875E57D815}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83B3A265-ECA4-43A6-9A96-57875E57D815}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{83B3A265-ECA4-43A6-9A96-57875E57D815}.Debug|x64.Build.0 = Debug|Any CPU
+		{83B3A265-ECA4-43A6-9A96-57875E57D815}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{83B3A265-ECA4-43A6-9A96-57875E57D815}.Debug|x86.Build.0 = Debug|Any CPU
+		{83B3A265-ECA4-43A6-9A96-57875E57D815}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83B3A265-ECA4-43A6-9A96-57875E57D815}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83B3A265-ECA4-43A6-9A96-57875E57D815}.Release|x64.ActiveCfg = Release|Any CPU
+		{83B3A265-ECA4-43A6-9A96-57875E57D815}.Release|x64.Build.0 = Release|Any CPU
+		{83B3A265-ECA4-43A6-9A96-57875E57D815}.Release|x86.ActiveCfg = Release|Any CPU
+		{83B3A265-ECA4-43A6-9A96-57875E57D815}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

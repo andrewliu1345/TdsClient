@@ -12,26 +12,25 @@ namespace ABC.Factory
 {
     public class FunFactory : iCallBackListenner
     {
-        private static FunFactory m_instance = null;
-        public static FunFactory Instance
-        {
-            get { return m_instance; }
-        }
-        private FunFactory()
-        {
-        }
-        static FunFactory()
-        {
-            m_instance = new FunFactory();
-        }
-        public Socket NetSocket
-        {
-            set
-            {
-                m_socket = value;
-            }
-        }
         Socket m_socket;
+        //         private static FunFactory m_instance = null;
+        //         public static FunFactory Instance
+        //         {
+        //             get { return m_instance; }
+        //         }
+        //         private FunFactory()
+        //         {
+        //         }
+        //         static FunFactory()
+        //         {
+        //             m_instance = new FunFactory();
+        //         }
+        public FunFactory(Socket socket)
+        {
+            m_socket = socket;
+        }
+
+       
         public void SetData(byte[] buffer, int length)
         {
 

@@ -5,10 +5,18 @@
 #include "../libNetWorkConnet/CSocketDelegete.h"
 #define CLASSNAME "CardReader"
 
+struct APDUPARAMETER {
+	int iReqid;
+	char* szCmd;
+	char* szApduData;
+};
+
 class CardReader : public ICardReader, public CSocketDelegete
 {
 private:
+	long iReqid ;
 	TranSocket * transoket;
+	APDUPARAMETER apdup;
 	void RevReadCard(UCHAR * buffer);
 public:
 	void socketRevCallBack(unsigned char *buffer);
