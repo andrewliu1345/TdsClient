@@ -1,11 +1,6 @@
 ﻿using ABC.BT;
-using ABC.Config;
 using ABC.DeviceApi;
 using ABC.Enity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 
 namespace ABC.BackSplint
@@ -28,7 +23,7 @@ namespace ABC.BackSplint
         {
             while (true)
             {
-                if (isClosed == true)
+                if (isClosed == true)//关闭标志
                 {
                     BSApiHelper.device_close(DeviceIDs.ReadCard_fd);
                     DeviceIDs.ReadCard_fd = -1;
@@ -37,10 +32,10 @@ namespace ABC.BackSplint
 
                 if (DeviceIDs.ReadCard_fd > 0)
                 {
-                    int iRet = GetDeviceStatus();
+                    int iRet = GetDeviceStatus();//检查蓝牙状态
                     if (iRet == 0)
                     {
-                        Thread.Sleep(15000);
+                        Thread.Sleep(6000);
                         continue;
                     }
                     else

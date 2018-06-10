@@ -113,6 +113,7 @@ namespace ABC.BackSplint
         {
             List<byte[]> lParams = DataDispose.unPackData(buffer, 1);
             string sApdu = lParams[0].GetString();
+            SysLog.d("sApdu={0}", null, sApdu);
             byte[] bApdu = sApdu.HexString2ByteArray();
             byte[] recBuffer = new byte[2048];
             int reclen = 0;
@@ -124,10 +125,11 @@ namespace ABC.BackSplint
                 string strRecBuffer = recBuffer.bytesToHexString(reclen);
                 SysLog.d("reADPU={0}", null, strRecBuffer);
                 byte[] bRecBuffer = strRecBuffer.Replace("\0", "").Replace(" ", "").ToByteArry();
-                backData(recBuffer, bRecBuffer.Length);
+                backData(bRecBuffer, bRecBuffer.Length);
             }
             else
             {
+                SysLog.e("Adpu iRet={0}",null ,iRet);
                 // byte[] sendBuffer = DataDispose.sendErr();
                 backErrData(new byte[] { 0, 1 });
             }

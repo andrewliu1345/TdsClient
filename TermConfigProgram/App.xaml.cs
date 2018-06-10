@@ -1,6 +1,5 @@
 ﻿using ABC.Background;
 using ABC.BackSplint;
-using ABC.BT;
 using ABC.Config;
 using ABC.Printer;
 using System.Windows;

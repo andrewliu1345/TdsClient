@@ -154,6 +154,7 @@ namespace ABC.Background
             // int n = 0;
             Socket socketSend = obj as Socket;
             byte[] buffer = new byte[4096];
+            FunFactory fun = new FunFactory(socketSend);
             while (true)
             {
                 if (threadReceiveStop == true)
@@ -177,7 +178,7 @@ namespace ABC.Background
                     }
                     else
                     {
-                        FunFactory fun = new FunFactory(socketSend);
+                       
                         fun.SetData(buffer, count);
                     }
                 }

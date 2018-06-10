@@ -105,6 +105,7 @@ int Utility::unPackData(unsigned char * buffer, int mun, PARAMLIST *params)
 			_param.ParamData = new unsigned char[lenx];
 			memset(_param.ParamData, 0, lenx);
 			memcpy(_param.ParamData, &buffer[index], lenx);
+
 			index += lenx;
 			_param.ParamLen = lenx;
 			params->push_back(_param);
@@ -153,7 +154,7 @@ int Utility::GB18030ToUTF8(char * pStrGB18030, unsigned char ** pStrUtf8)
 
 	if ((pStrGB18030 == NULL) || (pStrUtf8 == NULL))
 		return -12;
-	
+
 	//Convert string from GB18030 to Unicode
 	iLen = strlen(pStrGB18030);
 	iLenUnicode = MultiByteToWideChar(54936, 0, pStrGB18030, -1, NULL, 0);
@@ -163,7 +164,7 @@ int Utility::GB18030ToUTF8(char * pStrGB18030, unsigned char ** pStrUtf8)
 
 	//Convert string from Unicode to UTF8
 	iLen = WideCharToMultiByte(CP_UTF8, 0, (wchar_t *)pUnicodeBuf, -1, NULL, 0, NULL, NULL);
-	*pStrUtf8 = new BYTE[iLen+1];
+	*pStrUtf8 = new BYTE[iLen + 1];
 	memset(*pStrUtf8, 0, iLen + 1);
 	WideCharToMultiByte(CP_UTF8, 0, (wchar_t *)pUnicodeBuf, iLenUnicode * sizeof(wchar_t), (char *)*pStrUtf8, iLen, NULL, NULL);
 
