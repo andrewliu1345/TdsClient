@@ -59,7 +59,9 @@ namespace ABC.DeviceApi
         [DllImport(DllPath, EntryPoint = "device_beep")]
         public static extern int device_beep(int icdev, int delaytime, int times);
 
-      
+        //获取读写器版本信息
+        [DllImport(DllPath, EntryPoint = "device_version")]
+        public static extern int device_version(int icdev, int module, ref byte verlen, ref byte verdata);
         #endregion
         #region 二代证
 

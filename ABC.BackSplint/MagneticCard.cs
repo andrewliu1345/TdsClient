@@ -39,9 +39,17 @@ namespace ABC.BackSplint
         {
             
             List<byte[]> lParams = DataDispose.unPackData(buffer, 1);
-            int iTimeout = lParams[0].ToIntH();
-            byte[] bMag_card = new byte[256];
-            int iRet = BSApiHelper.magnetic_read(_fd, iTimeout, ref bMag_card[0]);
+            int itimeout = lParams[0].ToIntH();
+            if (itimeout == 0)
+            {
+                m_TimeOut = 30;
+            }
+            else
+            {
+                m_TimeOut = itimeout;
+            }
+            byte[] bMag_card = new byte[294];
+            int iRet = BSApiHelper.magnetic_read(_fd, m_TimeOut, ref bMag_card[0]);
             switch (iRet)
             {
                 case 0:

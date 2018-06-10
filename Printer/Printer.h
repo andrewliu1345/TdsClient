@@ -1,40 +1,24 @@
 #pragma once
-#include "ICardReader.h"
-#include "ICardReaderEventHandler.h"
+#include "IPrinter.h"
 #include "../libNetWorkConnet/TranSocket.h"
 #include "../libNetWorkConnet/CSocketDelegete.h"
-#define CLASSNAME "MagneticCardReader"
-struct MagCard {
-	unsigned char track1_len; //1磁道数据长度
-	unsigned char track2_len; //2磁道数据长度
-	unsigned char track3_len; //3磁道数据长度
-	unsigned char track1_data[80]; //1磁道数据
-	unsigned char track2_data[41]; //2磁道数据
-	unsigned char track3_data[170]; //3磁道数据
-};
 
-class MagneticCardReader :
-	public ICardReader, public CSocketDelegete
+class Printer :
+	public IPrinter, public CSocketDelegete
 {
 private:
 	TranSocket * transoket;
-	MagCard _MANAGED;
-	void RevReadCard(UCHAR* buffer);
 public:
-	MagneticCardReader();
-	~MagneticCardReader();
-
+	Printer();
+	~Printer();
 	void socketRevCallBack(unsigned char *buffer);
-
 	void socketSendCallBack(unsigned char *buffer);
-
 	void socketdidConnectCallBack();
-
 	void socketdisConnectCallBack();
-
 	void socketErrCallBack();
-
 	void setDeviceEventHandler(void* pHandler);
+
+
 	void initialize(XmlParser* pConfig);
 	const char* getDeviceId();
 	bool isBusy();
@@ -67,14 +51,6 @@ public:
 	int getRetainCount();
 
 	//
-	// 获取卡状态
-	//
-	CardReaderMediaStatus getMediaStatus();
-
-	// 获取位于卡槽中的卡的类型，如果卡槽中无卡，则返回 Unknown
-	CardReader_CardType getCardType();
-
-	//
 	// 获取数据
 	// 设置数据
 
@@ -98,5 +74,16 @@ public:
 	// #else
 	// 	  const int getVendorInfo(const char* key, char* val, unsigned int len);
 	// #endif
+
+
+	int printForm(const char* formName, const char* content, int* pReqID = NULL);
+
+
+	int printData(const void* data, int nSize, int* pReqID = NULL);
+
+	int read(const int timeout, int* pReqID = 0);
+
+	PaperStatus getPaperStatus(const char* pos = NULL);
 };
-__declspec(dllimport)  ICardReader*  __stdcall createDevice();
+
+extern "C" IPRINTER IPrinter* _stdcall createDevice();
