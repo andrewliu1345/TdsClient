@@ -45,7 +45,7 @@ void Pinpad::setDeviceEventHandler(void * pHandler)
 }
 const char * Pinpad::getDeviceId()
 {
-	return nullptr;
+	return "Pinpad";
 }
 bool Pinpad::isBusy()
 {

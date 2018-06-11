@@ -42,7 +42,7 @@ void Printer::initialize(XmlParser * pConfig)
 
 const char * Printer::getDeviceId()
 {
-	return nullptr;
+	return "ReceiptPrinter";
 }
 
 bool Printer::isBusy()
