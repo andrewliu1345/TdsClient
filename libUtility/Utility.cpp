@@ -133,7 +133,9 @@ void Utility::intToByteArray(int a, unsigned char *b)
 int Utility::ByteArrayToInt(unsigned char * b)
 {
 	int a;
-	a = ((b[0] << 8) & 0xFF) + (b[1] & 0xFF);
+	int h = (b[0] & 0xFF) << 8;
+	int l = b[1] & 0xFF;
+	a = h + l;
 	return a;
 }
 

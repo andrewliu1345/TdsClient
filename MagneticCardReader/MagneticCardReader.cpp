@@ -28,24 +28,24 @@ void MagneticCardReader::RevReadCard(UCHAR* buffer)
 		memset(&_MANAGED, 0, revdata.ParamLen);
 		memcpy(&_MANAGED, revdata.ParamData, revdata.ParamLen);
 		Log::i(CLASSNAME, "¶Á¿¨³É¹¦£¡");
-		m_pEventHandler->readCardCompleted(DEVICE_ERROR_SUCCESS, tag);
+		m_pEventHandler->readCardCompleted(DEVICE_ERROR_SUCCESS, iReqid);
 		break;
 	}
 	case 1:
 	{
 		Log::i(CLASSNAME, "Éè±¸Î´Á´½Ó£¡");
-		m_pEventHandler->readCardCompleted(DEVICE_ERROR_HARDWARE_ERROR, tag);
+		m_pEventHandler->readCardCompleted(DEVICE_ERROR_HARDWARE_ERROR, iReqid);
 		break;
 	}
 	case 2://³¬Ê±
 	{
 		Log::i(CLASSNAME, "¶Á¿¨³¬Ê±£¡");
-		m_pEventHandler->readCardCompleted(DEVICE_ERROR_TIMEOUT, tag);
+		m_pEventHandler->readCardCompleted(DEVICE_ERROR_TIMEOUT, iReqid);
 		break;
 	}
 	default:
 		Log::i(CLASSNAME, "¶Á¿¨Ê§°Ü£¡");
-		m_pEventHandler->readCardCompleted(DEVICE_CARDREADER_INVALID_MEDIA, tag);
+		m_pEventHandler->readCardCompleted(DEVICE_CARDREADER_INVALID_MEDIA, iReqid);
 		break;
 	}
 }
@@ -152,6 +152,7 @@ int MagneticCardReader::transaction(const char* tranID, const void* parameter, i
 
 int MagneticCardReader::readCard(int timeout, int* reqID)
 {
+
 	Log::i((const char *)classname, "timeout£º%d ", timeout);
 	sParam p1;
 	p1.ParamData = new unsigned char[1];
@@ -164,6 +165,7 @@ int MagneticCardReader::readCard(int timeout, int* reqID)
 	if (iRet > 0)
 	{
 		iRet = transoket->ReadData(this, timeout * 1000);//¿ªÆô¶ÁÈ¡Òì²½Ïß³Ì
+		InterlockedIncrement((LPLONG)&iReqid);
 		return DEVICE_ERROR_SUCCESS;
 	}
 	else
@@ -220,7 +222,12 @@ const int MagneticCardReader::getData(const char* key, char* value, unsigned int
 	{
 		if (_MANAGED.track2_len != 0) {
 			Rlen = _MANAGED.track2_len;
-			memcpy(value, _MANAGED.track2_data, Rlen);
+			if (value != NULL)
+			{
+				memcpy(value, _MANAGED.track2_data, Rlen);
+				return DEVICE_ERROR_SUCCESS;
+			}
+
 			return Rlen;
 		}
 	}
@@ -228,7 +235,12 @@ const int MagneticCardReader::getData(const char* key, char* value, unsigned int
 	{
 		if (_MANAGED.track3_len != 0) {
 			Rlen = _MANAGED.track3_len;
-			memcpy(value, _MANAGED.track3_data, Rlen);
+			if (value != NULL)
+			{
+				memcpy(value, _MANAGED.track3_data, Rlen);
+				return DEVICE_ERROR_SUCCESS;
+			}
+
 			return Rlen;
 		}
 	}

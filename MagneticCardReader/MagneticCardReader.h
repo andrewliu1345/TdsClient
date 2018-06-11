@@ -17,6 +17,7 @@ class MagneticCardReader :
 	public ICardReader, public CSocketDelegete
 {
 private:
+	long iReqid = 1;
 	TranSocket * transoket;
 	MagCard _MANAGED;
 	void RevReadCard(UCHAR* buffer);

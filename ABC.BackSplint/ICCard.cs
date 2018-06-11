@@ -49,7 +49,7 @@ namespace ABC.BackSplint
             int timeout = lParams[0].ToIntH();
             if (timeout == 0)
             {
-                timeout = 15000;
+                timeout = 5000;
             }
             else
             {

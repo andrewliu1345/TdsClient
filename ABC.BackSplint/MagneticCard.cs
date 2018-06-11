@@ -3,10 +3,7 @@ using ABC.DeviceApi;
 using ABC.Enity;
 using ABC.HelperClass;
 using ABC.Logs;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace ABC.BackSplint
 {
@@ -42,7 +39,7 @@ namespace ABC.BackSplint
             int itimeout = lParams[0].ToIntH();
             if (itimeout == 0)
             {
-                m_TimeOut = 30;
+                m_TimeOut = 5000;
             }
             else
             {
