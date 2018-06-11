@@ -50,6 +50,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MagneticCardReader", "Magne
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Printer", "Printer\Printer.vcxproj", "{9A9E7E7B-568C-40FA-BB23-6EEC5229DB1E}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Pinpad", "Pinpad\Pinpad.vcxproj", "{8EA85F86-8C90-481E-AC28-8E34F2817513}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -308,6 +310,16 @@ Global
 		{9A9E7E7B-568C-40FA-BB23-6EEC5229DB1E}.Release|x64.Build.0 = Release|x64
 		{9A9E7E7B-568C-40FA-BB23-6EEC5229DB1E}.Release|x86.ActiveCfg = Release|Win32
 		{9A9E7E7B-568C-40FA-BB23-6EEC5229DB1E}.Release|x86.Build.0 = Release|Win32
+		{8EA85F86-8C90-481E-AC28-8E34F2817513}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{8EA85F86-8C90-481E-AC28-8E34F2817513}.Debug|x64.ActiveCfg = Debug|x64
+		{8EA85F86-8C90-481E-AC28-8E34F2817513}.Debug|x64.Build.0 = Debug|x64
+		{8EA85F86-8C90-481E-AC28-8E34F2817513}.Debug|x86.ActiveCfg = Debug|Win32
+		{8EA85F86-8C90-481E-AC28-8E34F2817513}.Debug|x86.Build.0 = Debug|Win32
+		{8EA85F86-8C90-481E-AC28-8E34F2817513}.Release|Any CPU.ActiveCfg = Release|Win32
+		{8EA85F86-8C90-481E-AC28-8E34F2817513}.Release|x64.ActiveCfg = Release|x64
+		{8EA85F86-8C90-481E-AC28-8E34F2817513}.Release|x64.Build.0 = Release|x64
+		{8EA85F86-8C90-481E-AC28-8E34F2817513}.Release|x86.ActiveCfg = Release|Win32
+		{8EA85F86-8C90-481E-AC28-8E34F2817513}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

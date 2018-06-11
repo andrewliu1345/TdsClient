@@ -137,7 +137,14 @@ bool MagneticCardReader::isBusy()
 
 DeviceStatus MagneticCardReader::getDeviceStatus()
 {
-	return DeviceStatus();
+	if (transoket->GetIsConnected())
+	{
+		return DEVICE_STATUS_ONLINE;
+	}
+	else
+	{
+		return DEVICE_STATUS_HWERROR;
+	}
 }
 
 void MagneticCardReader::cancel(int nReqID)
