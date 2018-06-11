@@ -53,6 +53,10 @@
       <Project>{733a853d-25a6-47e1-ab09-ff7331f28dbb}</Project>
       <Name>ABC.abstractFun</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ABC.Attribute\ABC.Attribute.csproj">
+      <Project>{540fbace-dc17-427a-b943-c3b4085644d8}</Project>
+      <Name>ABC.Attribute</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ABC.BT\ABC.BT.csproj">
       <Project>{83B3A265-ECA4-43A6-9A96-57875E57D815}</Project>
       <Name>ABC.BT</Name>

@@ -52,7 +52,7 @@ void MagneticCardReader::RevReadCard(UCHAR* buffer)
 
 MagneticCardReader::MagneticCardReader()
 {
-	Log::i((char *)classname, (char *)"IDCardRead 构造\n");
+	Log::i((char *)classname, (char *)"MagneticCardReader 构造\n");
 	transoket = TranSocket::GetInstance();
 
 }

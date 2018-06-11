@@ -4,13 +4,10 @@
 #include "../IDevice.h"
 #include <string>
 
-#define IPRINTER __declspec(dllexport)
-
 NS_TDS_DEVICE_BEGIN
 
 class IPrinterEventHandler;
 
-//////////////////
 class IPrinter : public IDevice
 {
 public:
@@ -28,35 +25,26 @@ public:
 
 	};
 
-	/*	enum PrintDataStatus
-		{
-			WFS_SUCCESS,					//	成功
-			WFS_ERR_HARDWARE_ERROR,			//	硬件故障
-			WFS_ERR_INVALID_DATA,			//	数据无效，比如为空
-			WFS_ERR_PRR_DATA_TOO_LONG		//	数据太长
-
-		};*/
-
-		// 从IDevice继承而来的方法
+	// 从IDevice继承而来的方法
 public:
 	// 读卡器的型别为 "CardReaderService"
-	virtual const char* getDeviceClass()//获取设备类别标识
+	virtual const char* getDeviceClass()
 	{
 		return "PrinterService";
 	}
 
+	virtual void initialize(XmlParser* pConfig) = 0;
 
-	virtual void initialize(XmlParser* pConfig) = 0;//对设备进行初始化
-
-	virtual void setDeviceEventHandler(void* pHandler) = 0;
-
+	virtual void setDeviceEventHandler(void* pHandler)
+	{
+		m_pEventHandler = static_cast<IPrinterEventHandler*>(pHandler);
+	}
 
 	virtual const char* getDeviceId() = 0;
 	virtual bool isBusy() = 0;
 	virtual DeviceStatus getDeviceStatus() = 0;
 	virtual void cancel(int nReqID) = 0;
 	virtual int transaction(const char* tranID, const void* parameter, int* pReqID = NULL) = 0;
-
 
 	// 打印机接口
 public:
@@ -80,9 +68,8 @@ public:
 	//
 	// 获取指定区域的纸状态
 	// 非特殊打印机，pos传入NULL，对于特殊打印机，pos有其特殊含义
+	//
 	virtual PaperStatus getPaperStatus(const char* pos = NULL) = 0;
-
-
 
 	//
 	// 对于存折打印机，可用于获取存折上的数据
@@ -90,7 +77,7 @@ public:
 #if !defined(DEVICE_INTERFACE_VERSION_ANDROID)
 	virtual bool getData(const std::string& key, std::string& val) = 0;
 #else
-	virtual const int getData(const char* key, char* value, unsigned int len) = 0;
+        virtual const int getData(const char* key, char* value, unsigned int len) = 0;
 #endif
 	//
 	// 读存折， timeout为超时时间
@@ -99,12 +86,9 @@ public:
 
 
 protected:
-	IPrinterEventHandler * m_pEventHandler;
-	//	HANDLE hMutex;
+	IPrinterEventHandler* m_pEventHandler;
 };
 
 NS_TDS_DEVICE_END
-
-
 
 #endif

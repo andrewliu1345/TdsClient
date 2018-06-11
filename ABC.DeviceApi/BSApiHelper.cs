@@ -234,6 +234,8 @@ namespace ABC.DeviceApi
         /// <returns></returns>
         [DllImport(DllPath, EntryPoint = "magnetic_read_ms")]
         public static extern int magnetic_read(int icdev, int timeout, ref byte mag_card);
+
+
         #endregion
     }
 }

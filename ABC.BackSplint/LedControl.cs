@@ -1,4 +1,5 @@
-﻿using ABC.DeviceApi;
+﻿using ABC.Attribute;
+using ABC.DeviceApi;
 using ABC.Enity;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ namespace ABC.BackSplint
         MAGNETICCARD = 8,
         FINGER=16,
     }
+    [BackSplintAttribute(isBackSplint = true)]
     public class LedControl
     {
         private static LedControl m_instance = null;

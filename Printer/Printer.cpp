@@ -1,9 +1,14 @@
 #include "stdafx.h"
 #include "Printer.h"
-
+#include "../LibLog/Log.h"
+#include "../libUtility/Utility.h"
+#include "IPrinterEventHandler.h"
+#define CLASSNAME "Printer"
 
 Printer::Printer()
 {
+	Log::i(CLASSNAME, (char *)"Printer 构造\n");
+	transoket = TranSocket::GetInstance();
 }
 
 
@@ -38,6 +43,16 @@ void Printer::setDeviceEventHandler(void * pHandler)
 
 void Printer::initialize(XmlParser * pConfig)
 {
+	Sleep(100);//让连接线程可以起来
+	Log::i((char *)CLASSNAME, "Printer::initialize");
+	if (transoket->GetIsConnected())
+	{
+		m_pEventHandler->initializeCompleted(DEVICE_ERROR_SUCCESS);
+	}
+	else
+	{
+		m_pEventHandler->initializeCompleted(DEVICE_ERROR_INTERNAL_ERROR);
+	}
 }
 
 const char * Printer::getDeviceId()

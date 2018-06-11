@@ -6,7 +6,8 @@ using System.Configuration;
 using ABC.Logs;
 using ABC.HelperClass;
 using System.Reflection;
-
+using ABC.Attribute;
+using ABC.Enity;
 
 namespace ABC.Factory
 {
@@ -30,7 +31,7 @@ namespace ABC.Factory
             m_socket = socket;
         }
 
-       
+
         public void SetData(byte[] buffer, int length)
         {
 
@@ -38,8 +39,22 @@ namespace ABC.Factory
             aFuns fun = GetFuns(buffer);
             if (fun != null)
             {
-                fun.SetBackListener = this;
-                fun.SetData(buffer);
+                Type t = fun.GetType();
+                BackSplintAttribute att = System.Attribute.GetCustomAttribute(t, typeof(BackSplintAttribute)) as BackSplintAttribute;
+                if (att != null && att.isBackSplint)
+                {
+                    lock (BackSplintLockObj.lockObj)
+                    {
+                        fun.SetBackListener = this;
+                        fun.SetData(buffer);
+                    }
+                }
+                else
+                {
+                    fun.SetBackListener = this;
+                    fun.SetData(buffer);
+                }
+
             }
         }
         private aFuns GetFuns(byte[] buffer)

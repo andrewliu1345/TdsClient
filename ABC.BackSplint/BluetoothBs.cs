@@ -32,7 +32,9 @@ namespace ABC.BackSplint
 
                 if (DeviceIDs.ReadCard_fd > 0)
                 {
-                    int iRet = GetDeviceStatus();//检查设备状态
+                    int iRet;
+                    lock (BackSplintLockObj.lockObj)
+                        iRet = GetDeviceStatus();//检查设备状态
                     if (iRet == 0)
                     {
                         Thread.Sleep(15000);
@@ -40,6 +42,7 @@ namespace ABC.BackSplint
                     }
                     else
                     {
+
                         iRet = BSApiHelper.device_close(DeviceIDs.ReadCard_fd);
                         if (iRet == 0)
                         {
@@ -53,6 +56,7 @@ namespace ABC.BackSplint
 
                     }
                 }
+
                 DeviceIDs.ReadCard_fd = DeviceApi.BSApiHelper.device_open(_Com - 1, _Baud);
                 if (DeviceIDs.ReadCard_fd > 0)
                 {

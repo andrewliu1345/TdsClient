@@ -2,6 +2,7 @@
 #include "IPinpad.h"
 #include "../libNetWorkConnet/TranSocket.h"
 #include "../libNetWorkConnet/CSocketDelegete.h"
+
 #define CLASSNAME "Pinpad"
 
 class Pinpad :
@@ -22,7 +23,6 @@ public:
 	void socketErrCallBack();
 
 
-	 const char* getDeviceClass();
 
 
 	 void initialize(XmlParser* pConfig);
@@ -88,6 +88,7 @@ private:
 	long iReqid = 1;
 	TranSocket * transoket;
 	void RevReadCard(UCHAR* buffer);
+
 };
 
 extern "C" IPINPAD IPinpad* _stdcall createDevice();

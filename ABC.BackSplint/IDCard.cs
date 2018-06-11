@@ -1,4 +1,5 @@
 ﻿using ABC.abstractFun;
+using ABC.Attribute;
 using ABC.DeviceApi;
 using ABC.Enity;
 using ABC.HelperClass;
@@ -14,6 +15,7 @@ namespace ABC.BackSplint
     /// <summary>
     /// ID卡
     /// </summary>
+    [BackSplintAttribute(isBackSplint = true)]
     public class IDCard : aFuns
     {
         enum eDataType

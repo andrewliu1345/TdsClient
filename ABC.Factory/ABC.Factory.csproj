@@ -48,9 +48,17 @@
       <Project>{733A853D-25A6-47E1-AB09-FF7331F28DBB}</Project>
       <Name>ABC.abstractFun</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ABC.Attribute\ABC.Attribute.csproj">
+      <Project>{540fbace-dc17-427a-b943-c3b4085644d8}</Project>
+      <Name>ABC.Attribute</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ABC.BackSplint\ABC.BackSplint.csproj">
       <Project>{8ab091ed-f302-4997-abbd-6625b7d6f718}</Project>
       <Name>ABC.BackSplint</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ABC.Enity\ABC.Enity.csproj">
+      <Project>{9B2FF05F-D632-4312-80BB-3D0C0E0B79A7}</Project>
+      <Name>ABC.Enity</Name>
     </ProjectReference>
     <ProjectReference Include="..\ABC.HelperClass\ABC.HelperClass.csproj">
       <Project>{C10D892E-3047-43FB-8953-3E4E7C6C1AB9}</Project>

@@ -3,12 +3,16 @@
 #include "../libNetWorkConnet/TranSocket.h"
 #include "../libNetWorkConnet/CSocketDelegete.h"
 
+#define IPRINTER __declspec(dllexport)
+
 class Printer :
 	public IPrinter, public CSocketDelegete
 {
 private:
 	TranSocket * transoket;
 public:
+
+
 	Printer();
 	~Printer();
 	void socketRevCallBack(unsigned char *buffer);

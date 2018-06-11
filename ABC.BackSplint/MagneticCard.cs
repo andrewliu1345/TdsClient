@@ -1,4 +1,5 @@
 ﻿using ABC.abstractFun;
+using ABC.Attribute;
 using ABC.DeviceApi;
 using ABC.Enity;
 using ABC.HelperClass;
@@ -7,6 +8,7 @@ using System.Collections.Generic;
 
 namespace ABC.BackSplint
 {
+    [BackSplintAttribute(isBackSplint = true)]
     public class MagneticCard : aFuns
     {
         private LedControl lcd = LedControl.Instance();

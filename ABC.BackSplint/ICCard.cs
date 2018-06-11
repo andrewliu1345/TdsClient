@@ -1,4 +1,5 @@
 ﻿using ABC.abstractFun;
+using ABC.Attribute;
 using ABC.Enity;
 using ABC.HelperClass;
 using ABC.Logs;
@@ -10,6 +11,7 @@ namespace ABC.BackSplint
     /// <summary>
     /// IC 卡
     /// </summary>
+    [BackSplintAttribute(isBackSplint = true)]
     public class ICCard : aFuns
     {
         private LedControl lcd = LedControl.Instance();

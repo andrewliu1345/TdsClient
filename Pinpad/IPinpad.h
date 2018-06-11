@@ -14,7 +14,10 @@ class IPinpad : public IDevice
 {
 	// 从IDevice继承而来的方法
 public:
-	virtual const char* getDeviceClass() = 0;
+	virtual const char* getDeviceClass()
+	{
+		return "PinpadService";
+	}
 
 
 	virtual void initialize(XmlParser* pConfig) = 0;

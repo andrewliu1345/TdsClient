@@ -25,7 +25,7 @@ void Pinpad::socketErrCallBack()
 
 Pinpad::Pinpad()
 {
-	Log::i(CLASSNAME, (char *)"IDCardRead 构造\n");
+	Log::i(CLASSNAME, (char *)"Pinpad 构造\n");
 	transoket = TranSocket::GetInstance();
 }
 
@@ -33,15 +33,25 @@ Pinpad::Pinpad()
 Pinpad::~Pinpad()
 {
 }
-const char * Pinpad::getDeviceClass()
-{
-	return nullptr;
-}
+
 void Pinpad::initialize(XmlParser * pConfig)
+
 {
+	Sleep(100);//让连接线程可以起来
+	Log::i((char *)CLASSNAME, "Pinpad::initialize");
+	if (transoket->GetIsConnected())
+	{
+		m_pEventHandler->initializeCompleted(DEVICE_ERROR_SUCCESS);
+	}
+	else
+	{
+		m_pEventHandler->initializeCompleted(DEVICE_ERROR_INTERNAL_ERROR);
+	}
 }
 void Pinpad::setDeviceEventHandler(void * pHandler)
 {
+	Log::i((char *)CLASSNAME, (char *)"setDeviceEventHandler");
+	m_pEventHandler = static_cast<IPinpadEventHandler*>(pHandler);
 }
 const char * Pinpad::getDeviceId()
 {
@@ -79,6 +89,10 @@ const char * Pinpad::getLastErrorDescription()
 }
 int Pinpad::importKey(const char * keyname, const char * data, const char * keyuse, const char * encKeyName, int * pReqID)
 {
+	
+	string skeyname(keyname);
+	
+
 	return 0;
 }
 int Pinpad::clearKey()

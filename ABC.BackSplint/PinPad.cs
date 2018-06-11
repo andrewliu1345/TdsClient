@@ -6,9 +6,11 @@ using ABC.DeviceApi;
 using ABC.Logs;
 using System.Text;
 using ABC.Enity;
+using ABC.Attribute;
 
 namespace ABC.BackSplint
 {
+    [BackSplintAttribute(isBackSplint = true)]
     public class Pinpad : aFuns
     {
         int _fd = -1;
