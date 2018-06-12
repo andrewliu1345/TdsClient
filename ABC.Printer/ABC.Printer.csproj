@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BluetoothPrinter.cs" />
+    <Compile Include="LoadFormData.cs" />
     <Compile Include="Print.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

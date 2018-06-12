@@ -45,6 +45,7 @@ namespace ABC.UI
             path.FormPath = txtPath.Text;
             path.PhotoPath = txtPath2.Text;
             path.Save();
+            System.Windows.Forms.MessageBox.Show("保存成功");
         }
     }
 }

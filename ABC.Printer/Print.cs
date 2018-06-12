@@ -24,8 +24,15 @@ namespace ABC.Printer
         private void PrintMsg(byte[] buffer)
         {
             //byte[] sendBuffer;
-            List<byte[]> lPrams = DataDispose.unPackData(buffer, 1);
-            byte[] data = lPrams[0];
+            List<byte[]> lPrams = DataDispose.unPackData(buffer, 2);
+
+            byte[] bfileName = lPrams[0];
+            byte[] bData = lPrams[1];
+
+            string sfileName = bfileName.GetString();
+            string sData = bData.GetString();
+            LoadFormData load = new LoadFormData();
+            byte[] data = load.FormData(sfileName, sData);
             int iRet = PrintApiHelper.Print_CHS(DeviceIDs.Print_fd, data, data.Length);
             if (iRet == 0)
             {

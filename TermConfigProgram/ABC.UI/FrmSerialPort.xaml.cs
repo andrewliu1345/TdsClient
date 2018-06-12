@@ -1,4 +1,7 @@
 ﻿using ABC.Config;
+using ABC.DeviceApi;
+using ABC.Enity;
+using ABC.Printer;
 using System.Collections.Generic;
 using System.IO.Ports;
 using System.Linq;
@@ -45,6 +48,9 @@ namespace ABC.UI
         }
         BackSplintClass backSplint = AppConfig.Instance.BackSplint;
         PrinterClass printer = AppConfig.Instance.Printer;
+
+       
+
         private void LoadIni()
         {
 
@@ -79,6 +85,16 @@ namespace ABC.UI
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
             SaveIni();
+        }
+
+        private void btnPrinter_Click(object sender, RoutedEventArgs e)
+        {
+            string formName = string.Empty;
+            string data = string.Empty;
+            LoadFormData load = new LoadFormData();
+            byte [] prdata= load.FormData(formName, data);
+            PrintApiHelper.Print_CHS(DeviceIDs.Print_fd, prdata, prdata.Length);
+            MessageBox.Show("打印完成");
         }
     }
 }

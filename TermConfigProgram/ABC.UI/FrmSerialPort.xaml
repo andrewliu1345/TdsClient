@@ -16,6 +16,7 @@
         <Button x:Name="btnRefresh" Content="刷新端口" HorizontalAlignment="Left" Margin="27,72,0,0" VerticalAlignment="Top" Width="75" Click="btnRefresh_Click"/>
         <Button x:Name="btnSave" Content="保存配置" HorizontalAlignment="Left" Margin="107,72,0,0" VerticalAlignment="Top" Width="75" Click="btnSave_Click"/>
         <Button x:Name="btnServerRestart" Content="服务重启" HorizontalAlignment="Left" Margin="187,73,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button x:Name="btnPrinter" Content="打印测试" HorizontalAlignment="Left" Margin="267,72,0,0" VerticalAlignment="Top" Width="75" Click="btnPrinter_Click"/>
 
     </Grid>
     <Window.Background>
