@@ -66,6 +66,14 @@ namespace ABC.DeviceApi
         #region 二代证
 
         /// <summary>
+        /// 设置路径
+        /// </summary>
+        /// <param name="photoName"></param>
+        /// <returns></returns>
+        [DllImport(DllPath, EntryPoint = "IDCard_SetPhotoPath")]
+        public static extern int IDCard_SetPhotoPath(string photoName);
+
+        /// <summary>
         /// 读取二代证
         /// </summary>
         /// <param name="icdev">句柄</param>
@@ -84,6 +92,14 @@ namespace ABC.DeviceApi
         /// <returns></returns>
         [DllImport(DllPath, EntryPoint = "IDCard_GetCardInfo")]
         public static extern int IDCard_GetCardInfo(int icdev, int index, ref byte infodata);
+
+        /// <summary>
+        /// 获取图片名
+        /// </summary>
+        /// <param name="cfileName"></param>
+        /// <returns></returns>
+        [DllImport(DllPath, EntryPoint = "IDCard_GetPhotoFile")]
+        public static extern int IDCard_GetPhotoFile(ref byte cfileName);
         #endregion
         #region 银行卡
 

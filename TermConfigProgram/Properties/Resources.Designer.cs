@@ -103,6 +103,16 @@ namespace ABC.UI.Properties {
         /// <summary>
         ///   查找 System.Drawing.Bitmap 类型的本地化资源。
         /// </summary>
+        internal static System.Drawing.Bitmap skin_icon_serialport {
+            get {
+                object obj = ResourceManager.GetObject("skin_icon_serialport", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
         internal static System.Drawing.Bitmap skin_icon_setting {
             get {
                 object obj = ResourceManager.GetObject("skin_icon_setting", resourceCulture);

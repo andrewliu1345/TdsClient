@@ -286,5 +286,11 @@ namespace ABC.UI
                 e.Cancel = false;
             }
         }
+
+        private void btnPrinter_Click(object sender, RoutedEventArgs e)
+        {
+            FrmPath frm = new FrmPath();
+            frm.Show();
+        }
     }
 }

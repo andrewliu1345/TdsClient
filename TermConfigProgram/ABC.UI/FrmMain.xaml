@@ -20,12 +20,12 @@
                 <Image Source="/ABC.UI;Component/Resources/skin-icon-usb.png" />
             </Button.Content>
         </Button>
-        <Button x:Name="btnSerialPort"  Background="#00FFFFFF" BorderBrush="#00FFFFFF" HorizontalAlignment="Left" Margin="140,10,0,0" VerticalAlignment="Top" Width="70" Height="75" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave" Click="btnSerialPort_Click">
+        <Button x:Name="btnSerialPort"  Background="#00FFFFFF" BorderBrush="#00FFFFFF" HorizontalAlignment="Left" Margin="103,10,0,0" VerticalAlignment="Top" Width="70" Height="75" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave" Click="btnSerialPort_Click">
             <Button.Content>
                 <Image Source="/ABC.UI;Component/Resources/skin-icon-setting.png" />
             </Button.Content>
         </Button>
-        <Button x:Name="btnBt" Background="#00FFFFFF" BorderBrush="#00FFFFFF" HorizontalAlignment="Left" Margin="280,10,0,0" VerticalAlignment="Top" Width="70" Height="75" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave" Click="btnBt_Click">
+        <Button x:Name="btnBt" Background="#00FFFFFF" BorderBrush="#00FFFFFF" HorizontalAlignment="Left" Margin="200,10,0,0" VerticalAlignment="Top" Width="70" Height="75" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave" Click="btnBt_Click">
             <Button.Content>
                 <Image Source="/ABC.UI;Component/Resources/skin-icon-bluetooth.png" />
             </Button.Content>
@@ -36,10 +36,17 @@
                 <Image Source="/ABC.UI;Component/Resources/skin-icon-network.png" Visibility="Hidden" />
             </Button.Content>
         </Button>
-        <Label Content="USB管理" HorizontalAlignment="Left" Margin="12,83,0,0" VerticalAlignment="Top" Width="70" FontWeight="Bold"/>
-        <Label Content="串口管理" HorizontalAlignment="Left" Margin="140,85,0,-1.6" VerticalAlignment="Top" Width="70" FontWeight="Bold"/>
-        <Label Content="蓝牙重连" HorizontalAlignment="Left" Margin="280,83,0,0" VerticalAlignment="Top" Width="70" FontWeight="Bold"/>
+        <Button x:Name="btnPrinter" Background="#00FFFFFF" BorderBrush="#00FFFFFF" HorizontalAlignment="Left" Margin="301,7,0,0" VerticalAlignment="Top" Width="70" Height="75" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave" Click="btnPrinter_Click" >
+            <Button.Content>
+                <Image Source="/ABC.UI;Component/Resources/skin-icon-serialport.png"  />
+            </Button.Content>
+        </Button>
+
+        <Label Content="USB管理" HorizontalAlignment="Left" Margin="20,83,0,0" VerticalAlignment="Top" Width="62" FontWeight="Bold"/>
+        <Label Content="串口管理" HorizontalAlignment="Left" Margin="107,85,0,-1.6" VerticalAlignment="Top" Width="61" FontWeight="Bold"/>
+        <Label Content="蓝牙重连" HorizontalAlignment="Left" Margin="207,83,0,0" VerticalAlignment="Top" Width="58" FontWeight="Bold"/>
         <Label Content="APN设置" HorizontalAlignment="Left" Margin="420,85,0,-1.6" VerticalAlignment="Top" Width="70" FontWeight="Bold" Visibility="Hidden"/>
+        <Label Content="路径设置" HorizontalAlignment="Left" Margin="307,82,0,0" VerticalAlignment="Top" Width="58" FontWeight="Bold"/>
 
     </Grid>
     <Window.Background>

@@ -46,5 +46,9 @@ namespace ABC.Config
                 return new BackSplintClass();
             }
         }
+        public PathClass Path
+        {
+            get => new PathClass();
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using ABC.abstractFun;
 using ABC.Attribute;
+using ABC.Config;
 using ABC.DeviceApi;
 using ABC.Enity;
 using ABC.HelperClass;
@@ -107,15 +108,15 @@ namespace ABC.BackSplint
                         backErrData(new byte[] { 0, 2 });//超时
                         break;
                     }
+                    int iRet = BSApiHelper.IDCard_SetPhotoPath(AppConfig.Instance.Path.PhotoPath);
                     StringBuilder stringBuilder = new StringBuilder(70);
-                    int iRet = BSApiHelper.IDCard_ReadCard_finger(DeviceIDs.ReadCard_fd, stringBuilder);
+                    iRet = BSApiHelper.IDCard_ReadCard_finger(DeviceIDs.ReadCard_fd, stringBuilder);
                     if (iRet == 0)
                     {
                         ReadOK = true;
                         string msg = stringBuilder.ToString();
                         SysLog.d("获取身份证返回:{0}", null, msg);
                         backData(null, 0);
-
                         break;
                     }
 
@@ -150,6 +151,12 @@ namespace ABC.BackSplint
                             string sNation = Encoding.Default.GetString(bdata).Replace("\0", "").Trim();
                             int iNation = UnBackCode.UnBackSexCode(sNation);
                             backData(new byte[] { (byte)iNation }, 1);
+                            break;
+                        }
+                    case eDataType.PHOTO:
+                        {
+                            BSApiHelper.IDCard_GetPhotoFile(ref bdata[0]);
+                            backData(bdata, 70);
                             break;
                         }
                     default:

@@ -130,6 +130,9 @@
   <data name="skin_icon_network" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\skin-icon-network.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="skin_icon_serialport" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\skin-icon-serialport.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="skin_icon_setting" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\skin-icon-setting.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
