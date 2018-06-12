@@ -89,8 +89,8 @@ namespace ABC.UI
 
         private void btnPrinter_Click(object sender, RoutedEventArgs e)
         {
-            string formName = string.Empty;
-            string data = string.Empty;
+            string formName = "PB33652.xml";
+            string data = "jymc=短信服务注册#cph=#rzh= 326650753#jyrq=20171013-143119#zdh=050LM001#czy=刘寿丽#fhy=高丽#zhjlx=身份证#zhjhm=12010919670108003X#khmc=罗跃亭#qdje=10#jfms=包月#xsye=显示余额#";
             LoadFormData load = new LoadFormData();
             byte [] prdata= load.FormData(formName, data);
             PrintApiHelper.Print_CHS(DeviceIDs.Print_fd, prdata, prdata.Length);

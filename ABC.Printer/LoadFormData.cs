@@ -2,6 +2,7 @@
 using ABC.HelperClass;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
@@ -21,34 +22,49 @@ namespace ABC.Printer
             string file = string.Format("{0}\\{1}", path, filename);
             string[] _params = str.Split('#');
             Dictionary<string, string> paramArry = new Dictionary<string, string>();
-            _params.Select(s =>
+
+            foreach (var s in _params)
             {
                 string[] p = s.Split('=');
-                paramArry.Add(p[0], p[1]);
-                return "";
-            });
+                if (p != null && p.Length == 2)
+                {
+                    paramArry.Add(p[0], p[1]);
+                }
+            }
+            //             _params.First(s =>
+            //             {
+            //                 string[] p = s.Split('=');
+            //                 paramArry.Add(p[0], p[1]);
+            //                 return ;
+            //             });
 
             StringBuilder stringBuilder = new StringBuilder();
-            XElement xele = XElement.Load(file);
-            var xePrtRoot = xele.Elements("PrtRoot");//根节点
-            string ss = formData(xePrtRoot.Elements("TxtItem"), p => _params.First(x => x == p));//加载数据
+
+            StreamReader sr = new StreamReader(file, Encoding.Default);
+            XElement xele = XElement.Load(sr);
+            // var xePrtRoot = xele.Elements("PrtRoot");//根节点
+            string ss = formData(xele.Elements("TxtItem"), p =>
+            {
+                var v = paramArry.FirstOrDefault(x => x.Key.Trim().Equals(p.Trim()));//p前面有空格
+                return v.Value;
+            });//加载数据
             stringBuilder.Append(ss);
 
             //列表
-            var xeListItemRoot = xePrtRoot.Elements("ListItem");
-            if (xeListItemRoot != null)
+            var xeListItemRoot = xele.Elements("ListItem");
+            if (xeListItemRoot != null && xeListItemRoot.Count() != 0)
             {
                 var conuAttr = xeListItemRoot.Attributes("CardNum");
                 var xeItem = xeListItemRoot.Elements("TxtItem");
-                var deCount = paramArry.First(s => s.Key.Equals("CardNum"));//获取个数
+                var deCount = paramArry.FirstOrDefault(s => s.Key.Equals("CardNum"));//获取个数
                 string scount = deCount.Value;
                 int listcount = int.Parse(scount);
                 for (int i = 0; i < listcount; i++)
                 {
-                    string sss = formData(xePrtRoot.Elements("TxtItem"), p => _params.First(x => x == string.Format("{0}{1}", p.Replace("$", ""), i)));//加载数据
+                    string sss = formData(xele.Elements("TxtItem"), p => paramArry.FirstOrDefault(x => x.Key.Trim().Equals(string.Format($"{p.Trim().Replace("$", "")}{i}"))).Value);//加载数据
                 }
             }
-            stringBuilder.AppendLine();
+            stringBuilder.Append("\n");
             buffer = stringBuilder.ToString().ToByteArry();
             return buffer;
         }
@@ -73,11 +89,11 @@ namespace ABC.Printer
                 }
 
                 var _txt = item.Value;//TxtItem节点的文本
-                if (_NewRow != null && _NewRow.Equals(1))
+                if (_NewRow != null && _NewRow.Equals("1"))
                 {
-                    stringBuilder.Append('\n');
+                    stringBuilder.Append("\n");
                 }
-                if (_Var != null && _Var.Equals(1))//是否为值
+                if (_Var != null && _Var.Equals("1"))//是否为值
                 {
                     string v = func.Invoke(_txt); //_params.First(p => p == _txt);//用_params的值替换
                     stringBuilder.Append(v);

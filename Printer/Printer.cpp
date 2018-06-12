@@ -4,6 +4,37 @@
 #include "../libUtility/Utility.h"
 #include "IPrinterEventHandler.h"
 #define CLASSNAME "Printer"
+const UCHAR print_CMD[] = { 0xC8,0x01 };
+
+void Printer::RevReadCard(UCHAR * buffer)
+{
+	UCHAR tag = buffer[7];
+	switch (tag)
+	{
+	case 0:
+	{
+		Log::i(CLASSNAME, "¶Á¿¨³É¹¦£¡");
+		m_pEventHandler->printFormCompleted(DEVICE_ERROR_SUCCESS, iReqid);
+		break;
+	}
+	case 1:
+	{
+		Log::i(CLASSNAME, "Éè±¸Î´Á´½Ó£¡");
+		m_pEventHandler->printDataCompleted(DEVICE_ERROR_HARDWARE_ERROR, iReqid);
+		break;
+	}
+	case 2://³¬Ê±
+	{
+		Log::i(CLASSNAME, "¶Á¿¨³¬Ê±£¡");
+		m_pEventHandler->printDataCompleted(DEVICE_ERROR_TIMEOUT, iReqid);
+		break;
+	}
+	default:
+		Log::i(CLASSNAME, "¶Á¿¨Ê§°Ü£¡");
+		m_pEventHandler->printDataCompleted(DEVICE_CARDREADER_INVALID_MEDIA, iReqid);
+		break;
+	}
+}
 
 Printer::Printer()
 {
@@ -18,6 +49,24 @@ Printer::~Printer()
 
 void Printer::socketRevCallBack(unsigned char * buffer)
 {
+	UCHAR cmd[2] = { 0 };
+	memcpy(cmd, &buffer[3], 2);
+	if (cmd[0] != print_CMD[0] || cmd[1] != print_CMD[1])
+	{
+		return;
+	}
+	UCHAR tag = buffer[5];
+	switch (tag)
+	{
+	case 1://´òÓ¡
+	{
+		RevReadCard(buffer);
+		break;
+	}
+
+	default:
+		break;
+	}
 }
 
 void Printer::socketSendCallBack(unsigned char * buffer)
@@ -133,6 +182,36 @@ const char * Printer::getLastErrorDescription()
 }
 int Printer::printForm(const char * formName, const char * content, int * pReqID)
 {
+	sParam p1;
+	p1.ParamLen = strlen(formName);
+	p1.ParamData = new unsigned char[p1.ParamLen + 1];
+
+	sParam p2;
+	p2.ParamLen = strlen(content);
+	p2.ParamData = new unsigned char[p2.ParamLen + 1];
+
+	memset(p1.ParamData, 0, p1.ParamLen);
+	memcpy(p1.ParamData, formName, p1.ParamLen);
+
+	memset(p2.ParamData, 0, p2.ParamLen);
+	memcpy(p2.ParamData, content, p2.ParamLen);
+
+	UCHAR tmp[256] = { 0 };
+	//int tmplen = 256;
+	UCHAR  sendbuffer[2048] = { 0 };
+	int _len = 0;
+	Utility::toPackData((UCHAR *)print_CMD, 0x02, sendbuffer, 2048, &_len, 2, p1, p2);
+	int iRet = transoket->WriteData(sendbuffer, _len);
+	InterlockedIncrement((LPLONG)&iReqid);
+	if (iRet > 0)
+	{
+		iRet = transoket->ReadData(this, 6000);//¿ªÆô¶ÁÈ¡Òì²½Ïß³Ì
+		return DEVICE_ERROR_SUCCESS;
+	}
+	else
+	{
+		return DEVICE_ERROR_HARDWARE_ERROR;
+	}
 	return 0;
 }
 int Printer::printData(const void * data, int nSize, int * pReqID)

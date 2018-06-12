@@ -23,7 +23,8 @@ namespace ABC.BackSplint
         {
             while (true)
             {
-                if (isClosed == true)//关闭标志
+              
+                if (isClosed == true|| cts.Token.IsCancellationRequested)//关闭标志
                 {
                     BSApiHelper.device_close(DeviceIDs.ReadCard_fd);
                     DeviceIDs.ReadCard_fd = -1;

@@ -10,6 +10,8 @@ class Printer :
 {
 private:
 	TranSocket * transoket;
+	long iReqid = 1;
+	void RevReadCard(UCHAR * buffer);
 public:
 
 

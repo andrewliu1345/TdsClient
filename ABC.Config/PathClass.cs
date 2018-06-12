@@ -12,12 +12,13 @@ namespace ABC.Config
         string photopath = string.Empty;
         public PathClass()
         {
-            _configuration = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            Configuration _configuration = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
             formpath = _configuration.AppSettings.Settings[FORMSPATH].Value;
             photopath = _configuration.AppSettings.Settings[PHOTOPATH].Value;
         }
         public override void Save()
         {
+            Configuration _configuration = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
             _configuration.AppSettings.Settings[FORMSPATH].Value = formpath;
             _configuration.AppSettings.Settings[PHOTOPATH].Value = photopath;
             _configuration.Save();

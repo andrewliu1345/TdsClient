@@ -1,5 +1,6 @@
 ﻿using ABC.Config;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace ABC.BT
 {
@@ -11,7 +12,8 @@ namespace ABC.BT
         protected bool isConnet = false;
         protected Thread _Thread;
         protected static iBluetooth m_instance;
-       
+
+        protected CancellationTokenSource cts ;
 
         private void LoadConfig(abstractSerialPort config)
         {
@@ -24,18 +26,24 @@ namespace ABC.BT
         /// <param name="config">加载参数</param>
         public void Start(abstractSerialPort config)
         {
+            cts = new CancellationTokenSource();
             LoadConfig(config);
-            if (_Thread == null)
-            {
-                isClosed = false;
-                _Thread = new Thread(new ParameterizedThreadStart(Run));
-                _Thread.IsBackground = true;
-                _Thread.Start();
-            }
-            else if (!_Thread.IsAlive)
-            {
-                _Thread.Start();
-            }
+            isClosed = false;
+            TaskFactory _task = new TaskFactory();
+            _task.StartNew(Run, cts.Token);
+
+            //             LoadConfig(config);
+            //             if (_Thread == null)
+            //             {
+            //                 isClosed = false;
+            //                 _Thread = new Thread(new ParameterizedThreadStart(Run));
+            //                 _Thread.IsBackground = true;
+            //                 _Thread.Start();
+            //             }
+            //             else if (!_Thread.IsAlive)
+            //             {
+            //                 _Thread.Start();
+            //             }
         }
 
         /// <summary>
@@ -44,7 +52,7 @@ namespace ABC.BT
         public void RestBTConnect(abstractSerialPort config)
         {
             Stop();
-            Start( config);
+            Start(config);
         }
 
         /// <summary>
@@ -53,12 +61,13 @@ namespace ABC.BT
         public void Stop()
         {
             isClosed = true;
-            if (_Thread != null && _Thread.IsAlive)
-            {
-                _Thread.Abort();
-                _Thread.Join();
-                _Thread = null;
-            }
+            cts.Cancel();//取消任务
+                         //             if (_Thread != null && _Thread.IsAlive)
+                         //             {
+                         //                 _Thread.Abort();
+                         //                 _Thread.Join();
+                         //                 _Thread = null;
+                         //             }
         }
 
         /// <summary>

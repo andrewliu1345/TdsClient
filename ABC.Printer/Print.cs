@@ -32,17 +32,26 @@ namespace ABC.Printer
             string sfileName = bfileName.GetString();
             string sData = bData.GetString();
             LoadFormData load = new LoadFormData();
-            byte[] data = load.FormData(sfileName, sData);
-            int iRet = PrintApiHelper.Print_CHS(DeviceIDs.Print_fd, data, data.Length);
-            if (iRet == 0)
+            try
             {
-                backData(null, 0);
+                byte[] data = load.FormData(sfileName, sData);
+                int iRet = PrintApiHelper.Print_CHS(DeviceIDs.Print_fd, data, data.Length);
+                if (iRet == 0)
+                {
+                    backData(null, 0);
+                }
+                else
+                {
+                    backErrData(new byte[] { 0, 1 });
+                    SysLog.e("打印失败");
+                }
             }
-            else
+            catch (Exception ex)
             {
+                SysLog.e("PrintMsg", ex);
                 backErrData(new byte[] { 0, 1 });
-                SysLog.e("打印失败");
             }
+
             //backData(sendBuffer);
         }
     }

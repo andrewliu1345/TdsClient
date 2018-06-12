@@ -13,7 +13,7 @@ namespace ABC.Config
         public const string PRINTER = "PRINTER";
         public const string FORMSPATH = "FORMSPATH";
         public const string PHOTOPATH = "PHOTOPATH";
-        protected Configuration _configuration;
+       // protected Configuration _configuration;
         public abstract void Save();
 
     }
