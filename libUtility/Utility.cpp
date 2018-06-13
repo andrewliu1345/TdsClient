@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Utility.h"
-
+#include <algorithm>
 
 
 Utility::Utility()
@@ -222,4 +222,16 @@ void Utility::dleteAllMark(string &s, const string &mark)
 		}
 		s.erase(pos, hSize);
 	}
+}
+
+string Utility::ToUpper(string s)
+{
+	transform(s.begin(), s.end(), s.begin(), toupper);
+	return s;
+}
+
+string Utility::ToLower(string s)
+{
+	transform(s.begin(), s.end(), s.begin(), tolower);
+	return s;
 }

@@ -125,6 +125,27 @@ public:
 	static int HexstringToBytes(const void * hexstr, unsigned char * bytes, int length);
 
 	static void dleteAllMark(string &s, const string &mark);
+
+	
+	//************************************
+	// Method:    转大写
+	// FullName:  Utility::ToUpper
+	// Access:    public static 
+	// Returns:   void
+	// Qualifier:
+	// Parameter: string s
+	//************************************
+	static string ToUpper(string s);
+
+	//************************************
+	// Method:    转小写
+	// FullName:  Utility::ToLower
+	// Access:    public static 
+	// Returns:   void
+	// Qualifier:
+	// Parameter: string s
+	//************************************
+	static string ToLower(string s);
 	Utility();
 	~Utility();
 };

@@ -58,14 +58,22 @@ namespace ABC.BackSplint
         private void LoadMkey(byte[] buffer)
         {
             List<byte[]> lParmsArry = DataDispose.unPackData(buffer, 4);
-            int MKeyIndex = lParmsArry[0].ToIntH();
-            int EncryType = lParmsArry[1].ToIntH();
-            byte[] key = lParmsArry[2];
+
+            string hexstrKey = lParmsArry[0].GetString();
+            //string strIndex = lParmsArry[1].GetString();
+
+
+            int EncryType = 1;//写死1-3Des
+
+            int MKeyIndex = 1;//写死-密钥号1
+
+
+            byte[] key = hexstrKey.HexString2ByteArray();
             byte[] errmsg = new byte[70];
             int iRet = BSApiHelper.LoadMasterkey(_fd, MKeyIndex, EncryType, key.Length, ref key[0], ref errmsg[0]);
             if (iRet == 0)
             {
-                backData(null,0);
+                backData(null, 0);
             }
             else
             {
@@ -73,7 +81,7 @@ namespace ABC.BackSplint
                 string errMsg = Encoding.Default.GetString(errmsg);
                 SysLog.e("密钥写入失败:{0}", null, errMsg);
             }
-           
+
         }
 
         /// <summary>
@@ -83,14 +91,52 @@ namespace ABC.BackSplint
         private void LoadWkey(byte[] buffer)
         {
             List<byte[]> lParmsArry = DataDispose.unPackData(buffer, 4);
-            int MKeyIndex = lParmsArry[0].ToIntH();
-            int WKeyIndex = lParmsArry[1].ToIntH();
-            int EncryType = lParmsArry[2].ToIntH();
-            int KeyType = lParmsArry[3].ToIntH();
-            byte[] key = lParmsArry[4];
-            byte[] errmsg = new byte[70];
 
-            int iRet = BSApiHelper.LoadWorkkey(_fd, MKeyIndex, key.Length, ref key[0], ref errmsg[0]);
+            string hexstrKey = lParmsArry[0].GetString();
+            string encIndex = lParmsArry[1].GetString();
+
+            int MKeyIndex = 1;//lParmsArry[0].ToIntH();
+            //int WKeyIndex = lParmsArry[1].ToIntH();
+            //int EncryType = lParmsArry[2].ToIntH();
+            int KeyType = 0;//lParmsArry[3].ToIntH();
+            byte[] key = hexstrKey.HexString2ByteArray();
+            byte[] errmsg = new byte[70];
+            int iRet = -1;
+            if (encIndex == null || encIndex == string.Empty)//为空时明文传下
+            {
+                int len = key.Length;
+                byte[] mkey = new byte[key.Length];
+                byte[] newkey = new byte[key.Length];
+                for (int i = 0; i < len; i++)//全八的主密钥
+                {
+                    mkey[i] = 0x38;
+                }
+                // byte[] key = hexstrKey.HexString2ByteArray();
+                byte[] errmsg2 = new byte[70];
+                iRet = BSApiHelper.LoadMasterkey(_fd, 1, 1, mkey.Length, ref mkey[0], ref errmsg2[0]);
+                if (iRet == 0)
+                {
+                    iRet = BSApiHelper.des3_encrypt(ref mkey[0], ref key[0], len, ref newkey[0]);
+                    if (iRet!=0)
+                    {
+                        backErrData(new byte[] { 0, 1 });
+                        string err = errmsg.GetString();
+                        SysLog.e("下载工作密钥失败：{0}", null, err);
+                        return;
+                    }
+                    key = newkey;//替换加密后的密钥
+                }
+                else
+                {
+                    backErrData(new byte[] { 0, 1 });
+                    string err = errmsg.GetString();
+                    SysLog.e("下载工作密钥失败：{0}", null, err);
+                    return;
+                }
+
+            }
+
+            iRet = BSApiHelper.LoadWorkkey(_fd, MKeyIndex, key.Length, ref key[0], ref errmsg[0]);
             if (iRet == 0)
             {
                 switch (KeyType)
@@ -122,7 +168,7 @@ namespace ABC.BackSplint
             }
             if (iRet == 0)
             {
-                backData(null,0);
+                backData(null, 0);
             }
             else
             {
@@ -130,7 +176,7 @@ namespace ABC.BackSplint
                 string err = errmsg.GetString();
                 SysLog.e("下载工作密钥失败：{0}", null, err);
             }
-           
+
         }
 
         /// <summary>
@@ -139,7 +185,7 @@ namespace ABC.BackSplint
         /// <param name="buffer"></param>
         private void GetPinPlock(byte[] buffer)
         {
-           
+
             List<byte[]> lParms = DataDispose.unPackData(buffer, 9);
             int iMKeyIndex = lParms[0].ToIntH();
             int iEncryType = lParms[1].ToIntH();
@@ -155,7 +201,7 @@ namespace ABC.BackSplint
             int pinlen = 0;
             byte[] pinblock = new byte[64];
             byte[] errMsg = new byte[70];
-            int iRet = BSApiHelper.GetPinBlock(_fd, iMKeyIndex, bPan.Length, ref bPan[0], iTimeout, ref pinlen, ref pinblock[0],ref errMsg[0]);
+            int iRet = BSApiHelper.GetPinBlock(_fd, iMKeyIndex, bPan.Length, ref bPan[0], iTimeout, ref pinlen, ref pinblock[0], ref errMsg[0]);
             if (iRet == 0)
             {
                 backData(pinblock, pinlen);
@@ -175,13 +221,13 @@ namespace ABC.BackSplint
         /// <param name="buffer"></param>
         private void GetMac(byte[] buffer)
         {
-         
+
             List<byte[]> lParams = DataDispose.unPackData(buffer, 5);
-            int iMKeyIndex=lParams[0].ToIntH();
+            int iMKeyIndex = lParams[0].ToIntH();
             int iEncryType = lParams[1].ToIntH();
             int iMode = lParams[2].ToIntH();
             byte[] bMacSrc = lParams[3];
-            int macSrclen=lParams[4].ToIntH();
+            int macSrclen = lParams[4].ToIntH();
 
             byte[] errMsg = new byte[70];
 
@@ -189,7 +235,7 @@ namespace ABC.BackSplint
             int imaclen = 0;
 
             int iRet = BSApiHelper.GetMAC(_fd, iMKeyIndex, iMode, macSrclen, ref bMacSrc[0], ref imaclen, ref bmac[0], ref errMsg[0]);
-            if (iRet==0)
+            if (iRet == 0)
             {
                 backData(bmac, imaclen);
             }

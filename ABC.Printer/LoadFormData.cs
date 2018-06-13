@@ -39,7 +39,8 @@ namespace ABC.Printer
             //             });
 
             StringBuilder stringBuilder = new StringBuilder();
-
+            //stringBuilder.Append($"{27}{87}{1}");
+            stringBuilder.Append("               中国农业银行");//标题
             StreamReader sr = new StreamReader(file, Encoding.Default);
             XElement xele = XElement.Load(sr);
             // var xePrtRoot = xele.Elements("PrtRoot");//根节点
@@ -64,6 +65,8 @@ namespace ABC.Printer
                     string sss = formData(xele.Elements("TxtItem"), p => paramArry.FirstOrDefault(x => x.Key.Trim().Equals(string.Format($"{p.Trim().Replace("$", "")}{i}"))).Value);//加载数据
                 }
             }
+            stringBuilder.Append("\n");
+            stringBuilder.Append("\n");
             stringBuilder.Append("\n");
             buffer = stringBuilder.ToString().ToByteArry();
             return buffer;
@@ -92,6 +95,7 @@ namespace ABC.Printer
                 if (_NewRow != null && _NewRow.Equals("1"))
                 {
                     stringBuilder.Append("\n");
+                    stringBuilder.Append("      ");//向右挪点点
                 }
                 if (_Var != null && _Var.Equals("1"))//是否为值
                 {

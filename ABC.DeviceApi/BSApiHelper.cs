@@ -251,7 +251,27 @@ namespace ABC.DeviceApi
         [DllImport(DllPath, EntryPoint = "magnetic_read_ms")]
         public static extern int magnetic_read(int icdev, int timeout, ref byte mag_card);
 
+        /// <summary>
+        /// 3DES加密函数
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="ptrSource"></param>
+        /// <param name="msgLen"></param>
+        /// <param name="ptrDest"></param>
+        /// <returns></returns>
+        [DllImport(DllPath, EntryPoint = "des3_encrypt")]
+        public static extern int des3_encrypt(ref byte key, ref byte ptrSource, int msgLen, ref byte ptrDest);
 
+        /// <summary>
+        /// 3Des解密函数
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="ptrSource"></param>
+        /// <param name="msgLen"></param>
+        /// <param name="ptrDest"></param>
+        /// <returns></returns>
+        [DllImport(DllPath, EntryPoint = "des3_decrypt")]
+        public static extern int des3_decrypt(ref byte key, ref byte ptrSource, int msgLen, ref byte ptrDest);
         #endregion
     }
 }
