@@ -21,7 +21,7 @@ void Pinpad::socketRevCallBack(unsigned char * buffer)
 	{
 	case 1://»ñÈ¡ÃÜÂë£¨ÃÜÎÄ£©pinBlock
 	{
-		RevImport(buffer);
+		RevGetPinBlock(buffer);
 		break;
 	}
 	case 2:
