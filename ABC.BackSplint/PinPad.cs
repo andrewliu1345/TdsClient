@@ -11,7 +11,7 @@ using ABC.Attribute;
 namespace ABC.BackSplint
 {
     [BackSplintAttribute(isBackSplint = true)]
-    public class Pinpad : aFuns
+    public class PinPad : aFuns
     {
         int _fd = -1;
         /// <summary>
@@ -113,11 +113,11 @@ namespace ABC.BackSplint
                 }
                 // byte[] key = hexstrKey.HexString2ByteArray();
                 byte[] errmsg2 = new byte[70];
-                iRet = BSApiHelper.LoadMasterkey(_fd, 1, 1, mkey.Length, ref mkey[0], ref errmsg2[0]);
+                iRet = BSApiHelper.LoadMasterkey(_fd, MKeyIndex, 1, mkey.Length, ref mkey[0], ref errmsg2[0]);
                 if (iRet == 0)
                 {
                     iRet = BSApiHelper.des3_encrypt(ref mkey[0], ref key[0], len, ref newkey[0]);
-                    if (iRet!=0)
+                    if (iRet != 0)
                     {
                         backErrData(new byte[] { 0, 1 });
                         string err = errmsg.GetString();
@@ -187,20 +187,20 @@ namespace ABC.BackSplint
         {
 
             List<byte[]> lParms = DataDispose.unPackData(buffer, 9);
-            int iMKeyIndex = lParms[0].ToIntH();
-            int iEncryType = lParms[1].ToIntH();
-            int iTimes = lParms[2].ToIntH();
-            int iAmount = lParms[3].ToIntH();
-            byte[] bPan = lParms[4];
+            int iMKeyIndex = 1;//lParms[0].ToIntH();
+          //  int iEncryType = 1;// lParms[1].ToIntH();
+           // int iTimes = lParms[2].ToIntH();
+           // int iAmount = lParms[3].ToIntH();
+            byte[] bPan = lParms[1];
 
-            int iLength = lParms[5].ToIntH();
-            string sVoice = lParms[6].GetString();
-            int iEndType = lParms[7].ToIntH();
-            int iTimeout = lParms[8].ToIntH();
+            //             int iLength = lParms[5].ToIntH();
+            //             string sVoice = lParms[6].GetString();
+            //             int iEndType = lParms[7].ToIntH();
+            int iTimeout = 10000;//lParms[8].ToIntH();
 
-            int pinlen = 0;
-            byte[] pinblock = new byte[64];
-            byte[] errMsg = new byte[70];
+            int pinlen = 6;
+            byte[] pinblock = new byte[128];
+            byte[] errMsg = new byte[128];
             int iRet = BSApiHelper.GetPinBlock(_fd, iMKeyIndex, bPan.Length, ref bPan[0], iTimeout, ref pinlen, ref pinblock[0], ref errMsg[0]);
             if (iRet == 0)
             {

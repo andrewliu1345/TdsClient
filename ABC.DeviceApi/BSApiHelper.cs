@@ -224,7 +224,7 @@ namespace ABC.DeviceApi
         /// <param name="errmessage"></param>
         /// <returns></returns>
         [DllImport(DllPath, EntryPoint = "GetPIN")]
-        public static extern int GetPinBlock(int icdev, int mainkeyno, int cardnolen,ref byte cardno, long timeout, ref int pinlen, ref byte pinblock, ref byte errmessage);
+        public static extern int GetPinBlock(int icdev, int mainkeyno, int cardnolen,ref byte cardno, int timeout, ref int pinlen, ref byte pinblock, ref byte errmessage);
 
         /// <summary>
         /// 获取MAC

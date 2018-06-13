@@ -13,6 +13,7 @@ void Pinpad::socketRevCallBack(unsigned char * buffer)
 	memcpy(cmd, &buffer[3], 2);
 	if (cmd[0] != Pinpad_CMD[0] || cmd[1] != Pinpad_CMD[1])
 	{
+		//m_pEventHandler->importKeyCompleted(DEVICE_CARDREADER_INVALID_MEDIA, iReqid);
 		return;
 	}
 	UCHAR tag = buffer[5];
@@ -20,19 +21,22 @@ void Pinpad::socketRevCallBack(unsigned char * buffer)
 	{
 	case 1://获取密码（密文）pinBlock
 	{
-		
+		RevImport(buffer);
 		break;
 	}
 	case 2:
 	{
+
 		break;
 	}
-	case 3:
+	case 3://主密钥
 	{
+		RevImport(buffer);
 		break;
 	}
-	case 4:
+	case 4://工作密钥
 	{
+		RevImport(buffer);
 		break;
 	}
 	default:
@@ -54,6 +58,7 @@ void Pinpad::socketdisConnectCallBack()
 
 void Pinpad::socketErrCallBack()
 {
+	m_pEventHandler->getPinblockCompleted(DEVICE_ERROR_TIMEOUT, iReqid, NULL);
 }
 
 Pinpad::Pinpad()
@@ -152,14 +157,14 @@ int Pinpad::importKey(const char * keyname, const char * data, const char * keyu
 	int iRet = DEVICE_ERROR_HARDWARE_ERROR;
 	if (skeyname == MAINKEY)
 	{
-		iRet=LoadMKey(skeydata, senckeyname);
+		iRet = LoadMKey(skeydata, senckeyname);
 	}
 	else if (skeyname == WORKKEY)
 	{
 		iRet = LoadWKey(skeydata, skeyuse, senckeyname);
 	}
-	
-	
+
+
 	InterlockedIncrement((LPLONG)&iReqid);
 	return iRet;
 }
@@ -188,11 +193,47 @@ void Pinpad::endGetPin()
 }
 int Pinpad::getPinblock(const char * keyname, const char * cryptData, int * pReqID)
 {
+	sParam spKeyName;
+	sParam spCryptData;
+
+	string strKeyName(keyname);
+	string strCrytData(cryptData);
+
+	int KeyNamelen = strlen(strKeyName.c_str());
+	int strCrytDatalen = strlen(strCrytData.c_str());
+
+	spKeyName.ParamData = new unsigned char[KeyNamelen + 1];
+	spCryptData.ParamData = new unsigned char[strCrytDatalen + 1];
+
+	memset(spKeyName.ParamData, 0, KeyNamelen + 1);
+	memset(spCryptData.ParamData, 0, strCrytDatalen + 1);
+
+	spKeyName.ParamLen = KeyNamelen;
+	spCryptData.ParamLen = strCrytDatalen;
+
+	memcpy(spKeyName.ParamData, strKeyName.c_str(), KeyNamelen);
+	memcpy(spCryptData.ParamData, strCrytData.c_str(), strCrytDatalen);
+
+	UCHAR  sendbuffer[256] = { 0 };
+	int len = 0;
+	Utility::toPackData((UCHAR *)Pinpad_CMD, 0x01, sendbuffer, 256, &len, 2, spKeyName, spCryptData);
+	//资源回收
+	delete[] spKeyName.ParamData;
+	delete[] spCryptData.ParamData;
+
+	int iRet = transoket->WriteData(sendbuffer, len);
+	if (iRet > 0)
+	{
+		iRet = transoket->ReadData(this,30000);//开启读取异步线程
+		return DEVICE_ERROR_SUCCESS;
+	}
+	else
+	{
+		return DEVICE_ERROR_HARDWARE_ERROR;
+	}
 	return 0;
 }
-void Pinpad::RevReadCard(UCHAR * buffer)
-{
-}
+
 
 int Pinpad::LoadMKey(string Mkey, string encIndex)
 {
@@ -202,20 +243,23 @@ int Pinpad::LoadMKey(string Mkey, string encIndex)
 	int Mkeylen = strlen(Mkey.c_str());
 	int encIndexlen = strlen(encIndex.c_str());
 
-	spMkey.ParamData = new unsigned char(Mkeylen);
-	spEncIndex.ParamData = new unsigned char(encIndexlen);
+	spMkey.ParamData = new unsigned char[Mkeylen + 1];
+	spEncIndex.ParamData = new unsigned char[encIndexlen + 1];
 
-	memset(spMkey.ParamData, 0, Mkeylen);
-	memset(spEncIndex.ParamData, 0, encIndexlen);
+	memset(spMkey.ParamData, 0, Mkeylen + 1);
+	memset(spEncIndex.ParamData, 0, encIndexlen + 1);
+
+	spMkey.ParamLen = Mkeylen;
+	spEncIndex.ParamLen = encIndexlen;
 
 	memcpy(spMkey.ParamData, Mkey.c_str(), Mkeylen);
 	memcpy(spEncIndex.ParamData, encIndex.c_str(), encIndexlen);
 
 	UCHAR  sendbuffer[256] = { 0 };
 	int len = 0;
-	Utility::toPackData((UCHAR *)Pinpad_CMD, 0x03, sendbuffer, 256, &len, 1, spMkey, spEncIndex);
+	Utility::toPackData((UCHAR *)Pinpad_CMD, 0x03, sendbuffer, 256, &len, 2, spMkey, spEncIndex);
 	//资源回收
-	delete[]spMkey.ParamData;
+	delete[] spMkey.ParamData;
 	delete[] spEncIndex.ParamData;
 
 	int iRet = transoket->WriteData(sendbuffer, len);
@@ -233,7 +277,7 @@ int Pinpad::LoadMKey(string Mkey, string encIndex)
 
 int Pinpad::LoadWKey(string Wkey, string keyuse, string encIndex)
 {
-	sParam spMkey;
+	sParam spWkey;
 	sParam spKeyUse;
 	sParam spEncIndex;
 
@@ -241,26 +285,31 @@ int Pinpad::LoadWKey(string Wkey, string keyuse, string encIndex)
 	int encIndexlen = strlen(encIndex.c_str());
 	int keyuselen = strlen(keyuse.c_str());
 
-	spMkey.ParamData = new unsigned char(Wkeylen);
-	spEncIndex.ParamData = new unsigned char(encIndexlen);
-	spKeyUse.ParamData = new unsigned char(keyuselen);
+	spWkey.ParamData = new unsigned char[Wkeylen + 1];
+	spEncIndex.ParamData = new unsigned char[encIndexlen + 1];
+	spKeyUse.ParamData = new unsigned char[keyuselen + 1];
 
-	memset(spMkey.ParamData, 0, Wkeylen);
-	memset(spEncIndex.ParamData, 0, encIndexlen);
-	memset(spKeyUse.ParamData, 0, keyuselen);
+	memset(spWkey.ParamData, 0, Wkeylen + 1);
+	memset(spEncIndex.ParamData, 0, encIndexlen + 1);
+	memset(spKeyUse.ParamData, 0, keyuselen + 1);
 
-	memcpy(spMkey.ParamData, Wkey.c_str(), Wkeylen);
+	spWkey.ParamLen = Wkeylen;
+	spEncIndex.ParamLen = encIndexlen;
+	spKeyUse.ParamLen = keyuselen;
+
+	memcpy(spWkey.ParamData, Wkey.c_str(), Wkeylen);
 	memcpy(spEncIndex.ParamData, encIndex.c_str(), encIndexlen);
 	memcpy(spKeyUse.ParamData, keyuse.c_str(), keyuselen);
 
 	UCHAR  sendbuffer[256] = { 0 };
 	int len = 0;
-	Utility::toPackData((UCHAR *)Pinpad_CMD, 0x04, sendbuffer, 256, &len, 1, spMkey, spKeyUse,spEncIndex);
+	Utility::toPackData((UCHAR *)Pinpad_CMD, 0x04, sendbuffer, 256, &len, 3, spWkey, spKeyUse, spEncIndex);
 	//资源回收
-	delete[]spMkey.ParamData;
+	delete[] spWkey.ParamData;
 	delete[] spEncIndex.ParamData;
-
+	delete[] spKeyUse.ParamData;
 	int iRet = transoket->WriteData(sendbuffer, len);
+
 	if (iRet > 0)
 	{
 		iRet = transoket->ReadData(this, 6000);//开启读取异步线程
@@ -276,4 +325,75 @@ IPinpad  * APIENTRY createDevice()
 {
 	IPinpad *tmp = new Pinpad();
 	return tmp;
+}
+void Pinpad::RevImport(UCHAR * buffer)
+{
+	UCHAR tag = buffer[7];
+	switch (tag)
+	{
+	case 0:
+	{
+		Log::i(CLASSNAME, "成功！");
+		m_pEventHandler->importKeyCompleted(DEVICE_ERROR_SUCCESS, iReqid);
+		break;
+	}
+	case 1:
+	{
+		Log::i(CLASSNAME, "设备未链接！");
+		m_pEventHandler->importKeyCompleted(DEVICE_ERROR_HARDWARE_ERROR, iReqid);
+		break;
+	}
+	case 2://超时
+	{
+		Log::i(CLASSNAME, "超时！");
+		m_pEventHandler->importKeyCompleted(DEVICE_ERROR_TIMEOUT, iReqid);
+		break;
+	}
+	default:
+		Log::i(CLASSNAME, "失败！");
+		m_pEventHandler->importKeyCompleted(DEVICE_CARDREADER_INVALID_MEDIA, iReqid);
+		break;
+	}
+}
+
+void Pinpad::RevGetPinBlock(UCHAR * buffer)
+{
+	UCHAR tag = buffer[7];
+	switch (tag)
+	{
+	case 0:
+	{
+		PARAMLIST params;
+		PARAMLIST::iterator i;
+		int iRet = Utility::unPackData(buffer, 1, &params);
+		if (iRet != 0)
+		{
+			m_pEventHandler->getPinblockCompleted(DEVICE_CARDREADER_INVALID_MEDIA, iReqid, NULL);
+			return;
+		}
+		i = params.begin();
+		sParam revdata = (sParam)*i;
+		string hexstrData = Utility::bytesToHexstring(revdata.ParamData, revdata.ParamLen);
+
+		Log::i(CLASSNAME, "成功！hexstrData=%s", hexstrData.c_str());
+		m_pEventHandler->getPinblockCompleted(DEVICE_ERROR_SUCCESS, iReqid, hexstrData.c_str());
+		break;
+	}
+	case 1:
+	{
+		Log::i(CLASSNAME, "设备未链接！");
+		m_pEventHandler->getPinblockCompleted(DEVICE_ERROR_HARDWARE_ERROR, iReqid, NULL);
+		break;
+	}
+	case 2://超时
+	{
+		Log::i(CLASSNAME, "超时！");
+		m_pEventHandler->getPinblockCompleted(DEVICE_ERROR_TIMEOUT, iReqid, NULL);
+		break;
+	}
+	default:
+		Log::i(CLASSNAME, "失败！");
+		m_pEventHandler->getPinblockCompleted(DEVICE_CARDREADER_INVALID_MEDIA, iReqid, NULL);
+		break;
+	}
 }

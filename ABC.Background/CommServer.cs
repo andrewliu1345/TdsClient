@@ -97,7 +97,7 @@ namespace ABC.Background
         private void StartListen(object obj)
         {
             //ConnectDev();//连接设备
-            ThreadPool.SetMaxThreads(10, 10);
+            ThreadPool.SetMaxThreads(20, 20);
             Socket socketWatch = obj as Socket;
             while (true)
             {

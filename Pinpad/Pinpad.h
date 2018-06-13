@@ -87,8 +87,8 @@ public:
 private:
 	long iReqid = 1;
 	TranSocket * transoket;
-	void RevReadCard(UCHAR* buffer);
-
+	void RevImport(UCHAR* buffer);
+	void RevGetPinBlock(UCHAR * buffer);
 	//************************************
 	// Method:    œ¬‘ÿ÷˜√‹‘ø
 	// FullName:  Pinpad::LoadMKey
