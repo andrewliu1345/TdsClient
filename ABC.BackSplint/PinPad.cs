@@ -113,15 +113,16 @@ namespace ABC.BackSplint
                 }
                 // byte[] key = hexstrKey.HexString2ByteArray();
                 byte[] errmsg2 = new byte[70];
-                iRet = BSApiHelper.LoadMasterkey(_fd, MKeyIndex, 1, mkey.Length, ref mkey[0], ref errmsg2[0]);
+                iRet = BSApiHelper.LoadMasterkey(_fd, MKeyIndex, 1, mkey.Length, ref mkey[0], ref errmsg2[0]);//初始主密钥
                 if (iRet == 0)
                 {
-                    iRet = BSApiHelper.des3_encrypt(ref mkey[0], ref key[0], len, ref newkey[0]);
+                   
+                    iRet = BSApiHelper.des3_encrypt(ref mkey[0], ref key[0], (byte)len, ref newkey[0]);//对工作密钥加密
                     if (iRet != 0)
                     {
                         backErrData(new byte[] { 0, 1 });
-                        string err = errmsg.GetString();
-                        SysLog.e("下载工作密钥失败：{0}", null, err);
+                        string err = errmsg.GetString("UTF-8");
+                        SysLog.e($"工作密钥加密失败：{err},iRet={iRet} key={key.bytesToHexString(key.Length)}", null);
                         return;
                     }
                     key = newkey;//替换加密后的密钥
@@ -130,7 +131,7 @@ namespace ABC.BackSplint
                 {
                     backErrData(new byte[] { 0, 1 });
                     string err = errmsg.GetString();
-                    SysLog.e("下载工作密钥失败：{0}", null, err);
+                    SysLog.e($"下载初始主密钥失败：{err}", null);
                     return;
                 }
 
@@ -168,6 +169,7 @@ namespace ABC.BackSplint
             }
             if (iRet == 0)
             {
+                SysLog.d($"下载工作密钥成功", null );
                 backData(null, 0);
             }
             else
@@ -188,9 +190,9 @@ namespace ABC.BackSplint
 
             List<byte[]> lParms = DataDispose.unPackData(buffer, 9);
             int iMKeyIndex = 1;//lParms[0].ToIntH();
-          //  int iEncryType = 1;// lParms[1].ToIntH();
-           // int iTimes = lParms[2].ToIntH();
-           // int iAmount = lParms[3].ToIntH();
+                               //  int iEncryType = 1;// lParms[1].ToIntH();
+                               // int iTimes = lParms[2].ToIntH();
+                               // int iAmount = lParms[3].ToIntH();
             byte[] bPan = lParms[1];
 
             //             int iLength = lParms[5].ToIntH();

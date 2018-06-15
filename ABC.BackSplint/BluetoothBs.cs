@@ -1,6 +1,7 @@
 ﻿using ABC.BT;
 using ABC.DeviceApi;
 using ABC.Enity;
+using ABC.Logs;
 using System.Threading;
 
 namespace ABC.BackSplint
@@ -23,8 +24,8 @@ namespace ABC.BackSplint
         {
             while (true)
             {
-              
-                if (isClosed == true|| cts.Token.IsCancellationRequested)//关闭标志
+
+                if (isClosed == true || cts.Token.IsCancellationRequested)//关闭标志
                 {
                     BSApiHelper.device_close(DeviceIDs.ReadCard_fd);
                     DeviceIDs.ReadCard_fd = -1;
@@ -45,6 +46,7 @@ namespace ABC.BackSplint
                     {
 
                         iRet = BSApiHelper.device_close(DeviceIDs.ReadCard_fd);
+                        SysLog.d($"device_close iret={iRet},ReadCard_fd={DeviceIDs.ReadCard_fd}", null);
                         if (iRet == 0)
                         {
                             DeviceIDs.ReadCard_fd = -1;
@@ -70,10 +72,10 @@ namespace ABC.BackSplint
         private int GetDeviceStatus()
         {
             byte[] verlen = { 0, 0, 0 };
-            byte[] verdata = new byte[102400];
+            byte[] verdata = new byte[1024];
             byte[] ndev_status = new byte[1];
-            int iRet = BSApiHelper.get_device_status(DeviceIDs.ReadCard_fd, ref ndev_status[0]);
-            //BSApiHelper.device_version(DeviceIDs.ReadCard_fd, 0, ref verlen[0], ref verdata[0]);
+            // int iRet = BSApiHelper.get_device_status(DeviceIDs.ReadCard_fd, ref ndev_status[0]);
+            int iRet = BSApiHelper.device_version(DeviceIDs.ReadCard_fd, 0, ref verlen[0], ref verdata[0]);
             if (iRet != 0)
             {
                 if (ndev_status[0] > 4)

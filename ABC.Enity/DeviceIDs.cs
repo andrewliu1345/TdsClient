@@ -16,12 +16,12 @@
         {
             get
             {
-                lock (rc_lock)
+                //lock (rc_lock)
                     return rc_fd;
             }
             set
             {
-                lock (rc_lock)
+               // lock (rc_lock)
                     rc_fd = value;
             }
         }
@@ -33,12 +33,12 @@
         {
             get
             {
-                lock (print_lock)
+                //lock (print_lock)
                     return print_fd;
             }
             set
             {
-                lock (print_lock)
+                //lock (print_lock)
                     print_fd = value;
             }
         }

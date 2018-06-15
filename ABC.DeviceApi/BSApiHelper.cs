@@ -260,7 +260,7 @@ namespace ABC.DeviceApi
         /// <param name="ptrDest"></param>
         /// <returns></returns>
         [DllImport(DllPath, EntryPoint = "des3_encrypt")]
-        public static extern int des3_encrypt(ref byte key, ref byte ptrSource, int msgLen, ref byte ptrDest);
+        public static extern int des3_encrypt(ref byte key, ref byte ptrSource, byte msgLen, ref byte ptrDest);
 
         /// <summary>
         /// 3Des解密函数

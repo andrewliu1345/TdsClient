@@ -53,6 +53,31 @@ namespace ABC.HelperClass
             }
             return stringBuilder.ToString().Trim();
         }
+        public static String bytesToHexString(this byte[] src)
+        {
+            int length = src.Length;
+            StringBuilder stringBuilder = new StringBuilder("");
+            if (src == null || src.Length <= 0)
+            {
+                return null;
+            }
+            if (src.Length < length)
+            {
+                length = src.Length;
+            }
+            for (int i = 0; i < length; i++)
+            {
+                int v = src[i] & 0xFF;
+                String hv = Convert.ToString(v, 16);
+                if (hv.Length < 2)
+                {
+                    stringBuilder.Append(0);
+                }
+                stringBuilder.Append(hv);
+                stringBuilder.Append(" ");
+            }
+            return stringBuilder.ToString().Trim();
+        }
         public static byte[] intToByteArray(this int a)
         {
 
@@ -106,6 +131,10 @@ namespace ABC.HelperClass
         public static string GetString(this byte[] b)
         {
             return Encoding.Default.GetString(b);
+        }
+        public static string GetString(this byte[] b, string s)
+        {
+            return Encoding.GetEncoding(s).GetString(b);
         }
 
         public static byte[] ToByteArry(this string str)
