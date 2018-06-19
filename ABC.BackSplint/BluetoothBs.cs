@@ -29,7 +29,7 @@ namespace ABC.BackSplint
         {
             while (true)
             {
-
+                SysLog.d($"BluetoothBs Run ReadCard_fd={DeviceIDs.ReadCard_fd}", null);
                 if (isClosed == true || cts.Token.IsCancellationRequested)//关闭标志
                 {
                     SysLog.d($"BluetoothBs.Run isClosed={isClosed},cts={cts.Token.IsCancellationRequested}", null);
@@ -43,7 +43,11 @@ namespace ABC.BackSplint
                 {
                     int iRet;
                     lock (BackSplintLockObj.lockObj)
-                        iRet = GetDeviceStatus();//检查设备状态
+                    {
+                        SysLog.d($"GetDeviceStatus:进入锁", null);
+                        iRet = GetDeviceStatus();//检查设备状态 
+                        SysLog.d($"GetDeviceStatus:退出锁,iRet={iRet}", null);
+                    }
                     if (iRet == 0)
                     {
                         Thread.Sleep(15000);
@@ -74,6 +78,7 @@ namespace ABC.BackSplint
                 if (DeviceIDs.ReadCard_fd > 0)
                 {
                     isConnet = true;
+                    LedControl.Instance().ClearALL();//清空显示
                     BSApiHelper.device_beep(DeviceIDs.ReadCard_fd, 0, 1);
                     BSApiHelper.Set_RCT_Timer(DeviceIDs.ReadCard_fd);
                 }
@@ -99,13 +104,13 @@ namespace ABC.BackSplint
             return iRet;
 
         }
-//         public  void Stop()
-//         {
-//             base.Stop();
-//         }
-//         public override void RestBTConnect(abstractSerialPort config)
-//         {
-//             base.RestBTConnect(config);
-//         }
+        //         public  void Stop()
+        //         {
+        //             base.Stop();
+        //         }
+        //         public override void RestBTConnect(abstractSerialPort config)
+        //         {
+        //             base.RestBTConnect(config);
+        //         }
     }
 }

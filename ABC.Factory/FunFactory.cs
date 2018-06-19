@@ -43,10 +43,13 @@ namespace ABC.Factory
                 BackSplintAttribute att = System.Attribute.GetCustomAttribute(t, typeof(BackSplintAttribute)) as BackSplintAttribute;
                 if (att != null && att.isBackSplint)
                 {
+                    SysLog.d("isBackSplint 特性", null);
                     lock (BackSplintLockObj.lockObj)
                     {
+                        SysLog.d($"{buffer.bytesToHexString(length)}:进入锁", null);
                         fun.SetBackListener = this;
                         fun.SetData(buffer);
+                        SysLog.d($"{buffer.bytesToHexString(length)}:退出锁", null);
                     }
                 }
                 else

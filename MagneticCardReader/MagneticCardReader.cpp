@@ -160,10 +160,15 @@ int MagneticCardReader::transaction(const char* tranID, const void* parameter, i
 int MagneticCardReader::readCard(int timeout, int* reqID)
 {
 
+	int _timeout = 30;
+	if (timeout != 0)
+	{
+		_timeout = timeout;
+	}
 	Log::i((const char *)classname, "timeout：%d ", timeout);
 	sParam p1;
 	p1.ParamData = new unsigned char[1];
-	p1.ParamData[0] = (UCHAR)timeout;
+	p1.ParamData[0] = (UCHAR)_timeout;
 	p1.ParamLen = 1;
 	int len = 0;
 	UCHAR  sendbuffer[32] = { 0 };
@@ -171,7 +176,7 @@ int MagneticCardReader::readCard(int timeout, int* reqID)
 	int iRet = transoket->WriteData(sendbuffer, len);
 	if (iRet > 0)
 	{
-		iRet = transoket->ReadData(this, timeout * 1000);//开启读取异步线程
+		iRet = transoket->ReadData(this, _timeout*1000);//开启读取异步线程
 		InterlockedIncrement((LPLONG)&iReqid);
 		return DEVICE_ERROR_SUCCESS;
 	}

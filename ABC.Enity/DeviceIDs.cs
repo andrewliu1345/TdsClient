@@ -21,7 +21,7 @@
             }
             set
             {
-               // lock (rc_lock)
+               lock (rc_lock)
                     rc_fd = value;
             }
         }
@@ -38,7 +38,7 @@
             }
             set
             {
-                //lock (print_lock)
+                lock (print_lock)
                     print_fd = value;
             }
         }

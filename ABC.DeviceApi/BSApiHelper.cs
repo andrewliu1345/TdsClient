@@ -80,7 +80,7 @@ namespace ABC.DeviceApi
         /// <param name="message">失败消息</param>
         /// <returns></returns>
         [DllImport(DllPath, EntryPoint = "IDCard_ReadCard_finger")]
-        public static extern int IDCard_ReadCard_finger(int icdev, StringBuilder message);
+        public static extern int IDCard_ReadCard_finger(int icdev, ref byte message);
 
         /// <summary>
         /// 
@@ -100,6 +100,15 @@ namespace ABC.DeviceApi
         /// <returns></returns>
         [DllImport(DllPath, EntryPoint = "IDCard_GetPhotoFile")]
         public static extern int IDCard_GetPhotoFile(ref byte cfileName);
+
+        /// <summary>
+        /// 获取照片文件Base64格式数据
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <param name="WideString"></param>
+        /// <returns></returns>
+        [DllImport(DllPath, EntryPoint = "GetFileBase64Buffer")]
+        public static extern int GetFileBase64Buffer(string filename, StringBuilder WideString);
         #endregion
         #region 银行卡
 

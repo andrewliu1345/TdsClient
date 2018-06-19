@@ -97,7 +97,7 @@ namespace ABC.Background
         private void StartListen(object obj)
         {
             //ConnectDev();//连接设备
-            ThreadPool.SetMaxThreads(20, 20);
+            ThreadPool.SetMaxThreads(10, 10);
             Socket socketWatch = obj as Socket;
             while (true)
             {
@@ -170,16 +170,17 @@ namespace ABC.Background
 
                     int count = socketSend.Receive(buffer);
                     string str = buffer.bytesToHexString(count);//DataConver.bytesToHexString(buffer, count);
-                    string strReceiveMsg = "接收：" + socketSend.RemoteEndPoint + "发送的消息:" + str;
-                    SysLog.i(strReceiveMsg);
+                   // string strReceiveMsg = "" + + + ;
+                    SysLog.i($"接收：{socketSend.RemoteEndPoint} 接收的消息: {str} ");
                     if (count == 0)//count 表示客户端关闭，要退出循环
                     {
                         continue;
                     }
                     else
                     {
-                      
-                        fun.SetData(buffer, count);
+                        byte[] buffer2 = new byte[count];
+                        System.Array.Copy(buffer, buffer2, count);
+                        fun.SetData(buffer2, count);
                     }
                 }
                 catch (System.Exception ex)
