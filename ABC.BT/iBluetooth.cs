@@ -6,14 +6,15 @@ namespace ABC.BT
 {
     public abstract class iBluetooth
     {
-        protected bool isClosed = true;
+
+        protected static bool isClosed = true;
         protected int _Com = 0;
         protected int _Baud = 0;
         protected bool isConnet = false;
-        protected Thread _Thread;
         protected static iBluetooth m_instance;
 
-        protected CancellationTokenSource cts ;
+        private Task _task;
+        protected CancellationTokenSource cts;
 
         private void LoadConfig(abstractSerialPort config)
         {
@@ -24,13 +25,15 @@ namespace ABC.BT
         /// 开启线程
         /// </summary>
         /// <param name="config">加载参数</param>
-        public void Start(abstractSerialPort config)
+        public virtual void Start(abstractSerialPort config)
         {
             cts = new CancellationTokenSource();
             LoadConfig(config);
             isClosed = false;
-            TaskFactory _task = new TaskFactory();
-            _task.StartNew(Run, cts.Token);
+
+            TaskFactory _taskFactory = new TaskFactory();
+            _task = _taskFactory.StartNew(Run, cts.Token);
+
 
             //             LoadConfig(config);
             //             if (_Thread == null)
@@ -49,7 +52,7 @@ namespace ABC.BT
         /// <summary>
         /// 重启线程
         /// </summary>
-        public void RestBTConnect(abstractSerialPort config)
+        public  void RestBTConnect(abstractSerialPort config)
         {
             Stop();
             Start(config);
@@ -58,16 +61,23 @@ namespace ABC.BT
         /// <summary>
         /// 关闭线程
         /// </summary>
-        public void Stop()
+        public  void Stop()
         {
             isClosed = true;
-            cts.Cancel();//取消任务
-                         //             if (_Thread != null && _Thread.IsAlive)
-                         //             {
-                         //                 _Thread.Abort();
-                         //                 _Thread.Join();
-                         //                 _Thread = null;
-                         //             }
+            //this.isConnet = false;
+            //cts.Cancel();//取消任务
+            //Thread.Sleep(10000);
+            if (_task != null)
+            {
+                Task.WaitAll(_task);
+            }
+
+            //             if (_Thread != null && _Thread.IsAlive)
+            //             {
+            //                 _Thread.Abort();
+            //                 _Thread.Join();
+            //                 _Thread = null;
+            //             }
         }
 
         /// <summary>

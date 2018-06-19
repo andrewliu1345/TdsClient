@@ -1,4 +1,5 @@
 ﻿using ABC.BT;
+using ABC.Config;
 using ABC.DeviceApi;
 using ABC.Enity;
 using ABC.Logs;
@@ -8,6 +9,7 @@ namespace ABC.BackSplint
 {
     public class BluetoothBs : iBluetooth
     {
+
         static BluetoothBs()
         {
             m_instance = new BluetoothBs();
@@ -20,6 +22,9 @@ namespace ABC.BackSplint
             }
 
         }
+
+        //  protected override bool IsClosed { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+
         public override void Run(object obj)
         {
             while (true)
@@ -27,8 +32,10 @@ namespace ABC.BackSplint
 
                 if (isClosed == true || cts.Token.IsCancellationRequested)//关闭标志
                 {
+                    SysLog.d($"BluetoothBs.Run isClosed={isClosed},cts={cts.Token.IsCancellationRequested}", null);
                     BSApiHelper.device_close(DeviceIDs.ReadCard_fd);
                     DeviceIDs.ReadCard_fd = -1;
+                    isConnet = false;
                     return;
                 }
 
@@ -47,15 +54,18 @@ namespace ABC.BackSplint
 
                         iRet = BSApiHelper.device_close(DeviceIDs.ReadCard_fd);
                         SysLog.d($"device_close iret={iRet},ReadCard_fd={DeviceIDs.ReadCard_fd}", null);
-                        if (iRet == 0)
-                        {
-                            DeviceIDs.ReadCard_fd = -1;
-                        }
-                        else
-                        {
-                            Thread.Sleep(1000);
-                            continue;
-                        }
+                        DeviceIDs.ReadCard_fd = -1;
+                        Thread.Sleep(1000);
+                        isConnet = false;
+                        //                         if (iRet == 0)
+                        //                         {
+                        //                             DeviceIDs.ReadCard_fd = -1;
+                        //                         }
+                        //                         else
+                        //                         {
+                        //                             Thread.Sleep(1000);
+                        //                             continue;
+                        //                         }
 
                     }
                 }
@@ -63,11 +73,13 @@ namespace ABC.BackSplint
                 DeviceIDs.ReadCard_fd = DeviceApi.BSApiHelper.device_open(_Com - 1, _Baud);
                 if (DeviceIDs.ReadCard_fd > 0)
                 {
+                    isConnet = true;
                     BSApiHelper.device_beep(DeviceIDs.ReadCard_fd, 0, 1);
                     BSApiHelper.Set_RCT_Timer(DeviceIDs.ReadCard_fd);
                 }
                 Thread.Sleep(6000);
             }
+
         }
         private int GetDeviceStatus()
         {
@@ -87,5 +99,13 @@ namespace ABC.BackSplint
             return iRet;
 
         }
+//         public  void Stop()
+//         {
+//             base.Stop();
+//         }
+//         public override void RestBTConnect(abstractSerialPort config)
+//         {
+//             base.RestBTConnect(config);
+//         }
     }
 }

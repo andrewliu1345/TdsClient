@@ -32,5 +32,19 @@ namespace ABC.Printer
             }
             DeviceIDs.Print_fd = PrintApiHelper.device_open_print(_Com, _Baud);
         }
+        //         public override void Stop()
+        //         {
+        //             if (DeviceIDs.Print_fd > 0)
+        //             {
+        //                 PrintApiHelper.device_close_print(DeviceIDs.Print_fd);
+        //                 DeviceIDs.Print_fd = -1;
+        //             }
+        //             //cts.Cancel();//取消任务
+        //             //base.Stop();
+        //         }
+        //         public override void RestBTConnect(abstractSerialPort config)
+        //         {
+        //             base.RestBTConnect(config);
+        //         }
     }
 }
