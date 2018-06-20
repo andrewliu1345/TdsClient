@@ -4,3 +4,5 @@ device_open  @1001
 device_close @1002
 Print_CHS    @1003
 Print        @1004
+PrintPic     @1005
+PrintBarcode @1006

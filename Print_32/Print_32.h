@@ -4,6 +4,11 @@
 /* 打印机基本接口                                                       */
 /************************************************************************/
 
+enum Encoding
+{
+	 EAN_8 = 2,
+	 EAN_13 = 3,
+};
 
 //************************************
 // Method:    device_open
@@ -52,3 +57,30 @@ __int16 __stdcall Print_CHS(HANDLE icdev, unsigned char * str, unsigned int leng
 // Parameter: unsigned int length 长度
 //************************************
 __int16 __stdcall Print(HANDLE icdev, unsigned char * str, unsigned int length);
+
+
+//************************************
+// Method:    打印图片
+// FullName:  PrintPic
+// Access:    public 
+// Returns:   __int16 __stdcall
+// Qualifier:
+// Parameter: HANDLE icdev
+// Parameter: unsigned char * photodata
+// Parameter: unsigned int length
+//************************************
+__int16 __stdcall PrintPic(HANDLE icdev, unsigned char * photodata, unsigned int length);
+
+
+//************************************
+// Method:    PrintBarcode
+// FullName:  PrintBarcode
+// Access:    public 
+// Returns:   __int16 __stdcall
+// Qualifier: 打印一维码
+// Parameter: HANDLE icdev
+// Parameter: unsigned char * photodata
+// Parameter: unsigned int length
+//************************************
+__int16 __stdcall PrintBarcode(HANDLE icdev, int enc, unsigned char * Data, unsigned int length);
+

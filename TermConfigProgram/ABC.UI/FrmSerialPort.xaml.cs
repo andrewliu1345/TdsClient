@@ -1,6 +1,7 @@
 ﻿using ABC.Config;
 using ABC.DeviceApi;
 using ABC.Enity;
+using ABC.HelperClass;
 using ABC.Printer;
 using System.Collections.Generic;
 using System.IO.Ports;
@@ -94,6 +95,9 @@ namespace ABC.UI
             LoadFormData load = new LoadFormData();
             byte [] prdata= load.FormData(formName, data);
             PrintApiHelper.Print_CHS(DeviceIDs.Print_fd, prdata, prdata.Length);
+            byte[] numdata = "123".ToByteArry();
+            PrintApiHelper.PrintBarcode(DeviceIDs.Print_fd, 2, numdata, numdata.Length);
+            PrintApiHelper.Print_CHS(DeviceIDs.Print_fd,new byte[] { 0X0A },1);
             MessageBox.Show("打印完成");
         }
     }

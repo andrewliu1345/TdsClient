@@ -21,5 +21,11 @@ namespace ABC.DeviceApi
         //打印
         [DllImport(DllPath, EntryPoint = "Print_CHS")]
         public static extern int Print_CHS(int icdev, byte[] str, int length);
+
+        [DllImport(DllPath, EntryPoint = "PrintBarcode")]
+        public static extern int PrintBarcode(int icdev, int enc, byte[] Data, int length);
+
+        [DllImport(DllPath, EntryPoint = "PrintPic")]
+        public static extern int PrintPic(int icdev, byte[] photodata, int length);
     }
 }
