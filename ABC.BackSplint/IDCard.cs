@@ -24,9 +24,10 @@ namespace ABC.BackSplint
         {
             NAME = 0,
             SEX_CODE = 11,
-            SEX_NAME = 1,
+            SEX_CNAME = 1,
             IDC = 5,
             NATION_CODE = 21,
+            NATION_CNAME = 2,
             NATION = 2,
             BIRTH = 3,
             ADDRESS = 4,
@@ -151,6 +152,7 @@ namespace ABC.BackSplint
         {
             List<byte[]> lParams = DataDispose.unPackData(buffer, 1);
             string name = lParams[0].GetString().ToUpper().Trim();
+            SysLog.d($"GetIDCardData 下发Name={name}");
             eDataType type = 0;
             try
             {
