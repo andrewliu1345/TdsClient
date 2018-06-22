@@ -2,6 +2,7 @@
 using ABC.DeviceApi;
 using ABC.Enity;
 using ABC.HelperClass;
+using ABC.Logs;
 using ABC.Printer;
 using System.Collections.Generic;
 using System.IO.Ports;
@@ -21,8 +22,17 @@ namespace ABC.UI
         public FrmSerialPort()
         {
             InitializeComponent();
-            LoadComboBox();
-            LoadIni();
+            try
+            {
+                LoadComboBox();
+                LoadIni();
+            }
+            catch (System.Exception ex)
+            {
+
+                SysLog.e($"串口界面加载出错", ex);
+            }
+
         }
         private void LoadComboBox()
         {
@@ -33,9 +43,13 @@ namespace ABC.UI
             {
                 string _ssp = item.ToUpper().Replace("COM", "");
                 int _sp = int.Parse(_ssp);
-                _SerialPortList.Add(item, _sp);
+                if (!_SerialPortList.ContainsKey(item))
+                {
+                    _SerialPortList.Add(item, _sp);
+                }
+
             }
-            var list = _SerialPortList.OrderBy(o => o.Value);
+            var list = _SerialPortList.OrderBy(o => o.Value);//排序
             //  cbbSerialPort.Items.Clear();
             cbbBS.ItemsSource = list;
             cbbBS.DisplayMemberPath = "Key";
@@ -50,7 +64,7 @@ namespace ABC.UI
         BackSplintClass backSplint = AppConfig.Instance.BackSplint;
         PrinterClass printer = AppConfig.Instance.Printer;
 
-       
+
 
         private void LoadIni()
         {
@@ -93,11 +107,11 @@ namespace ABC.UI
             string formName = "PB33652.xml";
             string data = "jymc=短信服务注册#cph=#rzh= 326650753#jyrq=20171013-143119#zdh=050LM001#czy=刘寿丽#fhy=高丽#zhjlx=身份证#zhjhm=12010919670108003X#khmc=罗跃亭#qdje=10#jfms=包月#xsye=显示余额#";
             LoadFormData load = new LoadFormData();
-            byte [] prdata= load.FormData(formName, data);
+            byte[] prdata = load.FormData(formName, data);
             PrintApiHelper.Print_CHS(DeviceIDs.Print_fd, prdata, prdata.Length);
             byte[] numdata = "123".ToByteArry();
             PrintApiHelper.PrintBarcode(DeviceIDs.Print_fd, 2, numdata, numdata.Length);
-            PrintApiHelper.Print_CHS(DeviceIDs.Print_fd,new byte[] { 0X0A },1);
+            PrintApiHelper.Print_CHS(DeviceIDs.Print_fd, new byte[] { 0X0A }, 1);
             MessageBox.Show("打印完成");
         }
     }
