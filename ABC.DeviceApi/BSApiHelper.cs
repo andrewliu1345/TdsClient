@@ -107,7 +107,7 @@ namespace ABC.DeviceApi
         /// <param name="filename"></param>
         /// <param name="WideString"></param>
         /// <returns></returns>
-        [DllImport(DllPath, EntryPoint = "GetFileBase64Buffer")]
+        [DllImport(DllPath, EntryPoint = "GetFileBase64Buffer",CallingConvention =CallingConvention.Cdecl)]
         public static extern int GetFileBase64Buffer(string filename, StringBuilder WideString);
         #endregion
         #region 银行卡

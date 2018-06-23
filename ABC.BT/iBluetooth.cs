@@ -6,12 +6,12 @@ namespace ABC.BT
 {
     public abstract class iBluetooth
     {
-
+       
         protected static bool isClosed = true;
         protected int _Com = 0;
         protected int _Baud = 0;
         protected bool isConnet = false;
-        protected static iBluetooth m_instance;
+        
 
         private Task _task;
         protected CancellationTokenSource cts;
@@ -25,7 +25,7 @@ namespace ABC.BT
         /// 开启线程
         /// </summary>
         /// <param name="config">加载参数</param>
-        public virtual void Start(abstractSerialPort config)
+        public  void Start(abstractSerialPort config)
         {
             cts = new CancellationTokenSource();
             LoadConfig(config);

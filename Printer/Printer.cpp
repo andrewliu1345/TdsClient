@@ -13,25 +13,25 @@ void Printer::RevReadCard(UCHAR * buffer)
 	{
 	case 0:
 	{
-		Log::i(CLASSNAME, "¶Á¿¨³É¹¦£¡");
+		Log::i(CLASSNAME, "´òÓ¡³É¹¦£¡");
 		m_pEventHandler->printFormCompleted(DEVICE_ERROR_SUCCESS, iReqid);
 		break;
 	}
 	case 1:
 	{
 		Log::i(CLASSNAME, "Éè±¸Î´Á´½Ó£¡");
-		m_pEventHandler->printDataCompleted(DEVICE_ERROR_HARDWARE_ERROR, iReqid);
+		m_pEventHandler->printFormCompleted(DEVICE_ERROR_HARDWARE_ERROR, iReqid);
 		break;
 	}
 	case 2://³¬Ê±
 	{
-		Log::i(CLASSNAME, "¶Á¿¨³¬Ê±£¡");
-		m_pEventHandler->printDataCompleted(DEVICE_ERROR_TIMEOUT, iReqid);
+		Log::i(CLASSNAME, "´òÓ¡³¬Ê±£¡");
+		m_pEventHandler->printFormCompleted(DEVICE_ERROR_TIMEOUT, iReqid);
 		break;
 	}
 	default:
-		Log::i(CLASSNAME, "¶Á¿¨Ê§°Ü£¡");
-		m_pEventHandler->printDataCompleted(DEVICE_CARDREADER_INVALID_MEDIA, iReqid);
+		Log::i(CLASSNAME, "´òÓ¡Ê§°Ü£¡");
+		m_pEventHandler->printFormCompleted(DEVICE_CARDREADER_INVALID_MEDIA, iReqid);
 		break;
 	}
 }
@@ -59,12 +59,14 @@ void Printer::socketRevCallBack(unsigned char * buffer)
 	switch (tag)
 	{
 	case 1://´òÓ¡
+	case 2:
 	{
 		RevReadCard(buffer);
 		break;
 	}
 
 	default:
+		m_pEventHandler->printFormCompleted(DEVICE_CARDREADER_INVALID_MEDIA, iReqid);
 		break;
 	}
 }
@@ -116,7 +118,18 @@ bool Printer::isBusy()
 
 DeviceStatus Printer::getDeviceStatus()
 {
-	return DeviceStatus();
+	if (transoket->GetIsConnected())
+	{
+
+		m_pEventHandler->initializeCompleted(DEVICE_ERROR_SUCCESS);
+		return	DEVICE_STATUS_ONLINE;
+	}
+	else
+	{
+		m_pEventHandler->initializeCompleted(DEVICE_ERROR_INTERNAL_ERROR);
+		return DEVICE_STATUS_HWERROR;
+	}
+
 }
 
 void Printer::cancel(int nReqID)
@@ -182,13 +195,14 @@ const char * Printer::getLastErrorDescription()
 }
 int Printer::printForm(const char * formName, const char * content, int * pReqID)
 {
+	Log::i("Printer.printForm", "formName=%s,content=%s\n", formName, content);
 	sParam p1;
 	p1.ParamLen = strlen(formName);
 	p1.ParamData = new unsigned char[p1.ParamLen + 1];
 
 	sParam p2;
-	p2.ParamLen = strlen(content);
-	p2.ParamData = new unsigned char[p2.ParamLen + 1];
+	p2.ParamLen = strlen(content) + 1;
+	p2.ParamData = new unsigned char[p2.ParamLen];
 
 	memset(p1.ParamData, 0, p1.ParamLen);
 	memcpy(p1.ParamData, formName, p1.ParamLen);

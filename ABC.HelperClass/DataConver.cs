@@ -103,7 +103,7 @@ namespace ABC.HelperClass
             int ilen = b.Length;
             for (int i = 0; i < ilen; i++)
             {
-                sum += (b[i] << (8 * (ilen - 1 - i))) & 0xFF;
+                sum += (b[i] << (8 * (ilen - 1 - i))) & 0xFFFF;
             }
             return sum;
         }
@@ -124,7 +124,7 @@ namespace ABC.HelperClass
             int ilen = b.Length;
             for (int i = 0; i < ilen; i++)
             {
-                sum += (b[i] << (8 * (i - 1))) & 0xFF;
+                sum += (b[i] << (8 * (i - 1))) & 0xFFFF;
             }
             return sum;
         }

@@ -9,7 +9,7 @@ namespace ABC.BackSplint
 {
     public class BluetoothBs : iBluetooth
     {
-
+        private static iBluetooth m_instance;
         static BluetoothBs()
         {
             m_instance = new BluetoothBs();
@@ -35,7 +35,7 @@ namespace ABC.BackSplint
                     SysLog.d($"BluetoothBs.Run isClosed={isClosed},cts={cts.Token.IsCancellationRequested}", null);
                     BSApiHelper.device_close(DeviceIDs.ReadCard_fd);
                     DeviceIDs.ReadCard_fd = -1;
-                    isConnet = false;
+                    this.isConnet = false;
                     return;
                 }
 
@@ -74,7 +74,7 @@ namespace ABC.BackSplint
                     }
                 }
 
-                DeviceIDs.ReadCard_fd = DeviceApi.BSApiHelper.device_open(_Com - 1, _Baud);
+                DeviceIDs.ReadCard_fd = DeviceApi.BSApiHelper.device_open(this._Com - 1, this._Baud);
                 if (DeviceIDs.ReadCard_fd > 0)
                 {
                     isConnet = true;

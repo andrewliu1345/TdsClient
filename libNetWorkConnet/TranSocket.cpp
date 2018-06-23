@@ -55,7 +55,7 @@ TranSocket::TranSocket()
 	{
 		WSACleanup();
 		isConnected = false;
-		
+
 	}
 	Log::i("TranSocket", "TranSocket() 构造", NULL);
 
@@ -91,7 +91,7 @@ TranSocket::~TranSocket()
 int TranSocket::Connet()
 {
 
-	
+
 	if (sclient > 0 && isConnected == false)
 	{
 		CloseSocket(&sclient);
@@ -183,7 +183,7 @@ unsigned __stdcall TranSocket::Heart_Thead(LPVOID lpParameter)
 			//unConnet();
 			isConnected = false;
 			ReleaseMutex(g_hMutex);//发送失败释放信号
-			Sleep(1000);
+			Sleep(3000);
 			continue;
 		}
 
@@ -198,7 +198,7 @@ unsigned __stdcall TranSocket::Heart_Thead(LPVOID lpParameter)
 			//unConnet();
 			isConnected = false;
 			ReleaseMutex(g_hMutex);//接收失败释放信号
-			Sleep(1000);
+			Sleep(3000);
 			continue;
 		}
 		ReleaseMutex(g_hMutex);
@@ -237,8 +237,8 @@ unsigned _stdcall TranSocket::Read_Thead(LPVOID lpParameter)
 	UCHAR  refbuffer[4096] = { 0 };
 	int length = 4096;
 	int iRet = 0;
-	WaitForSingleObject(g_hMutex, INFINITE);
-	Sleep(100);
+
+	//Sleep(50);
 	while (true)
 	{
 		if (socketDeleget != NULL) {
@@ -247,8 +247,9 @@ unsigned _stdcall TranSocket::Read_Thead(LPVOID lpParameter)
 				socketDeleget->socketErrCallBack();//连接出错回调
 			}
 			memset(refbuffer, 0, length);
-
+			WaitForSingleObject(g_hMutex, INFINITE);
 			iRet = recv(sclient, (char *)refbuffer, length, 0);
+			ReleaseMutex(g_hMutex);
 			string str = Utility::bytesToHexstring(refbuffer, iRet);
 			Log::i("TranSocket.Read_Thead", "recv iRet=%d refbuffer=%s ", iRet, str.c_str());
 
@@ -269,10 +270,10 @@ unsigned _stdcall TranSocket::Read_Thead(LPVOID lpParameter)
 				socketDeleget->socketErrCallBack();//连接出错回调
 				break;
 			}
-			Sleep(200);
+			Sleep(50);
 		}
 	}
-	ReleaseMutex(g_hMutex);
+
 	//delete[]refbuffer;
 	return 0;
 }
@@ -284,7 +285,7 @@ unsigned __stdcall TranSocket::Flush_Thead(LPVOID lpParameter)
 	unsigned char refbuffer[4 * 1024] = { 0 };
 	int length = 4 * 1024;
 	WaitForSingleObject(g_hMutex, INFINITE);
-	int iRet = _read((char *)refbuffer, &length, 200);
+	int iRet = _read((char *)refbuffer, &length, 50);
 	ReleaseMutex(g_hMutex);
 	return 0;
 }

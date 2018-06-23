@@ -15,6 +15,7 @@ namespace ABC.Printer
             base.SetData(buffer);
             if (DeviceIDs.Print_fd <= 0)
             {
+                SysLog.e($"设备未连 DeviceIDs.Print_fd={DeviceIDs.Print_fd}");
                 backErrData(new byte[] { 0, 1 });//失败获取
                 return;
             }
@@ -30,7 +31,8 @@ namespace ABC.Printer
             byte[] bData = lPrams[1];
 
             string sfileName = bfileName.GetString();
-            string sData = bData.GetString();
+            string sData = bData.GetString("UTF-8");
+            SysLog.d($"PrintMsg sfileName={sfileName} \n sData={sData} \n bData={bData.bytesToHexString()}", null);
             LoadFormData load = new LoadFormData();
             try
             {

@@ -110,8 +110,8 @@ namespace ABC.UI
             byte[] prdata = load.FormData(formName, data);
             PrintApiHelper.Print_CHS(DeviceIDs.Print_fd, prdata, prdata.Length);
             byte[] numdata = "123".ToByteArry();
-            PrintApiHelper.PrintBarcode(DeviceIDs.Print_fd, 2, numdata, numdata.Length);
-            PrintApiHelper.Print_CHS(DeviceIDs.Print_fd, new byte[] { 0X0A }, 1);
+//             PrintApiHelper.PrintBarcode(DeviceIDs.Print_fd, 2, numdata, numdata.Length);
+//             PrintApiHelper.Print_CHS(DeviceIDs.Print_fd, new byte[] { 0X0A }, 1);
             MessageBox.Show("打印完成");
         }
     }

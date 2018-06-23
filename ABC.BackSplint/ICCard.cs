@@ -83,7 +83,7 @@ namespace ABC.BackSplint
 
                     if (st == 0)
                     {
-
+                        DeviceApi.BSApiHelper.device_beep(DeviceIDs.ReadCard_fd, 0, 1);
                         CardNo = 0xFF;
                         SysLog.i("读取到非接卡");
                         //byte[] sendBuffer = DataDispose.sendOK();
@@ -94,7 +94,8 @@ namespace ABC.BackSplint
                 }
                 else
                 {
-                    CardNo = 0xFF;
+                    DeviceApi.BSApiHelper.device_beep(DeviceIDs.ReadCard_fd, 0, 1);
+                    CardNo = 0x00;
                     SysLog.i("读取到接触卡");
                     //byte[] sendBuffer = DataDispose.sendOK();
                     backData(null, 0);
@@ -122,7 +123,7 @@ namespace ABC.BackSplint
             int iRet = DeviceApi.BSApiHelper.card_APDU(_fd, CardNo, bApdu.Length, bApdu, ref reclen, ref recBuffer[0]);
             if (iRet == 0)
             {
-                DeviceApi.BSApiHelper.device_beep(DeviceIDs.ReadCard_fd, 0, 1);
+               // DeviceApi.BSApiHelper.device_beep(DeviceIDs.ReadCard_fd, 0, 1);
                 //byte[] sendBuffer = DataDispose.toPackData(recBuffer, reclen);
                 string strRecBuffer = recBuffer.bytesToHexString(reclen);
                 SysLog.d("reADPU={0}", null, strRecBuffer);
