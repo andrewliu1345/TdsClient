@@ -190,7 +190,7 @@ unsigned __stdcall TranSocket::Heart_Thead(LPVOID lpParameter)
 		unsigned char  rebuff[7] = { 0 };
 		int relen = 7;
 
-		iRet = _read((char *)rebuff, &relen, 4000);//接收服务器返回
+		iRet = _read((char *)rebuff, &relen, 6000);//接收服务器返回
 		if (iRet == 0 || iRet == SOCKET_ERROR)
 		{
 			Log::i("TranSocket.Heart_Thead", "_read err=%d", iRet);
