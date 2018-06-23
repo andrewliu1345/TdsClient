@@ -270,7 +270,7 @@ unsigned _stdcall TranSocket::Read_Thead(LPVOID lpParameter)
 				socketDeleget->socketErrCallBack();//连接出错回调
 				break;
 			}
-			Sleep(50);
+			Sleep(10);
 		}
 	}
 
@@ -285,7 +285,7 @@ unsigned __stdcall TranSocket::Flush_Thead(LPVOID lpParameter)
 	unsigned char refbuffer[4 * 1024] = { 0 };
 	int length = 4 * 1024;
 	WaitForSingleObject(g_hMutex, INFINITE);
-	int iRet = _read((char *)refbuffer, &length, 50);
+	int iRet = _read((char *)refbuffer, &length, 1);
 	ReleaseMutex(g_hMutex);
 	return 0;
 }
