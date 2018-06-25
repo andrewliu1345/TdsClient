@@ -102,6 +102,7 @@ namespace ABC.BackSplint
             byte[] key = hexstrKey.HexString2ByteArray();
             byte[] errmsg = new byte[70];
             int iRet = -1;
+            SysLog.d($"工作密钥加下载：hexstrKey={hexstrKey},encIndex={encIndex}");
             if (encIndex == null || encIndex == string.Empty)//为空时明文传下
             {
                 int len = key.Length;
@@ -136,7 +137,7 @@ namespace ABC.BackSplint
                 }
 
             }
-
+            
             iRet = BSApiHelper.LoadWorkkey(_fd, MKeyIndex, key.Length, ref key[0], ref errmsg[0]);
             if (iRet == 0)
             {
@@ -206,6 +207,7 @@ namespace ABC.BackSplint
             int iRet = BSApiHelper.GetPinBlock(_fd, iMKeyIndex, bPan.Length, ref bPan[0], iTimeout, ref pinlen, ref pinblock[0], ref errMsg[0]);
             if (iRet == 0)
             {
+                SysLog.i($"获取 PinBlock={pinblock.bytesToHexString()}", null);
                 backData(pinblock, pinlen);
                 //sendBuffer = DataDispose.toPackData(pinblock, pinlen);
             }

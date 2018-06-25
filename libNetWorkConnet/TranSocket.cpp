@@ -234,50 +234,78 @@ unsigned _stdcall TranSocket::Read_Thead(LPVOID lpParameter)
 {
 	Log::i("TranSocket.Read_Thead", "Read_Thead  异步读取线程开启");
 	CSocketDelegete *socketDeleget = (CSocketDelegete *)lpParameter;
-	UCHAR  refbuffer[4096] = { 0 };
-	int length = 4096;
+	UCHAR *refbuffer;
+	UCHAR tmp[38863] = { 0 };
+	int length = 38863;
 	int iRet = 0;
-
-	//Sleep(50);
-	while (true)
-	{
-		if (socketDeleget != NULL) {
-			if (!isConnected)
-			{
-				socketDeleget->socketErrCallBack();//连接出错回调
-			}
-			memset(refbuffer, 0, length);
-			WaitForSingleObject(g_hMutex, INFINITE);
-			iRet = recv(sclient, (char *)refbuffer, length, 0);
-			ReleaseMutex(g_hMutex);
-			string str = Utility::bytesToHexstring(refbuffer, iRet);
-			Log::i("TranSocket.Read_Thead", "recv iRet=%d refbuffer=%s ", iRet, str.c_str());
-
-
-			if (iRet > 0)
-			{
-
-				socketDeleget->socketRevCallBack(refbuffer);//收到数据时的回调
-				break;
-			}
-			else if (iRet == 0)
-			{
-				socketDeleget->socketdisConnectCallBack();//网络短开回调
-				break;
-			}
-			else if (iRet == SOCKET_ERROR)
-			{
-				socketDeleget->socketErrCallBack();//连接出错回调
-				break;
-			}
-			Sleep(10);
+	int index = 0;
+	int __timeout = 10;
+	if (socketDeleget != NULL) {
+		if (!isConnected)
+		{
+			socketDeleget->socketErrCallBack();//连接出错回调
 		}
+		WaitForSingleObject(g_hMutex, INFINITE);
+		iRet = recv(sclient, (char *)tmp, length, 0);//第一次读取
+		if (iRet > 5)
+		{
+			unsigned char blen[2] = { 0 };
+			memcpy(blen, &tmp[1], 2);
+			int retlen = Utility::ByteArrayToInt(blen);//获取数据长度
+			refbuffer = new UCHAR[retlen + 5];
+			memset(refbuffer, 0, retlen + 5);
+			memcpy(&refbuffer[index], tmp, iRet);//获取第一条数据
+			index += iRet;//标志
+			setsockopt(sclient, SOL_SOCKET, SO_RCVTIMEO, (char *)&__timeout, sizeof(int));//读取超时设为10ms 
+			//Sleep(50);
+			while (true)
+			{
+				if (index == retlen + 5 && refbuffer[index - 1] == 0x03)
+				{
+					socketDeleget->socketRevCallBack(refbuffer);//收到完整数据的回调
+					delete[] refbuffer;
+					break;
+				}
+
+				memset(tmp, 0, length);
+				//WaitForSingleObject(g_hMutex, INFINITE);
+				iRet = recv(sclient, (char *)tmp, length, 0);
+
+				string str = Utility::bytesToHexstring(refbuffer, iRet);
+				Log::i("TranSocket.Read_Thead", "recv iRet=%d refbuffer=%s ", iRet, str.c_str());
+
+
+				if (iRet > 0)
+				{
+					memcpy(&refbuffer[index], tmp, iRet);//获取第N条数据
+					index += iRet;//标志
+				}
+				else
+				{
+					break;
+				}
+
+				//Sleep(10);
+			}
+		}
+		else if (iRet == 0)
+		{
+			socketDeleget->socketdisConnectCallBack();//网络短开回调
+
+		}
+		else if (iRet == SOCKET_ERROR)
+		{
+			socketDeleget->socketErrCallBack();//连接出错回调
+
+		}
+
+
+		ReleaseMutex(g_hMutex);
+		//delete[]refbuffer;
+		return 0;
 	}
 
-	//delete[]refbuffer;
-	return 0;
 }
-
 
 
 unsigned __stdcall TranSocket::Flush_Thead(LPVOID lpParameter)

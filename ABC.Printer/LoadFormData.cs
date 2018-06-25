@@ -1,5 +1,6 @@
 ﻿using ABC.Config;
 using ABC.HelperClass;
+using ABC.Logs;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -28,7 +29,7 @@ namespace ABC.Printer
                 string[] p = s.Split('=');
                 if (p != null && p.Length == 2)
                 {
-                    paramArry.Add(p[0], p[1]);
+                    paramArry.Add(p[0].Trim(), p[1].Trim());
                 }
             }
             //             _params.First(s =>
@@ -47,7 +48,12 @@ namespace ABC.Printer
             string ss = formData(xele.Elements("TxtItem"), p =>
             {
                 var v = paramArry.FirstOrDefault(x => x.Key.Trim().Equals(p.Trim()));//p前面有空格
-                return v.Value;
+                if (v.Key != null)
+                {
+                    paramArry.Remove(v.Key);
+                    return v.Value;
+                }
+                return string.Empty;
             });//加载数据
             stringBuilder.Append(ss);
 
@@ -58,13 +64,29 @@ namespace ABC.Printer
                 var conuAttr = xeListItemRoot.Attributes("CardNum");
                 var xeItem = xeListItemRoot.Elements("TxtItem");
                 var deCount = paramArry.FirstOrDefault(s => s.Key.Equals("CardNum"));//获取个数
+                SysLog.d($"ListItem deCount={deCount}");
                 string scount = deCount.Value;
                 int listcount = int.Parse(scount);
                 for (int i = 0; i < listcount; i++)
                 {
-                    string sss = formData(xele.Elements("TxtItem"), p => paramArry.FirstOrDefault(x => x.Key.Trim().Equals(string.Format($"{p.Trim().Replace("$", "")}{i}"))).Value);//加载数据
+                    string sss = formData(xeItem, p =>
+                    {
+                        string sp = paramArry.FirstOrDefault(x =>
+                          {
+                              string n = string.Format($"{p.Trim().Replace("$", "")}{i}");
+                              string key = x.Key.Replace("$", "").Trim();
+                              SysLog.d($"ListItem name={n} x.Key={key}");
+                              return key.Equals(n);
+                          }
+                          ).Value;
+                        return $"{sp}  ";
+                    }
+                    );//加载数据
+                    stringBuilder.Append(sss);
+
                 }
             }
+            stringBuilder.Append("\n");
             stringBuilder.Append("\n");
             stringBuilder.Append("\n");
             stringBuilder.Append("\n");
@@ -100,6 +122,7 @@ namespace ABC.Printer
                 if (_Var != null && _Var.Equals("1"))//是否为值
                 {
                     string v = func.Invoke(_txt); //_params.First(p => p == _txt);//用_params的值替换
+
                     stringBuilder.Append(v);
                 }
                 else

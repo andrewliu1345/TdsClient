@@ -303,7 +303,7 @@ int Pinpad::LoadWKey(string Wkey, string keyuse, string encIndex)
 
 	UCHAR  sendbuffer[256] = { 0 };
 	int len = 0;
-	Utility::toPackData((UCHAR *)Pinpad_CMD, 0x04, sendbuffer, 256, &len, 3, spWkey, spKeyUse, spEncIndex);
+	Utility::toPackData((UCHAR *)Pinpad_CMD, 0x04, sendbuffer, 256, &len, 3, spWkey, spEncIndex, spKeyUse);
 	//资源回收
 	delete[] spWkey.ParamData;
 	delete[] spEncIndex.ParamData;
