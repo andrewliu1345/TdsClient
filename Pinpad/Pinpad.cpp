@@ -58,6 +58,7 @@ void Pinpad::socketdisConnectCallBack()
 
 void Pinpad::socketErrCallBack()
 {
+	Log::i(CLASSNAME, (char *)"Pinpad socketErrCallBack\n");
 	m_pEventHandler->getPinblockCompleted(DEVICE_ERROR_TIMEOUT, iReqid, NULL);
 }
 
@@ -312,7 +313,7 @@ int Pinpad::LoadWKey(string Wkey, string keyuse, string encIndex)
 
 	if (iRet > 0)
 	{
-		iRet = transoket->ReadData(this, 6000);//开启读取异步线程
+		iRet = transoket->ReadData(this, 10000);//开启读取异步线程
 		return DEVICE_ERROR_SUCCESS;
 	}
 	else

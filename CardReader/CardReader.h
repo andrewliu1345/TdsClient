@@ -14,7 +14,7 @@ struct APDUPARAMETER {
 class CardReader : public ICardReader, public CSocketDelegete
 {
 private:
-	long iReqid ;
+	long iReqid = 1;
 	TranSocket * transoket;
 	APDUPARAMETER apdup;
 	void RevReadCard(UCHAR * buffer);
