@@ -13,7 +13,7 @@ public:
 	// Qualifier:
 	// Parameter: unsigned char * buffer
 	//************************************
-	virtual void  socketRevCallBack(unsigned char *buffer)=0;
+	virtual void  socketRevCallBack(unsigned char *buffer,int length)=0;
 
 
 	//************************************

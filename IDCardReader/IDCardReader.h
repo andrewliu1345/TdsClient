@@ -8,7 +8,7 @@ class IDCardRead :public ICardReader, public CSocketDelegete
 {
 public:
 
-	void socketRevCallBack(unsigned char *buffer);
+	void socketRevCallBack(unsigned char *buffer, int length);
 
 	void socketSendCallBack(unsigned char *buffer);
 

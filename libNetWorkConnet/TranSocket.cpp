@@ -279,7 +279,7 @@ unsigned _stdcall TranSocket::Read_Thead(LPVOID lpParameter)
 			if (iRet > 0)
 			{
 
-				socketDeleget->socketRevCallBack(refbuffer);//收到数据时的回调
+				socketDeleget->socketRevCallBack(refbuffer,iRet);//收到数据时的回调
 				break;
 			}
 			else if (iRet == 0)

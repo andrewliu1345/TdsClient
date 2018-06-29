@@ -7,7 +7,7 @@
 #define WORKKEY "WORKKEY"
 
 const UCHAR Pinpad_CMD[] = { 0xC6,0x03 };
-void Pinpad::socketRevCallBack(unsigned char * buffer)
+void Pinpad::socketRevCallBack(unsigned char *buffer, int length)
 {
 	UCHAR cmd[2] = { 0 };
 	memcpy(cmd, &buffer[3], 2);

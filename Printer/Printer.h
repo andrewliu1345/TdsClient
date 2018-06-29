@@ -17,7 +17,7 @@ public:
 
 	Printer();
 	~Printer();
-	void socketRevCallBack(unsigned char *buffer);
+	void socketRevCallBack(unsigned char *buffer, int length);
 	void socketSendCallBack(unsigned char *buffer);
 	void socketdidConnectCallBack();
 	void socketdisConnectCallBack();

@@ -47,7 +47,7 @@ Printer::~Printer()
 {
 }
 
-void Printer::socketRevCallBack(unsigned char * buffer)
+void Printer::socketRevCallBack(unsigned char *buffer, int length)
 {
 	UCHAR cmd[2] = { 0 };
 	memcpy(cmd, &buffer[3], 2);

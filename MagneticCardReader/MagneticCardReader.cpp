@@ -63,8 +63,10 @@ MagneticCardReader::~MagneticCardReader()
 }
 
 
-void MagneticCardReader::socketRevCallBack(unsigned char *buffer)
+void MagneticCardReader::socketRevCallBack(unsigned char *buffer, int length)
 {
+	Log::i((const char *)classname, "socketRevCallBack ·µ»ØÊý¾Ý buffer=", Utility::bytesToHexstring(buffer, length).c_str());
+
 	UCHAR cmd[2] = { 0 };
 	memcpy(cmd, &buffer[3], 2);
 	if (cmd[0] != mrcard_CMD[0] || cmd[1] != mrcard_CMD[1])
