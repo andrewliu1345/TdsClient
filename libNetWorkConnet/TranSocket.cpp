@@ -80,7 +80,24 @@ int TranSocket::ReadData(CSocketDelegete * socketDelegete, int timeout)
 	return 0;
 }
 
+int TranSocket::TranData(unsigned char * buffer, int length, unsigned char * refbuffer, int * reflegth, unsigned long timeout)
+{
+	WaitForSingleObject(g_hMutex, INFINITE);
+	int iRet = WriteData(buffer, length);
+	iRet = ReadData(refbuffer, reflegth, timeout);
+	ReleaseMutex(g_hMutex);
+	return iRet;
+}
 
+
+
+int TranSocket::SyncTranData(unsigned char * buffer, int length, CSocketDelegete * socketDelegete, int timeout)
+{
+	WaitForSingleObject(g_hMutex, INFINITE);
+	int iRet = WriteData(buffer, length);
+	ReadData(socketDelegete, timeout);
+	return iRet;
+}
 
 TranSocket::~TranSocket()
 {
@@ -161,18 +178,23 @@ unsigned __stdcall TranSocket::Heart_Thead(LPVOID lpParameter)
 			Log::i("TranSocket.Heart_Thead", "isConnected=false");
 			WaitForSingleObject(g_hMutex, INFINITE);
 			Log::i("TranSocket.Heart_Thead", "WaitForSingleObject(g_hMutex, INFINITE)");
-			iRet = Connet();//连接后台程序
-			ReleaseMutex(g_hMutex);
-			if (iRet == 0)
+			if (!isConnected)
 			{
-				isConnected = true;
-				if (hReadThread != NULL)
-				{
-					CloseHandle(hReadThread);
-					hReadThread = NULL;
-				}
+				iRet = Connet();//连接后台程序
 
+
+				if (iRet == 0)
+				{
+					isConnected = true;
+					if (hReadThread != NULL)
+					{
+						CloseHandle(hReadThread);
+						hReadThread = NULL;
+					}
+
+				}
 			}
+			ReleaseMutex(g_hMutex);
 		}
 		WaitForSingleObject(g_hMutex, INFINITE);
 		iRet = _write((const char *)heartData, 8);//发送心跳包
@@ -183,14 +205,14 @@ unsigned __stdcall TranSocket::Heart_Thead(LPVOID lpParameter)
 			//unConnet();
 			isConnected = false;
 			ReleaseMutex(g_hMutex);//发送失败释放信号
-			Sleep(3000);
+			Sleep(1000);
 			continue;
 		}
 
 		unsigned char  rebuff[7] = { 0 };
 		int relen = 7;
 
-		iRet = _read((char *)rebuff, &relen, 6000);//接收服务器返回
+		iRet = _read((char *)rebuff, &relen, 2000);//接收服务器返回
 		if (iRet == 0 || iRet == SOCKET_ERROR)
 		{
 			Log::i("TranSocket.Heart_Thead", "_read err=%d", iRet);
@@ -202,7 +224,7 @@ unsigned __stdcall TranSocket::Heart_Thead(LPVOID lpParameter)
 			continue;
 		}
 		ReleaseMutex(g_hMutex);
-		Sleep(60000);
+		Sleep(10000);
 	}
 }
 
@@ -247,9 +269,9 @@ unsigned _stdcall TranSocket::Read_Thead(LPVOID lpParameter)
 				socketDeleget->socketErrCallBack();//连接出错回调
 			}
 			memset(refbuffer, 0, length);
-			WaitForSingleObject(g_hMutex, INFINITE);
+			//WaitForSingleObject(g_hMutex, INFINITE);
 			iRet = recv(sclient, (char *)refbuffer, length, 0);
-			ReleaseMutex(g_hMutex);
+
 			string str = Utility::bytesToHexstring(refbuffer, iRet);
 			Log::i("TranSocket.Read_Thead", "recv iRet=%d refbuffer=%s ", iRet, str.c_str());
 
@@ -273,7 +295,7 @@ unsigned _stdcall TranSocket::Read_Thead(LPVOID lpParameter)
 			Sleep(10);
 		}
 	}
-
+	ReleaseMutex(g_hMutex);
 	//delete[]refbuffer;
 	return 0;
 }
@@ -296,20 +318,20 @@ void TranSocket::Flush()
 	unsigned char refbuffer[4 * 1024] = { 0 };
 	int length = 4 * 1024;
 	//WaitForSingleObject(g_hMutex, INFINITE);
-	int iRet = _read((char *)refbuffer, &length, 1);
+	int iRet = _read((char *)refbuffer, &length, 10);
 	//ReleaseMutex(g_hMutex);
 }
 
 int TranSocket::WriteData(unsigned char * buffer, int length)
 {
-	WaitForSingleObject(g_hMutex, INFINITE);
+	//WaitForSingleObject(g_hMutex, INFINITE);
 	Flush();//清空接收缓存
 	string sHexData = Utility::bytesToHexstring(buffer, length);
 	Log::i("TranSocket.WriteData", "writedata=%s", sHexData.c_str());
-	
+
 	int iRet = _write((const char *)buffer, length);
 	Log::i("TranSocket.WriteData", "iRet=%i", iRet);
-	ReleaseMutex(g_hMutex);
+	//ReleaseMutex(g_hMutex);
 	return iRet;
 }
 
@@ -320,9 +342,9 @@ int TranSocket::ReadData(unsigned char * refbuffer, int * reflegth, unsigned lon
 		return -1;
 	}
 	//接收时限
-	WaitForSingleObject(g_hMutex, INFINITE);
+	//WaitForSingleObject(g_hMutex, INFINITE);
 	_read((char *)refbuffer, reflegth, timeout);
-	ReleaseMutex(g_hMutex);
+	//ReleaseMutex(g_hMutex);
 	return 0;
 }
 

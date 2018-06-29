@@ -222,10 +222,10 @@ int Pinpad::getPinblock(const char * keyname, const char * cryptData, int * pReq
 	delete[] spKeyName.ParamData;
 	delete[] spCryptData.ParamData;
 
-	int iRet = transoket->WriteData(sendbuffer, len);
+	int iRet = transoket->SyncTranData(sendbuffer, len, this, 30000);
 	if (iRet > 0)
 	{
-		iRet = transoket->ReadData(this,30000);//开启读取异步线程
+		//iRet = transoket->ReadData(this,30000);//开启读取异步线程
 		return DEVICE_ERROR_SUCCESS;
 	}
 	else
@@ -263,10 +263,10 @@ int Pinpad::LoadMKey(string Mkey, string encIndex)
 	delete[] spMkey.ParamData;
 	delete[] spEncIndex.ParamData;
 
-	int iRet = transoket->WriteData(sendbuffer, len);
+	int iRet = transoket->SyncTranData(sendbuffer, len, this, 6000);
 	if (iRet > 0)
 	{
-		iRet = transoket->ReadData(this, 6000);//开启读取异步线程
+		//iRet = transoket->ReadData(this, 6000);//开启读取异步线程
 		return DEVICE_ERROR_SUCCESS;
 	}
 	else
@@ -309,11 +309,11 @@ int Pinpad::LoadWKey(string Wkey, string keyuse, string encIndex)
 	delete[] spWkey.ParamData;
 	delete[] spEncIndex.ParamData;
 	delete[] spKeyUse.ParamData;
-	int iRet = transoket->WriteData(sendbuffer, len);
+	int iRet = transoket->SyncTranData(sendbuffer, len, this, 10000);
 
 	if (iRet > 0)
 	{
-		iRet = transoket->ReadData(this, 10000);//开启读取异步线程
+		//iRet = transoket->ReadData(this, 10000);//开启读取异步线程
 		return DEVICE_ERROR_SUCCESS;
 	}
 	else

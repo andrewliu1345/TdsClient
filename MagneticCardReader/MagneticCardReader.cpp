@@ -113,7 +113,7 @@ void MagneticCardReader::setDeviceEventHandler(void* pHandler)
 void MagneticCardReader::initialize(XmlParser* pConfig)
 {
 	Sleep(100);//让连接线程可以起来
-	Log::i((char *)classname, "transoket->GetIsConnected()");
+	Log::i((char *)classname, "transoket->GetIsConnected()=%d", transoket->GetIsConnected());
 	if (transoket->GetIsConnected())
 	{
 		m_pEventHandler->initializeCompleted(DEVICE_ERROR_SUCCESS);
@@ -160,7 +160,7 @@ int MagneticCardReader::transaction(const char* tranID, const void* parameter, i
 int MagneticCardReader::readCard(int timeout, int* reqID)
 {
 
-	int _timeout = 30;
+	int _timeout = 10;
 	if (timeout != 0)
 	{
 		_timeout = timeout;
@@ -173,10 +173,10 @@ int MagneticCardReader::readCard(int timeout, int* reqID)
 	int len = 0;
 	UCHAR  sendbuffer[32] = { 0 };
 	Utility::toPackData((UCHAR *)mrcard_CMD, 0x01, sendbuffer, 32, &len, 1, p1);
-	int iRet = transoket->WriteData(sendbuffer, len);
+	int iRet = transoket->SyncTranData(sendbuffer, len, this, _timeout * 1000);
 	if (iRet > 0)
 	{
-		iRet = transoket->ReadData(this, _timeout*1000);//开启读取异步线程
+		//iRet = transoket->ReadData(this, _timeout*1000);//开启读取异步线程
 		InterlockedIncrement((LPLONG)&iReqid);
 		return DEVICE_ERROR_SUCCESS;
 	}

@@ -215,11 +215,11 @@ int Printer::printForm(const char * formName, const char * content, int * pReqID
 	UCHAR  sendbuffer[2048] = { 0 };
 	int _len = 0;
 	Utility::toPackData((UCHAR *)print_CMD, 0x02, sendbuffer, 2048, &_len, 2, p1, p2);
-	int iRet = transoket->WriteData(sendbuffer, _len);
+	int iRet = transoket->SyncTranData(sendbuffer, _len, this, 2000);
 	InterlockedIncrement((LPLONG)&iReqid);
 	if (iRet > 0)
 	{
-		iRet = transoket->ReadData(this, 2000);//开启读取异步线程
+		//iRet = transoket->ReadData(this, 2000);//开启读取异步线程
 		return DEVICE_ERROR_SUCCESS;
 	}
 	else

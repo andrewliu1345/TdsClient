@@ -43,6 +43,34 @@ public:
 
 
 	int ReadData(CSocketDelegete * socketDelegete, int timeout);
+
+	
+	//************************************
+	// Method:    数据传输
+	// FullName:  TranSocket::TranData
+	// Access:    public 
+	// Returns:   int
+	// Qualifier:
+	// Parameter: unsigned char * buffer
+	// Parameter: int length
+	// Parameter: unsigned char * refbuffer
+	// Parameter: int * reflegth
+	// Parameter: unsigned long timeout
+	//************************************
+	int TranData(unsigned char * buffer, int length, unsigned char * refbuffer, int* reflegth, unsigned long timeout);
+
+	//************************************
+	// Method:    数据传输（异步）
+	// FullName:  TranSocket::SyncTranData
+	// Access:    public 
+	// Returns:   int
+	// Qualifier:
+	// Parameter: unsigned char * buffer
+	// Parameter: int length
+	// Parameter: CSocketDelegete * socketDelegete
+	// Parameter: int timeout
+	//************************************
+	int SyncTranData(unsigned char * buffer, int length, CSocketDelegete * socketDelegete, int timeout);
 	~TranSocket();
 private:
 	static bool isConnected;

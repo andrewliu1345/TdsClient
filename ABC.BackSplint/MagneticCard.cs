@@ -30,13 +30,13 @@ namespace ABC.BackSplint
                     }
                 default:
                     backErrData(new byte[] { 0, 1 });
-                    
+
                     break;
             }
         }
         private void ReadMagetcCard(byte[] buffer)
         {
-            
+
             List<byte[]> lParams = DataDispose.unPackData(buffer, 1);
             int itimeout = lParams[0].ToIntH();
             if (itimeout == 0)
@@ -45,10 +45,10 @@ namespace ABC.BackSplint
             }
             else
             {
-                m_TimeOut = itimeout;
+                m_TimeOut = itimeout * 1000;
             }
             byte[] bMag_card = new byte[294];
-            int iRet = BSApiHelper.magnetic_read(_fd, m_TimeOut, ref bMag_card[0]);
+            int iRet = BSApiHelper.magnetic_read(_fd, m_TimeOut - 10, ref bMag_card[0]);
             switch (iRet)
             {
                 case 0:

@@ -67,7 +67,7 @@ namespace ABC.BackSplint
             while (true)
             {
                 long lTime = stopwatch.ElapsedMilliseconds;
-                if (lTime > timeout)
+                if (lTime > timeout-10)
                 {
                     backErrData(new byte[] { 0, 2 });//超时
                     return;

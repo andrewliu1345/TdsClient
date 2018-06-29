@@ -31,7 +31,7 @@ namespace ABC.Background
             }
 
         }
-        private const int MaxUser = 10;
+        private const int MaxUser = 20;
 
         /// <summary>
         /// 接收回调
