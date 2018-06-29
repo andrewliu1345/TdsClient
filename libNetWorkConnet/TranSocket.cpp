@@ -292,15 +292,21 @@ unsigned __stdcall TranSocket::Flush_Thead(LPVOID lpParameter)
 
 void TranSocket::Flush()
 {
-	hFlushThread = (HANDLE)_beginthreadex(NULL, 0, &Flush_Thead, NULL, 0, &g_FlushThreadId);//开启读线程
+	//hFlushThread = (HANDLE)_beginthreadex(NULL, 0, &Flush_Thead, NULL, 0, &g_FlushThreadId);//开启读线程
+	unsigned char refbuffer[4 * 1024] = { 0 };
+	int length = 4 * 1024;
+	//WaitForSingleObject(g_hMutex, INFINITE);
+	int iRet = _read((char *)refbuffer, &length, 1);
+	//ReleaseMutex(g_hMutex);
 }
 
 int TranSocket::WriteData(unsigned char * buffer, int length)
 {
+	WaitForSingleObject(g_hMutex, INFINITE);
 	Flush();//清空接收缓存
 	string sHexData = Utility::bytesToHexstring(buffer, length);
 	Log::i("TranSocket.WriteData", "writedata=%s", sHexData.c_str());
-	WaitForSingleObject(g_hMutex, INFINITE);
+	
 	int iRet = _write((const char *)buffer, length);
 	Log::i("TranSocket.WriteData", "iRet=%i", iRet);
 	ReleaseMutex(g_hMutex);

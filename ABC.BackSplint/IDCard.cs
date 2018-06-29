@@ -194,25 +194,25 @@ namespace ABC.BackSplint
                     case eDataType.BIRTHDAY_YEAR:
                         {
                             BSApiHelper.IDCard_GetCardInfo(DeviceIDs.ReadCard_fd, 3, ref bdata[0]);
-                            byte[] year = new byte[4];
+                            byte[] year = new byte[5];//多一位防乱码
                             System.Array.Copy(bdata, year, 4);
-                            backData(year, 4);
+                            backData(year, 5);
                             break;
                         }
                     case eDataType.BIRTHDAY_MONTH:
                         {
                             BSApiHelper.IDCard_GetCardInfo(DeviceIDs.ReadCard_fd, 3, ref bdata[0]);
-                            byte[] month = new byte[2];
+                            byte[] month = new byte[3];//多一位防乱码
                             System.Array.Copy(bdata, 4, month, 0, 2);
-                            backData(month, 2);
+                            backData(month, 3);
                             break;
                         }
                     case eDataType.BIRTHDAY_DAY:
                         {
                             BSApiHelper.IDCard_GetCardInfo(DeviceIDs.ReadCard_fd, 3, ref bdata[0]);
-                            byte[] day = new byte[2];
+                            byte[] day = new byte[3];//多一位防乱码
                             System.Array.Copy(bdata, 6, day, 0, 2);
-                            backData(day, 2);
+                            backData(day, 3);
                             break;
                         }
                     case eDataType.PHOTODATA:
