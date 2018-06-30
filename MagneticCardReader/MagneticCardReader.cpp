@@ -65,7 +65,7 @@ MagneticCardReader::~MagneticCardReader()
 
 void MagneticCardReader::socketRevCallBack(unsigned char *buffer, int length)
 {
-	Log::i((const char *)classname, "socketRevCallBack 返回数据 buffer=", Utility::bytesToHexstring(buffer, length).c_str());
+	Log::i((const char *)classname, "socketRevCallBack 返回数据 buffer=%s", Utility::bytesToHexstring(buffer, length).c_str());
 
 	UCHAR cmd[2] = { 0 };
 	memcpy(cmd, &buffer[3], 2);
@@ -161,7 +161,7 @@ int MagneticCardReader::transaction(const char* tranID, const void* parameter, i
 
 int MagneticCardReader::readCard(int timeout, int* reqID)
 {
-
+	iReqid = 1;
 	int _timeout = 10;
 	if (timeout != 0)
 	{

@@ -95,7 +95,11 @@ int TranSocket::SyncTranData(unsigned char * buffer, int length, CSocketDelegete
 {
 	WaitForSingleObject(g_hMutex, INFINITE);
 	int iRet = WriteData(buffer, length);
-	ReadData(socketDelegete, timeout);
+	if (iRet>0)
+	{
+		ReadData(socketDelegete, timeout);
+	}
+
 	return iRet;
 }
 
@@ -197,6 +201,7 @@ unsigned __stdcall TranSocket::Heart_Thead(LPVOID lpParameter)
 			ReleaseMutex(g_hMutex);
 		}
 		WaitForSingleObject(g_hMutex, INFINITE);
+		Log::i("TranSocket.Heart_Thead", "发送心跳包");
 		iRet = _write((const char *)heartData, 8);//发送心跳包
 		if (iRet <= 0)
 		{
@@ -205,7 +210,7 @@ unsigned __stdcall TranSocket::Heart_Thead(LPVOID lpParameter)
 			//unConnet();
 			isConnected = false;
 			ReleaseMutex(g_hMutex);//发送失败释放信号
-			Sleep(1000);
+			Sleep(3000);
 			continue;
 		}
 
@@ -224,7 +229,7 @@ unsigned __stdcall TranSocket::Heart_Thead(LPVOID lpParameter)
 			continue;
 		}
 		ReleaseMutex(g_hMutex);
-		Sleep(10000);
+		Sleep(60000);
 	}
 }
 

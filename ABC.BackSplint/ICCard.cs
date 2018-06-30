@@ -73,13 +73,14 @@ namespace ABC.BackSplint
                     return;
                 }
 
-                int st = DeviceApi.BSApiHelper.sam_slt_reset(_fd, 1000, 0, ref length, ref msg[0]);
+                int st = DeviceApi.BSApiHelper.sam_slt_reset(_fd, 500, 0, ref length, ref msg[0]);
                 if (st != 0)
                 {
+                    timeout -= 500;
                     byte[] cardtype = { 0 };
                     byte[] snrlen = { 0 };
                     byte[] snr = new byte[4];
-                    st = DeviceApi.BSApiHelper.open_card(_fd, 1000, ref cardtype[0], ref snrlen[0], ref snr[0], ref length, ref msg[0]);
+                    st = DeviceApi.BSApiHelper.open_card(_fd, 500, ref cardtype[0], ref snrlen[0], ref snr[0], ref length, ref msg[0]);
 
                     if (st == 0)
                     {
@@ -90,6 +91,7 @@ namespace ABC.BackSplint
                         backData(null, 0);
                         break;
                     }
+                    timeout -= 500;
 
                 }
                 else
