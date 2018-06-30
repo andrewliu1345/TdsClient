@@ -18,8 +18,9 @@ private:
 	TranSocket * transoket;
 	APDUPARAMETER apdup;
 	void RevReadCard(UCHAR * buffer);
+	void RevApdu(UCHAR * Buffer);
 public:
-	void socketRevCallBack(unsigned char *buffer,int length);
+	void socketRevCallBack(unsigned char *buffer, int length);
 
 	void socketSendCallBack(unsigned char *buffer);
 

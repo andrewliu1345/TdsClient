@@ -5,6 +5,7 @@ using ABC.HelperClass;
 using ABC.Logs;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 
 namespace ABC.BackSplint
 {
@@ -67,20 +68,20 @@ namespace ABC.BackSplint
             while (true)
             {
                 long lTime = stopwatch.ElapsedMilliseconds;
-                if (lTime > timeout-10)
+                if (lTime > timeout-1000)
                 {
                     backErrData(new byte[] { 0, 2 });//超时
                     return;
                 }
 
-                int st = DeviceApi.BSApiHelper.sam_slt_reset(_fd, 500, 0, ref length, ref msg[0]);
+                int st = DeviceApi.BSApiHelper.sam_slt_reset(_fd, 0, 0, ref length, ref msg[0]);
                 if (st != 0)
                 {
-                    timeout -= 500;
+                   // timeout -= 500;
                     byte[] cardtype = { 0 };
                     byte[] snrlen = { 0 };
                     byte[] snr = new byte[4];
-                    st = DeviceApi.BSApiHelper.open_card(_fd, 500, ref cardtype[0], ref snrlen[0], ref snr[0], ref length, ref msg[0]);
+                    st = DeviceApi.BSApiHelper.open_card(_fd, 0, ref cardtype[0], ref snrlen[0], ref snr[0], ref length, ref msg[0]);
 
                     if (st == 0)
                     {
@@ -91,7 +92,7 @@ namespace ABC.BackSplint
                         backData(null, 0);
                         break;
                     }
-                    timeout -= 500;
+                    //timeout -= 500;
 
                 }
                 else
@@ -103,6 +104,7 @@ namespace ABC.BackSplint
                     backData(null, 0);
                     break;
                 }
+                Thread.Sleep(10);
             }
             if (CardNo == -1)
             {

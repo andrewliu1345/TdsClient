@@ -99,7 +99,7 @@ int TranSocket::SyncTranData(unsigned char * buffer, int length, CSocketDelegete
 	{
 		ReadData(socketDelegete, timeout);
 	}
-
+	Log::i("TranSocket.WriteData", "写数据失败 isConnected=%i", isConnected);
 	return iRet;
 }
 
@@ -181,9 +181,10 @@ unsigned __stdcall TranSocket::Heart_Thead(LPVOID lpParameter)
 		{
 			Log::i("TranSocket.Heart_Thead", "isConnected=false");
 			WaitForSingleObject(g_hMutex, INFINITE);
-			Log::i("TranSocket.Heart_Thead", "WaitForSingleObject(g_hMutex, INFINITE)");
+			
 			if (!isConnected)
 			{
+				Log::i("TranSocket.Heart_Thead", "正在连接服务端");
 				iRet = Connet();//连接后台程序
 
 
