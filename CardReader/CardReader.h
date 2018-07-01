@@ -7,8 +7,8 @@
 
 struct APDUPARAMETER {
 	int iReqid;
-	char* szCmd;
-	char* szApduData;
+	char szCmd[256] = { 0 };
+	char szApduData[2048] = { 0 };
 };
 
 class CardReader : public ICardReader, public CSocketDelegete

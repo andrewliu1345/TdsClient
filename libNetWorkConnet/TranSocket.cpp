@@ -95,11 +95,14 @@ int TranSocket::SyncTranData(unsigned char * buffer, int length, CSocketDelegete
 {
 	WaitForSingleObject(g_hMutex, INFINITE);
 	int iRet = WriteData(buffer, length);
-	if (iRet>0)
+	if (iRet > 0)
 	{
 		ReadData(socketDelegete, timeout);
 	}
-	Log::i("TranSocket.WriteData", "写数据失败 isConnected=%i", isConnected);
+	else
+	{
+		Log::i("TranSocket.WriteData", "写数据失败 isConnected=%i", isConnected);
+	}
 	return iRet;
 }
 
@@ -181,7 +184,7 @@ unsigned __stdcall TranSocket::Heart_Thead(LPVOID lpParameter)
 		{
 			Log::i("TranSocket.Heart_Thead", "isConnected=false");
 			WaitForSingleObject(g_hMutex, INFINITE);
-			
+
 			if (!isConnected)
 			{
 				Log::i("TranSocket.Heart_Thead", "正在连接服务端");
@@ -285,7 +288,7 @@ unsigned _stdcall TranSocket::Read_Thead(LPVOID lpParameter)
 			if (iRet > 0)
 			{
 
-				socketDeleget->socketRevCallBack(refbuffer,iRet);//收到数据时的回调
+				socketDeleget->socketRevCallBack(refbuffer, iRet);//收到数据时的回调
 				break;
 			}
 			else if (iRet == 0)
