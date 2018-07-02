@@ -221,12 +221,13 @@ namespace ABC.BackSplint
                         }
                     case eDataType.PHOTODATA:
                         {
-                            StringBuilder stringBuilder = new StringBuilder(38863);
-                            //byte[] stringBuilder = new byte[38863];
-                            string path = string.Format($"{AppConfig.Instance.Path.PhotoPath}\\zp.bmp");
-                            BSApiHelper.GetFileBase64Buffer(path, stringBuilder);
-                            byte[] b = stringBuilder.ToString().ToByteArry();
-                            backData(b, b.Length);
+//                             StringBuilder stringBuilder = new StringBuilder(38863);
+//                             //byte[] stringBuilder = new byte[38863];
+//                             string path = string.Format($"{AppConfig.Instance.Path.PhotoPath}\\zp.bmp");
+//                             BSApiHelper.GetFileBase64Buffer(path, stringBuilder);
+//                             byte[] b = stringBuilder.ToString().ToByteArry();
+//                             backData(b, b.Length);
+                            backData(null, 0);
                             break;
                         }
                     default:
