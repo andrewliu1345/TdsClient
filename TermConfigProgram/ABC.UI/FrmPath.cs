@@ -43,7 +43,7 @@ namespace ABC.UI
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
             path.FormPath = txtPath.Text;
-            path.PhotoPath = txtPath2.Text;
+            path.PhotoPath = txtPath2.Text.TrimEnd('\\');
             path.Save();
             System.Windows.Forms.MessageBox.Show("保存成功");
         }

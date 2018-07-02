@@ -166,7 +166,7 @@ namespace ABC.BackSplint
             if (ReadOK == true && DeviceIDs.ReadCard_fd > 0)
             {
 
-                byte[] bdata = new byte[70];
+                byte[] bdata = new byte[256];
                 switch (type)
                 {
                     case eDataType.SEX_CODE:
@@ -187,8 +187,12 @@ namespace ABC.BackSplint
                         }
                     case eDataType.PHOTO:
                         {
-                            BSApiHelper.IDCard_GetPhotoFile(ref bdata[0]);
-                            backData(bdata, 70);
+                           // int iRet = BSApiHelper.IDCard_GetPhotoFile(ref bdata[0]);
+                            //SysLog.i($"PHOTO={bdata.GetString()} iRet={iRet}");
+                            string sfilepath = $"{AppConfig.Instance.Path.PhotoPath}\\zp.bmp";
+                            SysLog.i($"sfilepath={sfilepath}");
+                            byte[] b = sfilepath.ToByteArry();
+                            backData(b, b.Length);
                             break;
                         }
                     case eDataType.BIRTHDAY_YEAR:
@@ -219,8 +223,8 @@ namespace ABC.BackSplint
                         {
                             StringBuilder stringBuilder = new StringBuilder(38863);
                             //byte[] stringBuilder = new byte[38863];
-                            string path = string.Format($"{AppConfig.Instance.Path.PhotoPath}zp.bmp");
-                            BSApiHelper.GetFileBase64Buffer(path,  stringBuilder);
+                            string path = string.Format($"{AppConfig.Instance.Path.PhotoPath}\\zp.bmp");
+                            BSApiHelper.GetFileBase64Buffer(path, stringBuilder);
                             byte[] b = stringBuilder.ToString().ToByteArry();
                             backData(b, b.Length);
                             break;

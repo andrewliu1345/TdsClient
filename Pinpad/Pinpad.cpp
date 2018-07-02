@@ -159,7 +159,7 @@ int Pinpad::importKey(const char * keyname, const char * data, const char * keyu
 	skeyname = Utility::ToUpper(skeyname);
 	skeyuse = Utility::ToUpper(skeyuse);
 	senckeyname = Utility::ToUpper(senckeyname);
-	Log::i(CLASSNAME, "skeyname=%s,skeyuse=%s,senckeyname=%s", skeyname.c_str(), skeyuse.c_str(), senckeyname.c_str());//打印日志
+	Log::i(CLASSNAME, "skeyname=%s,skeyuse=%s,senckeyname=%s,key=%s", skeyname.c_str(), skeyuse.c_str(), senckeyname.c_str(), data);//打印日志
 	int iRet = DEVICE_ERROR_HARDWARE_ERROR;
 	if (skeyname == MAINKEY)
 	{
@@ -421,11 +421,14 @@ void Pinpad::RevGetPinBlock2(UCHAR * buffer)
 		i = params.begin();
 		sParam revdata = (sParam)*i;
 		//string hexstrData = Utility::bytesToHexstring(revdata.ParamData, revdata.ParamLen);
-		char * cData = new char[revdata.ParamLen+1];//避免后面乱码
-		memset(cData, 0, revdata.ParamLen+1);
+		char * cData = new char[revdata.ParamLen + 1];//避免后面乱码
+		memset(cData, 0, revdata.ParamLen + 1);
 		memcpy(cData, revdata.ParamData, revdata.ParamLen);
 		Log::i(CLASSNAME, "成功！cData=%s,revdata.ParamLen =%d", cData, revdata.ParamLen);
-		m_pEventHandler->getPinblockCompleted(DEVICE_ERROR_SUCCESS, iReqid, cData);
+		unsigned char * b_utf_8;
+		Utility::GB18030ToUTF8(cData, &b_utf_8);
+		m_pEventHandler->getPinblockCompleted(DEVICE_ERROR_SUCCESS, iReqid, (char *)b_utf_8);
+		delete[]b_utf_8;
 		delete[] cData;
 		break;
 	}

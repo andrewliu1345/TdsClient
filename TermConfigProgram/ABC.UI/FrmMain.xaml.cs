@@ -15,7 +15,7 @@ namespace ABC.UI
     /// </summary>
     public partial class MainWindow : Window
     {
-        
+
         private NotifyIcon notifyIcon;
         public MainWindow()
         {
@@ -291,6 +291,14 @@ namespace ABC.UI
         {
             FrmPath frm = new FrmPath();
             frm.Show();
+        }
+        protected override void OnStateChanged(EventArgs e)
+        {
+            if (base.WindowState == WindowState.Minimized)
+            {
+                base.Hide();
+            }
+            base.OnStateChanged(e);
         }
     }
 }
