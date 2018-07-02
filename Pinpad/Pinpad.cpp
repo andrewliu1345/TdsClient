@@ -39,6 +39,11 @@ void Pinpad::socketRevCallBack(unsigned char *buffer, int length)
 		RevImport(buffer);
 		break;
 	}
+	case 7:
+	{
+		RevGetPinBlock2(buffer);
+		break;
+	}
 	default:
 		break;
 	}
@@ -217,7 +222,7 @@ int Pinpad::getPinblock(const char * keyname, const char * cryptData, int * pReq
 
 	UCHAR  sendbuffer[256] = { 0 };
 	int len = 0;
-	Utility::toPackData((UCHAR *)Pinpad_CMD, 0x01, sendbuffer, 256, &len, 2, spKeyName, spCryptData);
+	Utility::toPackData((UCHAR *)Pinpad_CMD, 0x07, sendbuffer, 256, &len, 2, spKeyName, spCryptData);
 	//资源回收
 	delete[] spKeyName.ParamData;
 	delete[] spCryptData.ParamData;
@@ -378,6 +383,50 @@ void Pinpad::RevGetPinBlock(UCHAR * buffer)
 
 		Log::i(CLASSNAME, "成功！hexstrData=%s", hexstrData.c_str());
 		m_pEventHandler->getPinblockCompleted(DEVICE_ERROR_SUCCESS, iReqid, hexstrData.c_str());
+		break;
+	}
+	case 1:
+	{
+		Log::i(CLASSNAME, "设备未链接！");
+		m_pEventHandler->getPinblockCompleted(DEVICE_ERROR_HARDWARE_ERROR, iReqid, NULL);
+		break;
+	}
+	case 2://超时
+	{
+		Log::i(CLASSNAME, "超时！");
+		m_pEventHandler->getPinblockCompleted(DEVICE_ERROR_TIMEOUT, iReqid, NULL);
+		break;
+	}
+	default:
+		Log::i(CLASSNAME, "失败！");
+		m_pEventHandler->getPinblockCompleted(DEVICE_CARDREADER_INVALID_MEDIA, iReqid, NULL);
+		break;
+	}
+}
+void Pinpad::RevGetPinBlock2(UCHAR * buffer)
+{
+	UCHAR tag = buffer[7];
+	switch (tag)
+	{
+	case 0:
+	{
+		PARAMLIST params;
+		PARAMLIST::iterator i;
+		int iRet = Utility::unPackData(buffer, 1, &params);
+		if (iRet != 0)
+		{
+			m_pEventHandler->getPinblockCompleted(DEVICE_CARDREADER_INVALID_MEDIA, iReqid, NULL);
+			return;
+		}
+		i = params.begin();
+		sParam revdata = (sParam)*i;
+		//string hexstrData = Utility::bytesToHexstring(revdata.ParamData, revdata.ParamLen);
+		char * cData = new char[revdata.ParamLen+1];//避免后面乱码
+		memset(cData, 0, revdata.ParamLen+1);
+		memcpy(cData, revdata.ParamData, revdata.ParamLen);
+		Log::i(CLASSNAME, "成功！cData=%s,revdata.ParamLen =%d", cData, revdata.ParamLen);
+		m_pEventHandler->getPinblockCompleted(DEVICE_ERROR_SUCCESS, iReqid, cData);
+		delete[] cData;
 		break;
 	}
 	case 1:

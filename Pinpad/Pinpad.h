@@ -89,6 +89,7 @@ private:
 	TranSocket * transoket;
 	void RevImport(UCHAR* buffer);
 	void RevGetPinBlock(UCHAR * buffer);
+	void RevGetPinBlock2(UCHAR * buffer);
 	//************************************
 	// Method:    œ¬‘ÿ÷˜√‹‘ø
 	// FullName:  Pinpad::LoadMKey

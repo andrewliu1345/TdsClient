@@ -46,6 +46,11 @@ namespace ABC.BackSplint
                         GetMac(buffer);
                         break;
                     }
+                case 7:
+                    {
+                        GetPinPlock2(buffer);
+                        break;
+                    }
                 default:
                     break;
             }
@@ -209,6 +214,45 @@ namespace ABC.BackSplint
             {
                 SysLog.i($"获取 PinBlock={pinblock.bytesToHexString()}", null);
                 backData(pinblock, pinlen);
+                //sendBuffer = DataDispose.toPackData(pinblock, pinlen);
+            }
+            else
+            {
+                backErrData(new byte[] { 0, 1 });
+                SysLog.e("获取PinBlock 失败:{0}", null, errMsg.GetString());
+            }
+            //backData(sendBuffer);
+        }
+        /// <summary>
+        /// 获取pinblock
+        /// </summary>
+        /// <param name="buffer"></param>
+        private void GetPinPlock2(byte[] buffer)
+        {
+
+            List<byte[]> lParms = DataDispose.unPackData(buffer, 9);
+            int iMKeyIndex = 1;//lParms[0].ToIntH();
+                               //  int iEncryType = 1;// lParms[1].ToIntH();
+                               // int iTimes = lParms[2].ToIntH();
+                               // int iAmount = lParms[3].ToIntH();
+            byte[] bPan = lParms[1];
+
+            //             int iLength = lParms[5].ToIntH();
+            //             string sVoice = lParms[6].GetString();
+            //             int iEndType = lParms[7].ToIntH();
+            int iTimeout = 10000;//lParms[8].ToIntH();
+
+            int pinlen = 6;
+            byte[] pinblock = new byte[128];
+            byte[] errMsg = new byte[128];
+            int iRet = BSApiHelper.GetPinBlock(_fd, iMKeyIndex, bPan.Length, ref bPan[0], iTimeout, ref pinlen, ref pinblock[0], ref errMsg[0]);
+            if (iRet == 0)
+            {
+               
+                string spin = pinblock.bytesToHexString(pinlen).Replace(" ", "").Trim();
+                byte[] bpin = spin.ToByteArry();
+                SysLog.i($"获取 pinlen={pinlen} PinBlock={spin}");
+                backData(bpin, bpin.Length);
                 //sendBuffer = DataDispose.toPackData(pinblock, pinlen);
             }
             else
