@@ -261,6 +261,92 @@ int TranSocket::_read(char * refbuffer, int * length, int timeout)
 	return *length;
 }
 
+int TranSocket::_read(UCHAR * _refbuffer, int timeout)
+{
+	DWORD start, stop;
+	start = GetTickCount();
+	UCHAR *refbuffer;
+	UCHAR tmp[38863] = { 0 };
+	int length = 38863;
+	int iRet = 0;
+	int index = 0;
+	int __timeout = 10;
+
+	if (!isConnected)
+	{
+		return -1;
+	}
+	//WaitForSingleObject(g_hMutex, INFINITE);
+	
+	iRet = recv(sclient, (char *)tmp, length, 0);//第一次读取
+	if (iRet > 5)
+	{
+		unsigned char blen[2] = { 0 };
+		memcpy(blen, &tmp[1], 2);
+		int retlen = Utility::ByteArrayToInt(blen);//获取数据长度
+		int datalen = retlen + 5;
+		refbuffer = new UCHAR[datalen];
+		memset(refbuffer, 0, datalen);
+		memcpy(&refbuffer[index], tmp, iRet);//获取第一条数据
+		index += iRet;//标志
+		setsockopt(sclient, SOL_SOCKET, SO_RCVTIMEO, (char *)&__timeout, sizeof(int));//读取超时设为10ms 
+																					  //Sleep(50);
+		while (true)
+		{
+			if (GetTickCount()-start>timeout)//超时
+			{
+				return -1;
+			}
+			if (index == datalen && refbuffer[index - 1] == 0x03)
+			{
+				string str = Utility::bytesToHexstring(refbuffer, iRet);
+				Log::i("TranSocket._read", "recv iRet=%d refbuffer=%s ", iRet, str.c_str());
+				memcpy(_refbuffer, refbuffer, datalen);
+				delete[] refbuffer;
+				return datalen;
+			}
+
+			memset(tmp, 0, length);
+			//WaitForSingleObject(g_hMutex, INFINITE);
+			iRet = recv(sclient, (char *)tmp, length, 0);
+
+// 			string str = Utility::bytesToHexstring(refbuffer, iRet);
+// 			Log::i("TranSocket.Read_Thead", "recv iRet=%d refbuffer=%s ", iRet, str.c_str());
+
+
+			if (iRet > 0)
+			{
+				memcpy(&refbuffer[index], tmp, iRet);//获取第N条数据
+				index += iRet;//标志
+			}
+			else
+			{
+				break;
+			}
+
+			Sleep(10);
+		}
+	}
+	else if (iRet == 0)
+	{
+		return -2;//网络短开回调
+
+	}
+	else if (iRet == SOCKET_ERROR)
+	{
+		return -1;//连接出错回调
+
+	}
+
+
+	//ReleaseMutex(g_hMutex);
+	//delete[]refbuffer;
+	return 0;
+
+}
+
+
+
 unsigned _stdcall TranSocket::Read_Thead(LPVOID lpParameter)
 {
 	Log::i("TranSocket.Read_Thead", "Read_Thead  异步读取线程开启");
@@ -352,8 +438,14 @@ int TranSocket::ReadData(unsigned char * refbuffer, int * reflegth, unsigned lon
 	}
 	//接收时限
 	//WaitForSingleObject(g_hMutex, INFINITE);
-	_read((char *)refbuffer, reflegth, timeout);
+	//_read((char *)refbuffer, reflegth, timeout);
+	setsockopt(sclient, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(int));
+	*reflegth=_read(refbuffer, timeout);
+	if (reflegth>0)
+	{
+		return 0;
+	}
 	//ReleaseMutex(g_hMutex);
-	return 0;
+	return -1;
 }
 

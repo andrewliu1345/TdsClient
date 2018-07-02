@@ -94,6 +94,7 @@ private:
 	static UCHAR heartData[8];
 	static int _write(const char* buffer, int length);
 	static int _read(char* refbuffer, int *length, int timeout);
+	static int _read(UCHAR* refbuffer, int timeout);
 	//static CSocketDelegete *socketDeleget;
 	static unsigned __stdcall Read_Thead(LPVOID lpParameter);
 	static unsigned __stdcall Flush_Thead(LPVOID lpParameter);

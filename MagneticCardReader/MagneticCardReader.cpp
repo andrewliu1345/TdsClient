@@ -221,7 +221,7 @@ ICardReader::CardReader_CardType MagneticCardReader::getCardType()
 
 const int MagneticCardReader::getData(const char* key, char* value, unsigned int len)
 {
-	Log::i("IDCardRead.getData", "getDatakeylen=%s,len=%d\n", key, len);
+	Log::i("MagneticCardReader.getData", "key=%s,len=%d\n", key, len);
 	// 	if (value != NULL || len != 0)
 	// 	{
 	// 		if (len > 70)
