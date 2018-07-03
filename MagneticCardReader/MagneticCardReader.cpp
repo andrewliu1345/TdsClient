@@ -156,6 +156,11 @@ void MagneticCardReader::cancel(int nReqID)
 
 int MagneticCardReader::transaction(const char* tranID, const void* parameter, int* pReqID)
 {
+	int iReqID;
+	iReqID = iReqid;
+	*pReqID = iReqID;
+	InterlockedIncrement((LPLONG)&iReqid);
+
 	return 0;
 }
 
@@ -192,22 +197,28 @@ int MagneticCardReader::readCard(int timeout, int* reqID)
 
 int MagneticCardReader::ejectCard(int* reqID)
 {
-	return 0;
+	m_pEventHandler->ejectCardCompleted(DEVICE_ERROR_OP_NOT_SUPPORTED, iReqid);
+	InterlockedIncrement((LPLONG)&iReqid);
+
+	return DEVICE_ERROR_OP_NOT_SUPPORTED;
 }
 
 int MagneticCardReader::retainCard(int* reqID)
 {
-	return 0;
+	InterlockedIncrement((LPLONG)&iReqid);
+
+	return DEVICE_ERROR_OP_NOT_SUPPORTED;
 }
 
 int MagneticCardReader::resetRetainCount(int* reqID)
 {
-	return 0;
+	InterlockedIncrement((LPLONG)&iReqid);
+	return DEVICE_ERROR_OP_NOT_SUPPORTED;
 }
 
 int MagneticCardReader::getRetainCount()
 {
-	return 0;
+	return DEVICE_ERROR_OP_NOT_SUPPORTED;
 }
 
 ICardReader::CardReaderMediaStatus MagneticCardReader::getMediaStatus()
@@ -232,7 +243,20 @@ const int MagneticCardReader::getData(const char* key, char* value, unsigned int
 	// 		return DEVICE_ERROR_SUCCESS;
 	// 	}
 	int Rlen = 0;
-	if (!strcmp(key, "track2"))
+	if (!strcmp(key, "track1"))
+	{
+		if (_MANAGED.track1_len != 0) {
+			Rlen = _MANAGED.track1_len;
+			if (value != NULL)
+			{
+				memcpy(value, _MANAGED.track1_data, Rlen);
+				return DEVICE_ERROR_SUCCESS;
+			}
+
+			return Rlen;
+		}
+	}
+	else	if (!strcmp(key, "track2"))
 	{
 		if (_MANAGED.track2_len != 0) {
 			Rlen = _MANAGED.track2_len;
