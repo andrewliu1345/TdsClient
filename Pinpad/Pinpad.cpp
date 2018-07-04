@@ -199,12 +199,13 @@ void Pinpad::endGetPin()
 }
 int Pinpad::getPinblock(const char * keyname, const char * cryptData, int * pReqID)
 {
+	Log::i(CLASSNAME, "getPinblock  keyname=%s,cryptData=%s", keyname, cryptData);
 	sParam spKeyName;
 	sParam spCryptData;
 
 	string strKeyName(keyname);
 	string strCrytData(cryptData);
-
+	
 	int KeyNamelen = strlen(strKeyName.c_str());
 	int strCrytDatalen = strlen(strCrytData.c_str());
 
@@ -314,7 +315,7 @@ int Pinpad::LoadWKey(string Wkey, string keyuse, string encIndex)
 	delete[] spWkey.ParamData;
 	delete[] spEncIndex.ParamData;
 	delete[] spKeyUse.ParamData;
-	int iRet = transoket->SyncTranData(sendbuffer, len, this, 10000);
+	int iRet = transoket->SyncTranData(sendbuffer, len, this, 15000);
 
 	if (iRet > 0)
 	{
