@@ -3,6 +3,7 @@ using ABC.DeviceApi;
 using ABC.Enity;
 using ABC.HelperClass;
 using ABC.Logs;
+using ABC.Printer.Decorator;
 using System;
 using System.Collections.Generic;
 
@@ -33,10 +34,13 @@ namespace ABC.Printer
             string sfileName = bfileName.GetString();
             string sData = bData.GetString("UTF-8");
             SysLog.d($"PrintMsg sfileName={sfileName} \n sData={sData} \n bData={bData.bytesToHexString()}", null);
-            LoadFormData load = new LoadFormData();
+            AbstractFormData load = new LoadFormData();
+            load = new FormHeaderDecorator(load);
+            load = new FormBottomDecorator(load);
             try
             {
-                byte[] data = load.FormData(sfileName, sData);
+                byte[] data = load.FormData(sfileName, sData).ToByteArry();
+              
                 int iRet = PrintApiHelper.Print_CHS(DeviceIDs.Print_fd, data, data.Length);
                 if (iRet == 0)
                 {

@@ -10,16 +10,16 @@ using System.Xml.Linq;
 
 namespace ABC.Printer
 {
-    public class LoadFormData
+    public class LoadFormData:AbstractFormData
     {
         private string path = AppConfig.Instance.Path.FormPath;
         public LoadFormData()
         {
 
         }
-        public byte[] FormData(string filename, string str)
+        public override string FormData(string filename, string str)
         {
-            byte[] buffer = null;
+           
             string file = string.Format("{0}\\{1}", path, filename);
             string[] _params = str.Split('#');
             Dictionary<string, string> paramArry = new Dictionary<string, string>();
@@ -41,7 +41,7 @@ namespace ABC.Printer
 
             StringBuilder stringBuilder = new StringBuilder();
             //stringBuilder.Append($"{27}{87}{1}");
-            stringBuilder.Append("         中国农业银行");//标题
+           // stringBuilder.Append("         中国农业银行");//标题
             StreamReader sr = new StreamReader(file, Encoding.Default);
             XElement xele = XElement.Load(sr);
             // var xePrtRoot = xele.Elements("PrtRoot");//根节点
@@ -86,12 +86,9 @@ namespace ABC.Printer
 
                 }
             }
-            stringBuilder.Append("\n");
-            stringBuilder.Append("\n");
-            stringBuilder.Append("\n");
-            stringBuilder.Append("\n");
-            buffer = stringBuilder.ToString().ToByteArry();
-            return buffer;
+
+            return stringBuilder.ToString();
+            
         }
 
 

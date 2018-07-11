@@ -41,7 +41,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AbstractFormData.cs" />
     <Compile Include="BluetoothPrinter.cs" />
+    <Compile Include="Decorator\BaseFormDataDecorator.cs" />
+    <Compile Include="Decorator\FormBottomDecorator.cs" />
+    <Compile Include="Decorator\FormHeaderDecorator.cs" />
     <Compile Include="LoadFormData.cs" />
     <Compile Include="Print.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -80,5 +84,6 @@
       <Name>ABC.Logs</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
