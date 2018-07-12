@@ -22,7 +22,6 @@ namespace ABC.Printer.Decorator
             strb.Append(a);
             strb.Append("\n");
             strb.Append("\n");
-            strb.Append("\n");
             return strb.ToString();
         }
     }

@@ -116,7 +116,7 @@ namespace ABC.UI
             load = new FormBottomDecorator(load);
 
             load2 = new FormHeaderDecorator(load2);
-            load2 = new FormSignatureDecorator(load2);
+            //load2 = new FormSignatureDecorator(load2);
             load2 = new FormSecondPageDecorator(load2);
             load2 = new FormBottomDecorator(load2);
 

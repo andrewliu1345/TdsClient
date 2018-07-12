@@ -17,6 +17,8 @@ namespace ABC.Printer.Decorator
             StringBuilder sb = new StringBuilder();
             string a = base.FormData(filename, str);
             sb.Append(a);
+            sb.Append("\n");
+            sb.Append("\n");
             sb.Append("第二联：客户核对\n");
             return sb.ToString();
         }
