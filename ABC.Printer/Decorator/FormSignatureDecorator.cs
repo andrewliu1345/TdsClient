@@ -9,9 +9,9 @@ namespace ABC.Printer.Decorator
     /// <summary>
     /// 标题装饰器
     /// </summary>
-    public class FormBottomDecorator : BaseFormDataDecorator
+    public class FormSignatureDecorator : BaseFormDataDecorator
     {
-        public FormBottomDecorator(AbstractFormData formData)
+        public FormSignatureDecorator(AbstractFormData formData)
             : base(formData)
         {
         }
@@ -23,6 +23,7 @@ namespace ABC.Printer.Decorator
             strb.Append("\n");
             strb.Append("\n");
             strb.Append("\n");
+            strb.Append("客户签名：\n");
             return strb.ToString();
         }
     }

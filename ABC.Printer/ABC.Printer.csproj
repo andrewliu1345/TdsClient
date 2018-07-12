@@ -44,7 +44,10 @@
     <Compile Include="AbstractFormData.cs" />
     <Compile Include="BluetoothPrinter.cs" />
     <Compile Include="Decorator\BaseFormDataDecorator.cs" />
+    <Compile Include="Decorator\FormSignatureDecorator.cs" />
     <Compile Include="Decorator\FormBottomDecorator.cs" />
+    <Compile Include="Decorator\FormSecondPageDecorator.cs" />
+    <Compile Include="Decorator\FormFirstPageDecorator.cs" />
     <Compile Include="Decorator\FormHeaderDecorator.cs" />
     <Compile Include="LoadFormData.cs" />
     <Compile Include="Print.cs" />
